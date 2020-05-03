@@ -1,0 +1,27 @@
+{{define "updatepost"}}
+
+{{template "header"}}
+
+<div class="wrapp">
+    <h2>Edit post </h2>
+    <form method="POST" action="/edit/post" class="wrapper-create" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" name="pid" value="{{ .PostIDEdit }}" />
+        <input type="text" name="title" placeholder="title">
+        <textarea name="content" id="" cols="30" rows="10"></textarea>
+
+        <label for="cars">Categories:</label>
+
+        <select name="cats" class="category-form">
+            <option value="1">School</option>
+            <option value="2">People</option>
+            <option value="3">Events</option>
+            <option value="4">Q&A</option>
+            <option value="5">Sapid</option>
+        </select>
+
+        <input type="file" name="uploadfile" required />
+        <input type="submit" value="edit" />
+    </form>
+</div>
+
+{{end}}

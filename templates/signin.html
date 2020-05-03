@@ -1,0 +1,17 @@
+{{define "signin"}}
+
+{{template "header"}}
+
+
+<div class="signin-wrapper">
+    <h3 class="signin-label">Signin Forum-X</h3>
+    <form action="/signin" method="POST">
+        <input type="email" name="email" placeholder="email"> <br />
+        <input type="password" name="password" placeholder="password"> <br />
+        <input type="submit" value="send">
+    </form>
+    <br>
+    <p>{{.Msg}}</p>
+</div>
+
+{{end}}

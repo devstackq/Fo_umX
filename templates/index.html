@@ -1,0 +1,27 @@
+{{define "index"}}
+<div class="main">
+    {{template "search"}}
+
+    {{template "filter" }}
+
+    {{ range $key, $value := . }}
+
+    <div class=" wrapper-main">
+        <form method="POST" action="{{ $value.EndpointPost}}/{{$value.ID}}">
+            <input type="hidden" name="pstID" value="{{ $value.ID }}" />
+            <input type="hidden" name="end" value="{{ $value.EndpointPost}}">
+
+        </form>
+        <h3>{{ $value.Title }}</h3>
+        <p class="content-main"> {{ $value.Content}} .... </p>
+        Create: {{ $value.CreationTime}} <br />
+
+        <a class="links" href="/post?id={{$value.ID}}">read..</a>
+    </div>
+
+    {{end}}
+</div>
+
+
+{{template "footer" }}
+{{end}}

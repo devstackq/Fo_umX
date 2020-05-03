@@ -1,0 +1,22 @@
+{{define "postuser"}}
+
+<br />
+<div class="profile-post-create">
+    <h3>Created posts</h3>
+
+    {{range .}}
+
+    <h4>{{.Title}}</h4>
+    <a href="/post?id={{.ID}}">see post</a>
+    {{if eq .CreatorID .AuthorForPost }}
+
+
+    <a href="/edit/post?id={{.ID}}"> edit post</a>
+    <a href="/delete/post?id={{.ID}}"> delete post</a>
+
+    {{end}}
+    {{end}}
+</div>
+<br />
+<br />
+{{end}}

@@ -1,0 +1,15 @@
+{{define "commentuser"}}
+
+<div class="profile-comment-create">
+    <h3>Comments lost</h3>
+    <div>
+        {{range .}}
+        <h4>{{.CreatedTime}}</h4>
+        <p>{{.Commentik}}</p>
+        <a href="/post?id={{.PostID}}">see comment</a>
+        {{end}}
+
+    </div>
+</div>
+{{end}}
+{{template "footer"}}

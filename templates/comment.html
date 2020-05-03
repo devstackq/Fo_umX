@@ -1,0 +1,39 @@
+{{define "comment"}}
+
+{{$id :=0}}
+
+{{range .}}
+{{$id = .PostID}}
+<div class="comment-underpost">
+    {{.CreatedTime}}
+    <h3> {{.Commentik}}</h3>
+
+    <form action="/user/id/{{.UserID}}" method="post" autocomplete="off">
+        <input type="hidden" name="uid" value="{{.UserID}}">
+        <input type="submit" value="{{.AuthorComment}}">
+    </form>
+    <p class="" style="color:red; font-size: 20px;">
+        {{.CommentLike}}
+        {{.CommentDislike}}
+    </p>
+    <div class="like-wrapper">
+        <form class="like-wrap" action="/votes/comment?cid={{.ID}}" method="POST">
+            <input type="hidden" name="comlike" value="1">
+            <input class="" type="submit" value="&hearts;">
+            <input type="hidden" name="pidc" value="{{.PostID}}">
+
+        </form>
+
+        <br>
+        <form class="dislike-wrap" action="/votes/comment?cid={{.ID}}" method="POST">
+            <input type="hidden" name="comdis" value="1">
+            <input class="" type="submit" value="-">
+            <input type="hidden" name="pidc" value="{{.PostID}}">
+        </form>
+    </div>
+
+</div>
+
+{{end}}
+
+{{end}}

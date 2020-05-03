@@ -1,0 +1,63 @@
+{{define "user"}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #000;
+            color: cornsilk;
+        }
+
+        a {
+            color: #fff;
+            padding: 5px;
+            background: orange;
+        }
+
+        .wrapper-main {
+            width: 100%;
+            max-width: 960px;
+            background: #fff;
+            color: #000;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../statics/css/app.css">
+
+</head>
+
+<body>
+ 
+    
+	
+
+
+    <div class="wrapper-main">
+        <h3>Welcome to: {{.FullName}} page</h3>
+
+        <div class="img-wrapper">
+           
+            {{if .SVG}}
+
+            <img alt=" " width="500px" src="data:image/svg+xml;base64, {{.ImageHtml}} ">
+    
+            {{else}}
+    
+            <img class="post-img" src="data:image/jpeg;base64, {{.ImageHtml}}" alt=" ">
+    
+            {{end}}
+        </div>
+
+        Name: {{.FullName}} <br />
+        Email : {{.Email}}<br />
+        Age : {{.Age}}<br />
+        Sex : {{.Sex}}<br />
+        From : {{.City}}<br />
+        On site with : {{.CreatedTime}}<br />
+    </div>
+
+
+    {{end}}

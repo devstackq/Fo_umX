@@ -1,0 +1,8 @@
+https://medium.com/@johnshenk77/create-a-simple-chat-application-in-go-using-websocket-d2cb387db836
+https://www.scaledrone.com/blog/go-chat-app-tutorial-build-a-real-time-chat/
+
+https://www.sohamkamani.com/blog/2017/10/18/parsing-json-in-golang/
+https://www.youtube.com/watch?v=KQcWXRlAiyA&t=0s
+
+http://134.122.124.102:6969/
+https://www.google.com/search?q=auth+github+api+golang&oq=auth+github+api+golang&aqs=chrome..69i57j33.4055j0j1&sourceid=chrome&ie=UTF-8

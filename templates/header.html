@@ -1,0 +1,36 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum-X</title>
+    <link rel="stylesheet" type="text/css" href="../statics/css/app.css">
+</head>
+
+<body>
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <div class="nav">
+
+                <a class="nav-link" href="/">All</a>
+                <a class="nav-link" href="/school">School</a>
+                <a class="nav-link" href="/people">People</a>
+                <a class="nav-link" href="/events">Events</a>
+                <a class="nav-link" href="/qa">Q&A</a>
+                <a class="nav-link" href="/sapid">Sapid</a>
+
+                {{if .Authenticated}}
+                <a class="nav-link" href="/profile">Profile</a>
+                <a class="nav-link" href="/logout">Logout</a>
+                {{else}}
+
+                <a class="nav-link" href="/signup">Signup</a>
+                <a class="nav-link" href="/signin">Signin</a>
+            </div>
+        </header>
+    </div>
+    {{end}}
+
+    {{end}}

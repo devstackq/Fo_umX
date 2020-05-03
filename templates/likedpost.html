@@ -1,0 +1,15 @@
+{{define "likedpost"}}
+
+<br />
+<div class="profile-post-create">
+    <h3>Liked posts</h3>
+    {{range .}}
+    <h4>{{.Title}}</h4>
+    <a href="/post?id={{.ID}}">see post</a>
+    {{end}}
+</div>
+<br />
+<br />
+{{end}}
+</body>
+</html>

@@ -1,0 +1,379 @@
+body {
+  background-color: #000;
+  height: 100%;
+  max-height: 100vh;
+}
+.main {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px auto;
+  background-color: #fff;
+  margin-top: 20px;
+}
+.wrapper-main {
+  margin: 5px 20px;
+  background-color: rgb(212, 236, 175);
+  color: #000;
+  max-width: 960px;
+  padding: 10px;
+}
+
+.wrapper-filter {
+  margin: 0 auto;
+  color: #000;
+  width: 100%;
+}
+.wrapper-filter h4 {
+  margin-left: 20px;
+  color: red;
+}
+.wrapper-filter label {
+  color: blue;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 20px;
+}
+.wrapper-filter input {
+  width: 100px;
+  background: rgb(199, 191, 76);
+  padding: 8px 10px;
+}
+.wrapper-filter input[type="submit"] {
+  margin-left: 410px;
+  border: none;
+}
+.search-wrapper {
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 960px;
+  margin: 10px auto;
+}
+.search-wrapper input[type="text"] {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid red;
+  width: 800px;
+  outline: none;
+
+  color: blue;
+}
+.search-wrapper input[type="submit"] {
+  color: #fff;
+  padding: 6px 10px;
+  background: #000;
+  border: 1px solid #fff;
+}
+.navbar {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  /* border: 1px solid #fff; */
+
+}
+.nav {
+  display: inline-block;
+}
+.navbar a {
+  margin-bottom: 20px;
+  padding: 5px;
+  width: 120px;
+  color: #000;
+  border-radius: 2px;
+}
+.wrapper-user {
+}
+.wrapper-main p {
+  padding: 2px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.wrapper-create {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: #fff;
+}
+
+.create-post-wrapper {
+  width: 100%;
+
+  margin: 0 auto;
+  margin: 12px 20px;
+  background-color: rgb(238, 237, 236);
+  color: #000;
+  max-width: 960px;
+  padding: 10px;
+}
+.wrapper-main-edit {
+  width: 100%;
+  min-width: 960px;
+  margin: 0 auto;
+  margin: 12px 20px;
+  background-color: rgb(238, 237, 236);
+  color: #000;
+  max-width: 960px;
+  padding: 10px;
+}
+.wrapper-create input {
+  padding: 10px;
+  width: 325px;
+  margin-bottom: 3px;
+}
+.wrapper-create input[type="submit"] {
+  background-color: gold;
+  width: 350px;
+  padding: 10px;
+}
+.wrapper-create input[type="file"] {
+  color: red;
+}
+.create-btn {
+  color: gold;
+  font-size: 16px;
+
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 10px;
+}
+.category-form {
+  width: 350px;
+}
+.comment {
+  color: red;
+}
+.wrapper-main {
+  padding: 20px;
+}
+
+.wrapper-main h3 {
+  text-align: center;
+}
+
+.wrapper-main a {
+  padding: 8px 12px;
+  text-decoration: none;
+  background-color: rgb(53, 52, 53);
+  margin-left: 800px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  width: 120px;
+}
+
+.links a {
+  text-decoration: none;
+  color: gold;
+}
+a.links {
+  color: #fff;
+}
+a {
+  color: gold;
+}
+
+.profile-post-create {
+  margin-bottom: -40px;
+  margin-top: -40px;
+  width: 100%;
+  background-color: rgb(166, 214, 55);
+  border: 1px solid green;
+  padding: 10px;
+}
+
+.profile-comment-create {
+  width: 100%;
+  background-color: rgb(224, 67, 120);
+  color: #000;
+  padding: 10px;
+}
+
+.profile-wrapper {
+  width: 100%;
+  min-width: 960px;
+  color: #000;
+  background-color: lightskyblue;
+  padding: 10px;
+}
+.profile-wrapper img {
+  width: 280px;
+}
+
+.user-img {
+  width: 100px;
+  height: 100px;
+}
+.img-wrapper {
+  width: 200px;
+  height: 100px;
+}
+
+.post-img-wrapper {
+  margin-top: 50px;
+  max-width: 800px;
+}
+.post-img {
+  width: 100%;
+}
+.post-wrapper {
+  max-width: 960px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: #fff;
+  color: #000;
+
+  margin: 0 auto;
+
+  padding: 10px;
+}
+
+.post-wrapper p {
+  padding: 0 70px;
+  line-height: 1.4;
+}
+
+.author-wrapper {
+  margin-left: 600px;
+  color: #000;
+  display: flex;
+  margin-bottom: 10px;
+}
+.author-wrapper label {
+  margin-right: 20px;
+}
+.author-wrapper input[type="submit"] {
+  padding: 10px;
+  background: #000;
+  color: #fff;
+}
+.comment-wrapper {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  color: #fff;
+  padding: 10px;
+}
+.comment-underpost {
+  margin-top: -50px;
+  background-color: deepskyblue;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  color: #fff;
+  padding: 10px;
+}
+.likess {
+  background-color: red;
+  position: absolute;
+  left: 35%;
+  bottom: 10px;
+  color: #fff;
+}
+.dislike {
+  position: absolute;
+  right: 35%;
+  bottom: 10px;
+}
+.category-post {
+  padding: 10px;
+  position: absolute;
+  left: 0;
+  margin-right: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: dodgerblue;
+  color: #fff;
+}
+.time-post {
+  background-color: dodgerblue;
+  color: #fff;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  margin-left: 50%;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.footer {
+  color: #000;
+  z-index: 2;
+}
+.signin-wrapper {
+  margin: 50px 0 0 380px;
+  background-color: rgb(226, 225, 156);
+  color: #000;
+  max-width: 400px;
+  padding: 10px;
+
+}
+.signin-label {
+  color: #fff;
+}
+.signin-wrapper input[type="email"] {
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+}
+.signin-wrapper input[type="password"] {
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  margin-top: 3px;
+}
+.signin-wrapper input[type="submit"] {
+  margin-top: 4px;
+  width: 176px;
+  background: fff;
+  color: #000;
+}
+.signup-wrapper {
+  margin: 50px 0 0 380px;
+  background-color: rgb(226, 225, 156);
+  color: #000;
+  max-width: 400px;
+  padding: 10px;
+}
+.link-profile {
+  background-color: red;
+  color: #000;
+}
+.profile-post-create a {
+background: #fff;
+color: #000;
+}
+.profile-comment-create  a{
+  background: #000;
+color: #fff;
+}
+.nav-link {
+  background-color: gold;
+}
+a.dislike  {
+  background-color: blue;
+  color: white;
+}
+.like-wrapper {
+  display: flex;
+  background-color: transparent;
+  border: none;
+}
+.lukas {
+  display: flex;
+}
+like {
+  padding: 10px;
+}
+.error {
+  color: red;
+  font-size: 20px;
+  background-color: red;
+}
