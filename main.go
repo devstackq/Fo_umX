@@ -8,7 +8,6 @@ import (
 
 	"github.com/devstackq/ForumX/models"
 	"github.com/devstackq/ForumX/routing"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -85,6 +84,7 @@ func CreateDB() {
 
 // refactor Architect -> category table, bridge table, posts table -> for update, delete post -> change category
 //todo:
+//dlete cookie client side,
 //google acc signin -> -> back signin ? what??
 //photo not required
 //refactor function 1 func

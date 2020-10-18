@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/devstackq/ForumX/Forum-X2/models"
+	"github.com/devstackq/ForumX/routing"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -304,34 +304,42 @@ func (u *Users) UpdateProfile() error {
 
 //siginin
 
-func Signin(r *http.Request, email, password string) {
+func Signin(w http.ResponseWriter, r *http.Request, email, password string) {
 
 	u := DB.QueryRow("SELECT id, password FROM users WHERE email=?", email)
 
-	var user models.Users
+	var user Users
 	//check pwd, if not correct, error
 	u.Scan(&user.ID, &user.Password)
-
-	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pwd)); err != nil {
-		// If the two passwords don't match, return a 401 status
-		w.WriteHeader(http.StatusUnauthorized)
-		msg.Msg = "Email or password incorrect lel"
-		displayTemplate(w, "signin", &msg)
-		return
+	if user.ID == 0 {
+		fmt.Println("user not found")
+		//
 	}
 
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		fmt.Println("not correct pwd")
+		//
+	}
+	// err != nil{
+	// 	// If the two passwords don't match, return a 401 status
+
+	// }
+
 	//get user by Id, and write session struct
-	s := models.Session{
+	s := Session{
 		UserID: user.ID,
 	}
 	uuid := uuid.Must(uuid.NewV4(), err).String()
 	if err != nil {
-		panic(err)
+
+		fmt.Println(err)
+		//panic(err)
 	}
 	//create uuid and set uid DB table session by userid,
 	_, err = DB.Exec("INSERT INTO session(uuid, user_id) VALUES (?, ?)", uuid, s.UserID)
 	if err != nil {
-		panic(err)
+		//panic(err)
 		fmt.Println("user uje v systeme ept")
 	}
 	// get user in info by session Id
@@ -344,15 +352,32 @@ func Signin(r *http.Request, email, password string) {
 		Name:     "_cookie",
 		Value:    s.UUID,
 		Path:     "/",
-		MaxAge:   84000,
+		MaxAge:   120,
 		HttpOnly: false,
 	}
 	fmt.Println(cookie.Value, "cook value from uuid send client")
 
 	if cookie.MaxAge == 0 {
 		_, err = DB.Exec("DELETE FROM session WHERE id = ?", s.ID)
+
+		// cookieDelete := http.Cookie{
+		// 	Name:     "_cookie",
+		// 	Value:    "",
+		// 	Path:     "/",
+		// 	MaxAge:   -1,
+		// 	HttpOnly: true,
+		// }
+		// http.SetCookie(w, &cookieDelete)
+		// http.Redirect(w, r, "/", http.StatusFound)
 	}
 	http.SetCookie(w, &cookie)
+	if err != nil {
+
+		w.WriteHeader(http.StatusUnauthorized)
+		API.Msg = "Email or password incorrect lel"
+		routing.DisplayTemplate(w, "signin", &API.Msg)
+		return
+	}
 }
 
 //get profile by id

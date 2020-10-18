@@ -14,19 +14,17 @@ import (
 	"strconv"
 
 	"github.com/devstackq/ForumX/models"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	rows *sql.Rows
 	err  error
 	DB   *sql.DB
 	temp = template.Must(template.ParseFiles("templates/header.html", "templates/category_temp.html", "templates/likedpost.html", "templates/likes.html", "templates/404page.html", "templates/postupdate.html", "templates/postuser.html", "templates/commentuser.html", "templates/userupdate.html", "templates/search.html", "templates/user.html", "templates/commentuser.html", "templates/postuser.html", "templates/profile.html", "templates/signin.html", "templates/user.html", "templates/signup.html", "templates/filter.html", "templates/posts.html", "templates/comment.html", "templates/create.html", "templates/footer.html", "templates/index.html"))
 )
 
 //cahce html file
-func displayTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
+func DisplayTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	err := temp.ExecuteTemplate(w, tmpl, data)
 	if err != nil {
 		http.Error(w, err.Error(),
@@ -40,7 +38,7 @@ func displayTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" && r.URL.Path != "/science" && r.URL.Path != "/love" && r.URL.Path != "/sapid" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
@@ -56,14 +54,14 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	displayTemplate(w, "header", auth)
+	DisplayTemplate(w, "header", auth)
 
 	// endpoint -> get post by category
 	// profile/ fix, create, get post fix
 	if endpoint == "/" {
-		displayTemplate(w, "index", posts)
+		DisplayTemplate(w, "index", posts)
 	} else {
-		displayTemplate(w, "catTemp", posts)
+		DisplayTemplate(w, "catTemp", posts)
 	}
 }
 
@@ -71,7 +69,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 func GetPostById(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/post" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 	//check cookie for  navbar, if not cookie - signin
@@ -87,16 +85,16 @@ func GetPostById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	displayTemplate(w, "header", auth)
-	displayTemplate(w, "posts", post)
-	displayTemplate(w, "comment", comments)
+	DisplayTemplate(w, "header", auth)
+	DisplayTemplate(w, "posts", post)
+	DisplayTemplate(w, "comment", comments)
 }
 
 //create post
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/create/post" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
@@ -113,8 +111,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		displayTemplate(w, "header", auth)
-		displayTemplate(w, "create", &msg)
+		DisplayTemplate(w, "header", auth)
+		DisplayTemplate(w, "create", &msg)
 	case "POST":
 		access := CheckCookies(w, r)
 		if !access {
@@ -180,8 +178,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			fmt.Print("file more 20mb")
 			//messga clinet send
 			msg.Msg = "Large file, more than 20mb"
-			displayTemplate(w, "header", auth)
-			displayTemplate(w, "create", &msg)
+			DisplayTemplate(w, "header", auth)
+			DisplayTemplate(w, "create", &msg)
 			return
 		}
 
@@ -244,8 +242,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusCreated)
 		} else {
 			msg.Msg = "Empty title or content"
-			displayTemplate(w, "header", auth)
-			displayTemplate(w, "create", &msg)
+			DisplayTemplate(w, "header", auth)
+			DisplayTemplate(w, "create", &msg)
 		}
 	}
 }
@@ -258,7 +256,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		pid, _ = strconv.Atoi(r.URL.Query().Get("id"))
 		p := models.Posts{}
 		p.PostIDEdit = pid
-		displayTemplate(w, "updatepost", p)
+		DisplayTemplate(w, "updatepost", p)
 
 	}
 	if r.Method == "POST" {
@@ -330,7 +328,7 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 func CreateComment(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/comment" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
@@ -379,7 +377,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 func GetProfileById(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/profile" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
@@ -398,11 +396,11 @@ func GetProfileById(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		displayTemplate(w, "header", auth)
-		displayTemplate(w, "profile", user)
-		displayTemplate(w, "likedpost", likedpost)
-		displayTemplate(w, "postuser", posts)
-		displayTemplate(w, "commentuser", comments)
+		DisplayTemplate(w, "header", auth)
+		DisplayTemplate(w, "profile", user)
+		DisplayTemplate(w, "likedpost", likedpost)
+		DisplayTemplate(w, "postuser", posts)
+		DisplayTemplate(w, "commentuser", comments)
 	}
 }
 
@@ -424,9 +422,9 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		displayTemplate(w, "header", auth)
-		displayTemplate(w, "user", user)
-		displayTemplate(w, "postuser", posts)
+		DisplayTemplate(w, "header", auth)
+		DisplayTemplate(w, "user", user)
+		DisplayTemplate(w, "postuser", posts)
 	}
 }
 
@@ -443,8 +441,8 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "GET" {
-		displayTemplate(w, "header", auth)
-		displayTemplate(w, "updateuser", "")
+		DisplayTemplate(w, "header", auth)
+		DisplayTemplate(w, "updateuser", "")
 	}
 
 	if r.Method == "POST" {
@@ -501,12 +499,12 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 func Search(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/search" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
 	if r.Method == "GET" {
-		displayTemplate(w, "search", http.StatusFound)
+		DisplayTemplate(w, "search", http.StatusFound)
 	}
 
 	if r.Method == "POST" {
@@ -525,8 +523,8 @@ func Search(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		displayTemplate(w, "header", auth)
-		displayTemplate(w, "index", findPosts)
+		DisplayTemplate(w, "header", auth)
+		DisplayTemplate(w, "index", findPosts)
 	}
 }
 
@@ -534,13 +532,13 @@ func Search(w http.ResponseWriter, r *http.Request) {
 func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/signup" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 	msg := models.API
 
 	if r.Method == "GET" {
-		displayTemplate(w, "signup", &msg)
+		DisplayTemplate(w, "signup", &msg)
 	}
 
 	if r.Method == "POST" {
@@ -594,7 +592,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		for _, v := range all {
 			if v.Email == e {
 				msg.Msg = "Not unique email lel"
-				displayTemplate(w, "signup", &msg)
+				DisplayTemplate(w, "signup", &msg)
 				return
 			}
 		}
@@ -614,7 +612,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 func Signin(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/signin" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 	r.Header.Add("Accept", "text/html")
@@ -623,7 +621,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	msg.Msg = ""
 
 	if r.Method == "GET" {
-		displayTemplate(w, "signin", &msg)
+		DisplayTemplate(w, "signin", &msg)
 	}
 
 	if r.Method == "POST" {
@@ -638,13 +636,11 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 
 		if person.Type == "default" {
 			fmt.Println(" default auth")
-			// email := r.FormValue("email")123 d
-			// pwd := r.FormValue("password")
 
 			email := person.Email
 			pwd := person.Password
 
-			models.Signin(r, email, pwd)
+			models.Signin(w, r, email, pwd)
 
 			//http.Redirect(w, r, "/profile", 200)
 			//citiesArtist := FindCityArtist(w, r, strings.ToLower(string(body)))
@@ -675,7 +671,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 func Logout(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/logout" {
-		displayTemplate(w, "404page", http.StatusNotFound)
+		DisplayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
 
