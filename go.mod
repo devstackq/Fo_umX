@@ -1,6 +1,6 @@
 module github.com/devstackq/ForumX
 
-go 1.15
+go 1.23
 
 require (
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible

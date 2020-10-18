@@ -1,60 +1,60 @@
 {{define "posts"}}
 
 <div class="post-wrapper">
-	<h2> {{.Title}}</h2>
-	<div class="post-img-wrapper">
-		{{if .SVG}}
-		<img alt=" " width="500px" src="data:image/svg+xml;base64, {{.ImageHtml}} ">
-		{{else}}
-		<img class="post-img" src="data:image/jpeg;base64, {{.ImageHtml}}" alt=" ">
-		{{end}}
-	</div>
+    <h2> {{.Title}}</h2>
+    <div class="post-img-wrapper">
+        {{if .SVG}}
+        <img alt=" " width="500px" src="data:image/svg+xml;base64, {{.ImageHtml}} "> {{else}}
+        <img class="post-img" src="data:image/jpeg;base64, {{.ImageHtml}}" alt=" "> {{end}}
+    </div>
 
-	<p> {{.Content}} </p>
+    <p> {{.Content}} </p>
 
-	<span id="time" class="time-post"> </span>
-	<span class="category-post"> Category : {{.CategoryName}}</span>
-	<br />
-	<div class="author-wrapper">
-		<label for=""> Author post</label>
-		<form action="/user/id/?{{.CreatorID}}" method="post" class="author-post">
-			<input type="hidden" name="uid" value="{{.CreatorID}}">
-			<input type="submit" value="{{.FullName}}">
-		</form>
-	</div>
-	<br />
-	<div class="lukas">
-		<span class="like"> {{.CountLike}}</span>
-		<span class="like"> {{.CountDislike}}</span>
-	</div>
+    <span id="time" class="time-post"> </span>
+    <span class="category-post"> Category : {{.CategoryName}}</span>
+    <br />
+    <div class="author-wrapper">
+        <label for=""> Author post</label>
+        <form action="/user/id/?{{.CreatorID}}" method="post" class="author-post">
+            <input type="hidden" name="uid" value="{{.CreatorID}}">
+            <input type="submit" value="{{.FullName}}">
+        </form>
+    </div>
+    <br />
+    <div class="lukas">
+        <span class="like"> {{.CountLike}}</span>
+        <span class="like"> {{.CountDislike}}</span>
+    </div>
 
-	<div class="like-wrapper">
-		<form class="like-wrap" action="/votes?id={{.ID}}" method="POST">
-			<input type="hidden" name="lukas" value="1">
-			<input class="" type="submit" value="&hearts;">
-		</form>
-		<br>
-		<form class="dislike-wrap" action="/votes?id={{.ID}}" method="POST">
-			<input type="hidden" name="diskus" value="1">
-			<input class="" type="submit" value="-">
-		</form>
-	</div>
+    <div class="like-wrapper">
+        <form class="like-wrap" action="/votes?id={{.ID}}" method="POST">
+            <input type="hidden" name="lukas" value="1">
+            <input class="" type="submit" value="&hearts;">
+        </form>
+        <br>
+        <form class="dislike-wrap" action="/votes?id={{.ID}}" method="POST">
+            <input type="hidden" name="diskus" value="1">
+            <input class="" type="submit" value="-">
+        </form>
+    </div>
 </div>
 <div class="comment-wrapper">
-	<form action="/comment" method="POST">
-		<textarea name="comment-text" id="" cols="130" rows="5" required></textarea>
-		<br />
-		<input type="hidden" name="curr" value="{{.ID}}">
-		<input type="submit" value="add">
-	</form>
+    <form action="/comment" method="POST">
+        <textarea name="comment-text" id="" cols="130" rows="5" required></textarea>
+        <br />
+        <input type="hidden" name="curr" value="{{.ID}}">
+        <input type="submit" value="add">
+    </form>
 </div>
 
 <script>
-	const formatTime = () => {
-		let d = {{.CreationTime }}	
-	document.getElementById('time').innerText = d.slice(0, 10) + " " + d.slice(11, 16)
-	}
-	formatTime()
+    const formatTime = () => {
+        let d = {
+            {.CreationTime
+            }
+        }
+        document.getElementById('time').innerText = d.slice(0, 10) + " " + d.slice(11, 16)
+    }
+    formatTime()
 </script>
-{{end}}
-{{template "footer" }}
+{{end}} {{template "footer" }}

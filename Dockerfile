@@ -1,4 +1,4 @@
-FROM golang:1.15 AS builder
+FROM golang:1.23 AS builder
 
 # enable Go modules support
 ENV GO111MODULE=on
@@ -14,6 +14,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
 
 FROM scratch
 COPY --from=builder /app/ForumX /app/
-EXPOSE 8181
+EXPOSE 6969
 ENTRYPOINT ["/app/ForumX"]
 # Copy src code from the host and compile it

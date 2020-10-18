@@ -80,6 +80,7 @@
                     body: JSON.stringify(user),
                 });
                 //check status
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch USER');
                 } else {

@@ -34,9 +34,9 @@ ifndef HAS_DEP
 endif
 
 .PHONY: prepare_metalinter
-prepare_metalinter:
-ifndef HAS_METALINTER
-	go get -u -v -d github.com/alecthomas/gometalinter && \
-	go install -v github.com/alecthomas/gometalinter && \
-	gometalinter --install --update
-endif
+# prepare_metalinter:
+# ifndef HAS_METALINTER
+# 	go get -u -v -d github.com/alecthomas/gometalinter && \
+# 	go install -v github.com/alecthomas/gometalinter && \
+# 	gometalinter --install --update
+# endif

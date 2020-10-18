@@ -23,7 +23,6 @@ func main() {
 	// http.HandleFunc("/school", routing.GetAllPosts)
 	// http.HandleFunc("/people", routing.GetAllPosts)
 	// http.HandleFunc("/events", routing.GetAllPosts)
-	// http.HandleFunc("/qa", routing.GetAllPosts)
 
 	http.HandleFunc("/sapid", routing.GetAllPosts)
 	http.HandleFunc("/love", routing.GetAllPosts)
@@ -86,10 +85,11 @@ func CreateDB() {
 
 // refactor Architect -> category table, bridge table, posts table -> for update, delete post -> change category
 //todo:
+//google acc signin -> -> back signin ? what??
 //photo not required
 //refactor function 1 func
 //код вынести в отдельные файлы
-//like dislike reafctor -> normal system
+//like dislike reafctor -> normal system -> || logic client side ?
 //design refactor
 //обработать ошикбки, log
 // pagination for posts
