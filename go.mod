@@ -1,9 +1,9 @@
-module github.com/devstackq/Forum-X
+module github.com/devstackq/ForumX
 
-go 1.14
+go 1.15
 
 require (
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/satori/go.uuid v1.2.0
-	golang.org/x/crypto v0.0.0-20200414173820-0848c9571904
+	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
 )

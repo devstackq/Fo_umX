@@ -3,15 +3,17 @@ package routing
 import (
 	"bytes"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
+	"os"
 
 	"net/http"
 	"strconv"
 
-	"github.com/devstackq/Forum-X/models"
-	uuid "github.com/satori/go.uuid"
+	"github.com/devstackq/ForumX/models"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,7 +22,7 @@ var (
 	rows *sql.Rows
 	err  error
 	DB   *sql.DB
-	temp = template.Must(template.ParseFiles("templates/header.html", "templates/likedpost.html", "templates/likes.html", "templates/404page.html", "templates/postupdate.html", "templates/postuser.html", "templates/commentuser.html", "templates/userupdate.html", "templates/search.html", "templates/user.html", "templates/commentuser.html", "templates/postuser.html", "templates/profile.html", "templates/signin.html", "templates/user.html", "templates/signup.html", "templates/filter.html", "templates/posts.html", "templates/comment.html", "templates/create.html", "templates/footer.html", "templates/index.html"))
+	temp = template.Must(template.ParseFiles("templates/header.html", "templates/category_temp.html", "templates/likedpost.html", "templates/likes.html", "templates/404page.html", "templates/postupdate.html", "templates/postuser.html", "templates/commentuser.html", "templates/userupdate.html", "templates/search.html", "templates/user.html", "templates/commentuser.html", "templates/postuser.html", "templates/profile.html", "templates/signin.html", "templates/user.html", "templates/signup.html", "templates/filter.html", "templates/posts.html", "templates/comment.html", "templates/create.html", "templates/footer.html", "templates/index.html"))
 )
 
 //cahce html file
@@ -37,7 +39,7 @@ func displayTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 //receive request, from client, query params, category ID, then query DB, depends catID, get Post this catID
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/" && r.URL.Path != "/school" && r.URL.Path != "/people" && r.URL.Path != "/events" && r.URL.Path != "/qa" && r.URL.Path != "/sapid" {
+	if r.URL.Path != "/" && r.URL.Path != "/science" && r.URL.Path != "/love" && r.URL.Path != "/sapid" {
 		displayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
@@ -49,66 +51,20 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-
-	var post models.Posts
-	r.ParseForm()
-	like := r.FormValue("likes")
-	date := r.FormValue("date")
-	category, _ := strconv.Atoi(r.FormValue("cats"))
-
-	switch r.URL.Path {
-	//check what come client, cats, and filter by like, date and cats
-	case "/":
-		post.EndpointPost = "/"
-		if date == "asc" {
-			rows, err = DB.Query("SELECT  * FROM posts WHERE category_id =?  ORDER BY  created_time ASC limit 8", category)
-		} else if date == "desc" {
-			rows, err = DB.Query("SELECT  * FROM posts WHERE category_id  =?  ORDER BY  created_time  DESC limit 8", category)
-		} else if like == "big" {
-			rows, err = DB.Query("SELECT  * FROM posts  WHERE   category_id  =? ORDER BY  count_like DESC limit 8", category)
-		} else if like == "letter" {
-			rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id  =?  ORDER BY  count_dislike DESC limit 8", category)
-		} else if category > 0 {
-			rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id  =?   ORDER BY  created_time  DESC limit 8", category)
-		} else {
-			rows, err = DB.Query("SELECT  * FROM posts  ORDER BY  created_time  DESC limit 8")
-		}
-
-	case "/school":
-		post.EndpointPost = "/school"
-		rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id =?   ORDER  BY created_time  DESC   LIMIT 4", 1)
-	case "/people":
-		post.EndpointPost = "/people"
-		rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id =?   ORDER  BY created_time  DESC LIMIT 4", 2)
-	case "/events":
-		post.EndpointPost = "/events"
-		rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id =?   ORDER  BY created_time  DESC LIMIT 4", 3)
-	case "/qa":
-		post.EndpointPost = "/qa"
-		rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id =?   ORDER  BY created_time  DESC LIMIT 4", 4)
-	case "/sapid":
-		post.EndpointPost = "/sapid"
-		rows, err = DB.Query("SELECT  * FROM posts  WHERE category_id =?   ORDER  BY created_time  DESC LIMIT 4", 5)
-	}
-
-	defer rows.Close()
+	posts, endpoint, err := models.GetAllPost(r)
 	if err != nil {
-		panic(err)
-	}
-
-	var PostsAll []models.Posts
-
-	for rows.Next() {
-		postik := models.Posts{}
-		if err := rows.Scan(&postik.ID, &postik.Title, &postik.Content, &postik.CreatorID, &postik.CategoryID, &postik.CreationTime, &postik.Image, &postik.CountLike, &postik.CountDislike); err != nil {
-			panic(err)
-		}
-		DB.QueryRow("SELECT title FROM categories WHERE id=?", postik.CategoryID).Scan(&postik.CategoryName)
-		PostsAll = append(PostsAll, postik)
+		log.Fatal(err)
 	}
 
 	displayTemplate(w, "header", auth)
-	displayTemplate(w, "index", PostsAll)
+
+	// endpoint -> get post by category
+	// profile/ fix, create, get post fix
+	if endpoint == "/" {
+		displayTemplate(w, "index", posts)
+	} else {
+		displayTemplate(w, "catTemp", posts)
+	}
 }
 
 //view 1 post by id
@@ -130,7 +86,6 @@ func GetPostById(w http.ResponseWriter, r *http.Request) {
 	comments, post, err := models.GetPostById(r)
 	if err != nil {
 		panic(err)
-		return
 	}
 	displayTemplate(w, "header", auth)
 	displayTemplate(w, "posts", post)
@@ -173,9 +128,35 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseMultipartForm(10 << 20)
 		file, _, err := r.FormFile("uploadfile")
-		if err != nil {
-			panic(err)
 
+		// fImg, err := os.Open("./1553259670.jpg")
+
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	os.Exit(1)
+		// }
+		// defer fImg.Close()
+
+		// imgInfo, err := fImg.Stat()
+		// if err != nil {
+		// 	fmt.Println(err, "stats")
+		// 	os.Exit(1)
+		// }
+
+		// var size int64 = imgInfo.Size()
+		// fmt.Println(size, "size")
+		// byteArr := make([]byte, size)
+
+		// read file into bytes
+		// buffer := bufio.NewReader(fImg)
+		// _, err = buffer.Read(byteArr)
+		//defer fImg.Close()
+		var fileBytes []byte
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+			//file = fImg
+			//fileBytes = byteArr
 		}
 
 		var buff bytes.Buffer
@@ -183,13 +164,17 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		// fmt.Println(fileSize)
-		var max int64
-		max = 20000000
+		// var max int64
+		// max = 20000000
 
-		var fileBytes []byte
-
-		if fileSize < max {
-			file2, _, _ := r.FormFile("uploadfile")
+		if fileSize < 20000000 {
+			file2, _, err := r.FormFile("uploadfile")
+			if err != nil {
+				log.Fatal(err)
+				//file2 = fImg
+				//fileBytes = byteArr
+			}
+			defer file2.Close()
 			fileBytes, _ = ioutil.ReadAll(file2)
 		} else {
 			fmt.Print("file more 20mb")
@@ -199,48 +184,60 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			displayTemplate(w, "create", &msg)
 			return
 		}
-		// fmt.Println(fileBytes)
-
-		if err != nil {
-			panic(err)
-		}
 
 		DB.QueryRow("SELECT user_id FROM session WHERE uuid = ?", s.UUID).Scan(&s.UserID)
-
-		category, _ := strconv.Atoi(r.FormValue("cats"))
 
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 		//check empty values
-		norm := false
-		nutaksebe := false
+		checkInputTitle := false
+		checkInputContent := false
 
 		for _, v := range title {
 			if v >= 97 && v <= 122 || v >= 65 && v <= 90 && v >= 32 && v <= 64 || v > 128 {
-				norm = true
+				checkInputTitle = true
 			}
 		}
 		for _, v := range content {
 			if v >= 97 && v <= 122 || v >= 65 && v <= 90 && v >= 32 && v <= 64 || v > 128 {
-				nutaksebe = true
+				checkInputContent = true
 			}
 		}
 
-		if norm && nutaksebe {
+		if checkInputTitle && checkInputContent {
 
 			p := models.Posts{
-				Title:      title,
-				Content:    content,
-				CreatorID:  s.UserID,
-				CategoryID: category,
-				Image:      fileBytes,
+				Title:     title,
+				Content:   content,
+				CreatorID: s.UserID,
+				Image:     fileBytes,
 			}
 
-			err = p.CreatePost()
-
+			lastPost, err := p.CreatePost()
+			//fmt.Println(lastPost)
+			//query last post -> db
 			if err != nil {
-				panic(err.Error())
+				fmt.Println(err)
+				//	panic(err.Error())
+			}
 
+			//insert cat_post_bridge value
+			categories, _ := r.Form["input"]
+			if len(categories) == 1 {
+				pcb := models.PostCategory{
+					PostID:   lastPost,
+					Category: categories[0],
+				}
+				err = pcb.CreateBridge()
+			} else if len(categories) > 1 {
+				//loop
+				for _, v := range categories {
+					pcb := models.PostCategory{
+						PostID:   lastPost,
+						Category: v,
+					}
+					err = pcb.CreateBridge()
+				}
 			}
 
 			http.Redirect(w, r, "/", http.StatusFound)
@@ -287,14 +284,12 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		cat, _ := strconv.Atoi(r.FormValue("cats"))
 		pid := r.FormValue("pid")
 		pidnum, _ := strconv.Atoi(pid)
 
 		p := models.Posts{
 			Title:      r.FormValue("title"),
 			Content:    r.FormValue("content"),
-			CategoryID: cat,
 			Image:      fileBytes,
 			PostIDEdit: pidnum,
 		}
@@ -328,7 +323,6 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
-
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
@@ -356,14 +350,14 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		pid, _ := strconv.Atoi(r.FormValue("curr"))
 		comment := r.FormValue("comment-text")
 
-		norm := false
+		checkLetter := false
 		for _, v := range comment {
 			if v >= 97 && v <= 122 || v >= 65 && v <= 90 && v >= 32 && v <= 64 || v > 128 {
-				norm = true
+				checkLetter = true
 			}
 		}
 
-		if norm {
+		if checkLetter {
 			com := models.Comments{
 				Commentik: comment,
 				PostID:    pid,
@@ -381,7 +375,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//profile current user page
+//profile current -> user page
 func GetProfileById(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/profile" {
@@ -399,7 +393,6 @@ func GetProfileById(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		//if userId now, createdPost uid equal -> show
-
 		likedpost, posts, comments, user, err := models.GetUserProfile(r)
 		if err != nil {
 			panic(err)
@@ -624,67 +617,57 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		displayTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
-
 	r.Header.Add("Accept", "text/html")
 	r.Header.Add("User-Agent", "MSIE/15.0")
 	msg := models.API
 	msg.Msg = ""
+
 	if r.Method == "GET" {
 		displayTemplate(w, "signin", &msg)
 	}
 
 	if r.Method == "POST" {
-		r.ParseForm()
-
-		email := r.FormValue("email")
-		pwd := r.FormValue("password")
-
-		u := DB.QueryRow("SELECT id, password FROM users WHERE email=?", email)
-
-		var user models.Users
-		//check pwd, if not correct, error
-		u.Scan(&user.ID, &user.Password)
-
-		if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pwd)); err != nil {
-			// If the two passwords don't match, return a 401 status
-			w.WriteHeader(http.StatusUnauthorized)
-			msg.Msg = "Email or password incorrect lel"
-			displayTemplate(w, "signin", &msg)
+		var person models.Users
+		//b, _ := ioutil.ReadAll(r.Body)
+		err := json.NewDecoder(r.Body).Decode(&person)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		fmt.Println(person)
 
-		//get user by Id, and write session struct
-		s := models.Session{
-			UserID: user.ID,
+		if person.Type == "default" {
+			fmt.Println(" default auth")
+			// email := r.FormValue("email")123 d
+			// pwd := r.FormValue("password")
+
+			email := person.Email
+			pwd := person.Password
+
+			models.Signin(r, email, pwd)
+
+			//http.Redirect(w, r, "/profile", 200)
+			//citiesArtist := FindCityArtist(w, r, strings.ToLower(string(body)))
+			//w.Header().Set("Content-Type", "application/json")
+			//json.NewEncoder(w).Encode(citiesArtist)
+
+			// json.NewEncoder(w).Encode(msg)
+			// ok := "okay"
+			// b := []byte(ok)
+
+			// msg.Msg = "okay"
+			// w.Header().Set("Content-Type", "application/json")
+			// m, _ := json.Marshal(msg)
+			// w.Write(m)
+		} else if person.Type == "google" {
+			fmt.Println("todo google auth")
+			http.Redirect(w, r, "/profile", http.StatusFound)
+		} else if person.Type == "github" {
+			fmt.Println("todo github")
+			http.Redirect(w, r, "/profile", http.StatusFound)
 		}
-		uuid := uuid.Must(uuid.NewV4(), err).String()
-		if err != nil {
-			panic(err)
-		}
-		//create uuid and set uid DB table session by userid,
-		_, err = DB.Exec("INSERT INTO session(uuid, user_id) VALUES (?, ?)", uuid, s.UserID)
-		if err != nil {
-			panic(err)
-		}
-		// get user in info by session Id
-		DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = ?", s.UserID).Scan(&s.ID, &s.UUID)
-		//set cookie
-		//uuidUSoro@mail.com -> 9128ueq9widjaisdh238yrhdeiuwandijsan
-		//CLient, DB
-		// Crete post -> Cleint cookie == session, Userd
-		cookie := http.Cookie{
-			Name:     "_cookie",
-			Value:    s.UUID,
-			Path:     "/",
-			MaxAge:   84000,
-			HttpOnly: false,
-		}
-		fmt.Println(cookie.MaxAge)
-		if cookie.MaxAge == 0 {
-			_, err = DB.Exec("DELETE FROM session WHERE id = ?", s.ID)
-		}
-		http.SetCookie(w, &cookie)
-		http.Redirect(w, r, "/profile", http.StatusFound)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		//http.Redirect(w, r, "/profile", 200)
 	}
 }
 

@@ -1,17 +1,92 @@
-{{define "signin"}}
+{{define "signin"}} {{template "header"}}
 
-{{template "header"}}
+<div id="signin-wrapper">
 
-
-<div class="signin-wrapper">
     <h3 class="signin-label">Signin Forum-X</h3>
-    <form action="/signin" method="POST">
-        <input type="email" name="email" placeholder="email"> <br />
-        <input type="password" name="password" placeholder="password"> <br />
-        <input type="submit" value="send">
-    </form>
-    <br>
+    <div id="authWrapperId">
+        <input id="email" type="email" name="email" placeholder="email"> <br />
+        <input id="password" type="password" name="password" placeholder="password"> <br />
+        <button onclick="defAuthSendData()"> send </button>
+
+    </div>
+    <div class="btn-default" onclick="defAuthShow()">default</div>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <p>{{.Msg}}</p>
+
+    <a href="#" onclick="signOut();">Sign out</a>
+
 </div>
 
+<script>
+    let user = {
+        name: '',
+        image: null,
+        email: '',
+        password: '',
+        type: ''
+    };
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function() {
+            console.log('User signed out.');
+        });
+    }
+
+    function onSignIn(googleUser) {
+
+        var profile = googleUser.getBasicProfile();
+        user.name = profile.getName(),
+            user.image = profile.getImageUrl(),
+            user.email = profile.getEmail(),
+            user.type = "google"
+        sendGoogleData(user)
+        console.log(user, "user ")
+    }
+
+    function sendGoogleData(user) {
+        fetch('http://localhost:6969/signin', {
+                mode: 'cors',
+                method: 'post',
+                body: JSON.stringify(user),
+            })
+            .then((response) => {
+                response.json()
+            })
+            .then((data) => {
+                console.log(data)
+            });
+    }
+
+    function defAuthShow() {
+        let el = document.getElementById("authWrapperId");
+        el.style.display = "block"
+    }
+
+    function defAuthSendData() {
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        user.email = email,
+            user.password = password,
+            user.type = "default"
+
+        if (user.email != '' && user.password != '') {
+            //async fetch query
+            (async() => {
+                let response = await fetch('http://localhost:6969/signin', {
+                    method: 'post',
+                    body: JSON.stringify(user),
+                });
+                //check status
+                if (!response.ok) {
+                    throw new Error('Failed to fetch USER');
+                } else {
+                    window.location.replace("http://localhost:6969/profile")
+                }
+            })();
+        }
+    }
+</script>
 {{end}}

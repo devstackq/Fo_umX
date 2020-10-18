@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum-X</title>
     <link rel="stylesheet" type="text/css" href="../statics/css/app.css">
+    
+    <meta name= "google-signin-client_id" content="272819090705-qu6arlmkvs66hc5fuvalv6liuf2n9fj8.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
 <body>
@@ -15,11 +18,16 @@
             <div class="nav">
 
                 <a class="nav-link" href="/">All</a>
-                <a class="nav-link" href="/school">School</a>
+
+                <!-- <a class="nav-link" href="/school">School</a>
                 <a class="nav-link" href="/people">People</a>
                 <a class="nav-link" href="/events">Events</a>
-                <a class="nav-link" href="/qa">Q&A</a>
+                <a class="nav-link" href="/qa">Q&A</a> -->
+                
+                <a class="nav-link" href="/science">Science</a>
+                <a class="nav-link" href="/love">Love</a>
                 <a class="nav-link" href="/sapid">Sapid</a>
+
 
                 {{if .Authenticated}}
                 <a class="nav-link" href="/profile">Profile</a>
