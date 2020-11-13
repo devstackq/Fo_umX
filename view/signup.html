@@ -1,0 +1,42 @@
+{{define "signup"}} {{template "header"}}
+<div class="signup-wrapper">
+<div class="signup-container">
+    <h3>Signup Forum-X</h3>
+    <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <input type="text" name="fullname" placeholder="Full Name"> <br />
+        <input id="email" type="email" name="email" placeholder="Email"><br />
+        <input type="number" name="age" placeholder="Age" min="16" max="80"> <br />
+
+        <select name="sex" id="">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <select name="city" id="">
+            <option value="Almaty">Almaty</option>
+            <option value="Astana">Astana</option>
+            <option value="Karaganda">Karaganda</option>
+            <option value="Shymkent">Shymkent</option>
+            <option value="Aktau">Aktau</option>
+            <option value="Atyrau">Atyrau</option>
+            <option value="Taraz">Taraz</option>
+            <option value="Kokshetau">Kokshetau</option>
+            <option value="Semey">Semey</option>
+            <option value="Uralsk">Uralsk</option>
+            <option value="Pavlodar">Pavlodar</option>
+            <option value="Petropavlsk">Petropavlsk</option>
+            <option value="Kyzyldorda">Kyzyldorda</option>
+            <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
+        </select>
+
+        <input type="password" name="password" placeholder="Password">
+
+        <input type="file" name="uploadfile" accept="image/*" />
+        <input type="submit" value="Register">
+
+    </form>
+     {{.}}
+    <span>If you are logged in, then log in to me <a style="color: gold;" href="/signin" >Signin</a> </span>
+</div>
+</div>
+{{end}}

@@ -1,0 +1,16 @@
+{{define "404page"}} {{template "header"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error page</title>
+    <style>
+        .error h2 {
+            color: red;
+        }
+    </style>
+</head>
+    <h2 class="error">Erroka epta {{.}} </h2>
+{{end}}

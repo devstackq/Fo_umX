@@ -1,0 +1,15 @@
+{{define "comment_user"}}
+
+<div class="profile-comment-create">
+    <h3>My comments</h3>
+        {{range .}}
+       <div class="user-post-card"> 
+        <h3> {{.TitlePost}}</h3>
+        <h5>{{.CreatedTime}}</h5>
+        <p>{{.Content}}</p>
+        <a href="/post?id={{.PostID}}">see comment</a> {{end}}
+</div>
+{{end}} 
+    </div>
+
+{{template "footer"}}

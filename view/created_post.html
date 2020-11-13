@@ -1,0 +1,16 @@
+{{define "created_post"}}
+
+<div class="profile-post-create">
+    <h3>My created posts</h3>
+    {{range .}}
+    <div class="user-post-card"> 
+    {{.Time}}
+    <h4>{{.Title}}</h4>
+     {{if eq .CreatorID .AuthorForPost }}
+    <a href="/post?id={{.ID}}">see post</a>
+    <a href="/edit/post?id={{.ID}}"> edit post</a>
+ <a href="/delete/post?id={{.ID}}"> delete post</a>
+ </div> 
+    {{end}} {{end}}
+</div>
+{{end}}

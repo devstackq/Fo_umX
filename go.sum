@@ -1,5 +1,7 @@
 github.com/devstackq/ForumX v0.0.0-20201018094854-4d4122129218 h1:enLizif5/8JbNZNtdK8/pioYk40wcMoLOLDuNj98lIQ=
 github.com/devstackq/ForumX v0.0.0-20201018094854-4d4122129218/go.mod h1:HlVxsGI744zwP9Zqk6ETW9cwv6L3wAj2VALSoT6U8h4=
+github.com/devstackq/ForumX v0.0.0-20201018111657-58affb47e2d2 h1:5adw9+/karZ2dcorunaWG7og7JjDQ3+sA+xDUYyuizU=
+github.com/devstackq/ForumX v0.0.0-20201018111657-58affb47e2d2/go.mod h1:HlVxsGI744zwP9Zqk6ETW9cwv6L3wAj2VALSoT6U8h4=
 github.com/mattn/go-sqlite3 v2.0.3+incompatible h1:gXHsfypPkaMZrKbD5209QV9jbUTJKjyR5WD3HYQSd+U=
 github.com/mattn/go-sqlite3 v2.0.3+incompatible/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
 github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=

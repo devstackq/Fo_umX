@@ -1,0 +1,46 @@
+{{define "comment_post"}} 
+
+{{$id :=0}} 
+
+{{range .}} 
+{{$id = .PostID}}
+<div class = "comment-wrapperz"> 
+<div class="comment-underpost">
+
+<div class="comment-wrapper-1"> 
+
+    <form action="/user/id/?{{.UserID}}" method="post" autocomplete="off">
+        <input type="hidden" name="uid" value="{{.UserID}}">
+        <input type="submit" value="{{.Author}}">
+    </form>
+       <span class="time-comment"> {{.CreatedTime}} </span>
+    </div>
+    
+    <p class="comment-wrapper-p"> {{.Content}}</p>
+
+    <div class="like-comment-wrapper comment-btn-like">
+
+        <form class="like-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
+          <span class = "fa fa-thumbs-up vote-up" > </span> 
+            <input type="hidden" name="commentLike" value="1">
+            <input  type="hidden" name="pidc" value="{{.PostID}}">
+         <input type="submit" value="     " /> 
+        </form>
+
+     <span class="" style="color:red; font-size: 15px; padding-left:5px;">
+        {{.Like}}
+    </span>
+        <form class="dislike-comment-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
+        <span class = "fa fa-thumbs-down vote-down" > </span> 
+            <input type="hidden" name="commentDislike" value="1">
+            <input class="" type="submit" value="     ">
+            <input type="hidden" name="pidc" value="{{.PostID}}">
+        </form>
+    <span class="" style="color:black; font-size: 15px;">
+        {{.Dislike}}
+    </span>
+    </div>
+</div>
+</div>
+{{end}}
+ {{end}}

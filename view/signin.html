@@ -1,0 +1,112 @@
+{{define "signin"}} {{template "header"}}
+
+<div class="signin-wrapper" id="signin-wrapper">
+<div class="signin-container"> 
+    <h3 class="signin-label">Login system</h3>
+    <div id="authWrapperId">
+        <input id="email" type="email" name="email" placeholder="email"> 
+        <input id="password" type="password" name="password" placeholder="password"> 
+        <button onclick="defAuthSendData()"> Login </button>
+    </div>
+<span> OR </span>
+
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut();">Sign out google</a>
+
+<span> OR </span>
+
+<div class="github-signin" > Signin Github</div>
+    <p id="notify"></p>
+
+</div>
+
+</div>
+
+{{template "footer"}}
+<script>
+
+    let user = {
+        name: '',
+        image: null,
+        email: '',
+        password: '',
+        type: ''
+    };
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function() {
+            console.log('User signed out.');
+        });
+    }
+
+    function onSignIn(googleUser) {
+
+        var profile = googleUser.getBasicProfile();
+        user.name = profile.getName(),
+            user.image = profile.getImageUrl(),
+            user.email = profile.getEmail(),
+            user.type = "google"
+        sendGoogleData(user)
+        console.log(user, "user ")
+    }
+
+    function sendGoogleData(user) {
+        fetch('http://localhost:6969/signin', {
+                mode: 'cors',
+                method: 'post',
+                body: JSON.stringify(user),
+            })
+            .then((response) => {
+                response.json()
+            })
+            .then((data) => {
+                console.log(data)
+            });
+    }
+
+    function defAuthShow() {
+        let el = document.getElementById("authWrapperId");
+        el.style.display = "block"
+    }
+    const showNotify = (msg) => {
+        if (msg != "success") {
+            let ns = document.getElementById('notify')
+            ns.innerText = msg
+        } else {
+        welcomeSound()
+        //sound & confetti
+            window.location.replace("http://localhost:6969/profile")
+        }
+    }
+
+    const welcomeSound = () => {
+var audio = new Audio('rihanna.mp3');
+audio.play();
+}
+
+    function defAuthSendData() {
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        user.email = email,
+            user.password = password,
+            user.type = "default"
+
+        if (user.email != '' && user.password != '') {
+            //async fetch query
+            async function getUserAsync() {
+                let response = await fetch('http://localhost:6969/signin', {
+                    method: 'post',
+                    body: JSON.stringify(user),
+                });
+                let data = await response.json()
+                return data;
+            }
+            getUserAsync()
+                .then(data => showNotify(data));
+        }
+    }
+</script>
+{{end}}

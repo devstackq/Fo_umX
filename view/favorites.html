@@ -1,0 +1,14 @@
+{{define "favorited_post"}}
+
+<div class="profile-post-like">
+    <h3>Liked posts</h3>
+    {{range .}} 
+         <div class="user-post-card"> 
+    {{.Time}}
+    <h4>{{.Title}}</h4>
+
+    <a href="/post?id={{.ID}}">see post</a>
+     {{end}}
+</div>
+</div>
+{{end}}
