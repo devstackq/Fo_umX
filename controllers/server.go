@@ -1,54 +1,91 @@
 package controllers
 
 import (
+	"ForumX/utils"
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
-// type Server struct {
-// 	config *config.Config
-// }
+// high order function func(func)(callback)
+//case 1: signin -> set session, & cookie Browser, -> redirect Middleware(Profile)
+//each handler - isCookie() - check Browser cookie value - and Db, if ok -> save session - global variable
+func IsValidCookie(f http.HandlerFunc) http.HandlerFunc {
 
-// func New(conf *config.Config) *Server {
-// 	return &Server{
-// 		config: conf,
-// 	}
-// }
+	return func(w http.ResponseWriter, r *http.Request) {
+		//check expires cookie
+		c, err := r.Cookie("_cookie")
+		if err != nil {
+			log.Println(err, "expires timeout || cookie deleted")
+			utils.Logout(w, r, *session)
+			return
+		}
+		//cookie Browser -> send IsCookie(check if this user ->)
+		// then call handler -> middleware
+		if isValidCookie, sessionF := utils.IsCookie(w, r, c.Value); isValidCookie {
+			err = DB.QueryRow("SELECT cookie_time FROM session WHERE user_id = ?", sessionF.UserID).Scan(&sessionF.Time)		
+			if err != nil {
+				log.Println(err)
+			}			
+			strToTime, _ := time.Parse(time.RFC3339, sessionF.Time)
+			diff := time.Now().Sub(strToTime)
+			
+			if int(diff.Minutes()) > 290 && int(diff.Seconds()) < 298   {
+				uuid := utils.CreateUuid()
+				utils.SetCookie(w, uuid)
+				utils.ReSession(sessionF.UserID, session, "timeout", uuid)
+				fmt.Println("change cookie Browser and update sessiontime and uuid in Db")
+			}
+			*session = sessionF
+			f(w, r)
+		}
+	}
+}
 
-// func (s *Server) Run() error {
-// 	return nil
-// }
-
-//handlers
-//mux own server,  route init  - google, config FileServer
-//handlers
+//Init func handlers
 func Init() {
-	http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("./statics/"))))
+	const PORT = ":6969"
+	//create multiplexer
+	mux := http.NewServeMux()
+	//file server
+	mux.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("./statics/"))))
 
-	http.HandleFunc("/", GetAllPosts)
-	http.HandleFunc("/sapid", GetAllPosts)
-	http.HandleFunc("/love", GetAllPosts)
-	http.HandleFunc("/science", GetAllPosts)
+	mux.HandleFunc("/", GetAllPosts)
+	mux.HandleFunc("/sapid", GetAllPosts)
+	mux.HandleFunc("/love", GetAllPosts)
+	mux.HandleFunc("/science", GetAllPosts)
 
-	http.HandleFunc("/post", GetPostByID)
-	http.HandleFunc("/create/post", CreatePost)
-	http.HandleFunc("/edit/post", UpdatePost)
-	http.HandleFunc("/delete/post", DeletePost)
+	mux.HandleFunc("/post", GetPostByID)
+	mux.HandleFunc("/create/post", IsValidCookie(CreatePost))
+	mux.HandleFunc("/edit/post", IsValidCookie(UpdatePost))
+	mux.HandleFunc("/delete/post", IsValidCookie(DeletePost))
 
-	http.HandleFunc("/comment", LeaveComment)
+	mux.HandleFunc("/comment", IsValidCookie(LeaveComment))
+	mux.HandleFunc("/edit/comment", IsValidCookie(UpdateComment))
+	mux.HandleFunc("/delete/comment", IsValidCookie(DeleteComment))
+	mux.HandleFunc("/reply/comment", IsValidCookie(ReplyComment))
 
-	http.HandleFunc("/votes", VotesPost)
-	http.HandleFunc("/votes/comment", VotesComment)
-	http.HandleFunc("/search", Search)
+	mux.HandleFunc("/votes/post", IsValidCookie(VotesPost))
+	mux.HandleFunc("/votes/comment", IsValidCookie(VotesComment))
 
-	http.HandleFunc("/profile", GetUserProfile)
-	http.HandleFunc("/user/id/", GetAnotherProfile)
-	http.HandleFunc("/edit/user", UpdateProfile)
-	http.HandleFunc("/delete/account", DeleteAccount)
+	mux.HandleFunc("/signin", Signin)
+	mux.HandleFunc("/signup", Signup)
+	mux.HandleFunc("/googleSignin", GoogleSignin)
+	mux.HandleFunc("/googleUserInfo", GoogleUserData)
 
-	http.HandleFunc("/signup", Signup)
-	http.HandleFunc("/signin", Signin)
-	http.HandleFunc("/logout", Logout)
+	mux.HandleFunc("/githubSignin", GithubSignin)
+	mux.HandleFunc("/githubUserInfo", GithubUserData)
+	mux.HandleFunc("/logout", IsValidCookie(Logout))
+
+	mux.HandleFunc("/profile", IsValidCookie(GetUserProfile))
+	mux.HandleFunc("/user/id", IsValidCookie(GetAnotherProfile))
+	mux.HandleFunc("/edit/user", IsValidCookie(UpdateProfile))
+	mux.HandleFunc("/delete/account", IsValidCookie(DeleteAccount))
+
+	mux.HandleFunc("/activity", IsValidCookie(GetUserActivities))
+	mux.HandleFunc("/search", Search)
 	// http.HandleFunc("/chat", routing.StartChat)
-	log.Fatal(http.ListenAndServe(":6969", nil))
+	log.Println("Listening port:", PORT)
+	log.Fatal(http.ListenAndServe(PORT, mux))
 }

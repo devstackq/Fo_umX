@@ -1,10 +1,9 @@
 {{define "index"}}
 
 <div class="main">
-    {{template "search"}} {{template "filter_post" }} 
-    
+    {{template "search"}} {{template "filter_post" }}
+    <a id="create_post" class="link-profile create-btn" href="/create/post">add post</a>
     {{ range $key, $value := . }}
-
     <a class="links" href="/post?id={{$value.ID}}">
         <div class="wrapper-main">
             <form method="POST" action="{{ $value.Endpoint}}/{{$value.ID}}">
@@ -14,28 +13,27 @@
             <h3>{{ $value.Title }}</h3>
             <p class="content-main"> {{ $value.Content}} .... </p>
             <span id="time"> {{.Time}}</span>
-               <div class="likes-card"> 
-         <span class = "fa fa-thumbs-up" > {{$value.Like}} </span>
-        <span class = "fa fa-thumbs-down">{{$value.Dislike}} </span>
-    </div>
+            <div class="likes-card">
+                <span>Like {{$value.Like}} </span>
+                <span>Dislike {{$value.Dislike}} </span>
+            </div>
         </div>
     </a>
     {{end}}
 </div>
 
 <div class="container-pagination">
-
-    <form  class="container-pagination-prev" action="/" method="POST">
+    <form class="container-pagination-prev" action="/" method="POST">
         <input type="hidden" name="prev" value="prev">
-        <input class="" type="submit" value="prev">
+        <input type="submit" value="previus">
     </form>
 
     <form class="container-pagination-next" action="/" method="POST">
         <input type="hidden" name="next" value="next">
-        <input class="" type="submit" value="next">
+        <input type="submit" value="next">
     </form>
-
 </div>
+
 {{template "footer" }}
 
 {{end}}

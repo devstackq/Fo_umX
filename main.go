@@ -1,33 +1,41 @@
 package main
 
 import (
-	"github.com/devstackq/ForumX/config"
-	"github.com/devstackq/ForumX/controllers"
+	"ForumX/config"
+	"ForumX/controllers"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 	config.Init()
 	controllers.Init()
+
+	//wsl installed
+
+	//signup page - todo js, like signin
+	//try - comment under - replies comment show
+	//create post -  out main page
+	//design -> another site, copy colors, etc
+	//try errors -> with gorutine
+	//no row set db - fix handle
+	//superflios writeheader
+	// Heroku deploy
+
+	//not require, optional:
+	//not delete rows in table- add field - visible, if Client delete post/comment-> filed visible false
+	//save image -> local folder, no Db
+	//try - create div - content editable
+	//create uniq Func -> queryDb(table, ...fields string, db)
+	//todo another Func add CheckMethod
+	//add valid Input data, and logger -> Middleware
+	//mod Name -> change github/devstackq/...
+	//try - event -> add sound & confetti -Login
+	//config, router refactor
+	// перегрузку методов - exp.go
+	// use constructor
+	// use anonim func
+	// use gorutine
+	// func use with Interface
+	//10 principe write coding
 }
-
-//statrt - Auth
-//try - event -> add sound & confetti -Logiin
-
-//domen check - org, kz ru, etc
-// save photo, like - source DB refactor
-//config, router refactor
-
-//if cookie = 0, notify message  user, logout etc
-//обработать ошикбки, log & http errors check http etc
-
-//google acc signin -> -> back signin ? what??
-//start Auth
-//google token, client id, event signin Google, -> get data User,
-//Name. email, photo, -> then save Db. -> authorized Forum
-// Logout event, logout system, delete cookie, logout Google
-//272819090705-qu6arlmkvs66hc5fuvalv6liuf2n9fj8.apps.googleusercontent.com   || W42c6sfYqhPc4O5wXMobY3av
-
-// 1 request, 910 additional, 0904 - 101202 ->
-// 2 request -7575
-// 3 request 910 additional, 090410 - 101202 ->Otegen batyr etc

@@ -1,0 +1,14 @@
+{{define "update_comment"}}
+
+<div class="wrapp">
+    <h2>Edit post </h2>
+    <form method="POST" action="/edit/comment" class="wrapper-edit" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" name="id" value="{{ .ID }}" />
+        <label for="cars">Content:
+            <textarea name="content" id="content" cols="30" rows="10" value={{.Content}}> {{.Content}}</textarea>
+        </label>
+        <input type="submit" value="Edit" />
+    </form>
+</div>
+
+{{end}}

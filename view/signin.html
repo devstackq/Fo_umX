@@ -1,69 +1,37 @@
 {{define "signin"}} {{template "header"}}
 
 <div class="signin-wrapper" id="signin-wrapper">
-<div class="signin-container"> 
-    <h3 class="signin-label">Login system</h3>
-    <div id="authWrapperId">
-        <input id="email" type="email" name="email" placeholder="email"> 
-        <input id="password" type="password" name="password" placeholder="password"> 
-        <button onclick="defAuthSendData()"> Login </button>
+    <div class="signin-container">
+        <h3 class="signin-label">Login system</h3>
+        <form onsubmit="event.preventDefault()">
+            <div id=" authWrapperId">
+                <input id="name" type="text" name="email" placeholder="email || username" required>
+                <input id="password" type="password" name="password" placeholder="password" required>
+                <input onclick="defAuthSendData()" type="submit" value="Login">
+        </form>
     </div>
-<span> OR </span>
-
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    <a href="#" onclick="signOut();">Sign out google</a>
-
-<span> OR </span>
-
-<div class="github-signin" > Signin Github</div>
-    <p id="notify"></p>
-
+    <hr>
+    <div class="google-signin"> <a href="/googleSignin"> Google Sign in </a> </div>
+    <hr>
+    <div class="github-signin"> <a href="/githubSignin"> Github Sign in </a></div>
 </div>
 
+<span id="notify"> {{ if . }} {{.}} {{end}} </span>
+
+</div>
 </div>
 
 {{template "footer"}}
 <script>
-
     let user = {
         name: '',
         image: null,
         email: '',
+        username: '',
         password: '',
         type: ''
     };
 
-    function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function() {
-            console.log('User signed out.');
-        });
-    }
-
-    function onSignIn(googleUser) {
-
-        var profile = googleUser.getBasicProfile();
-        user.name = profile.getName(),
-            user.image = profile.getImageUrl(),
-            user.email = profile.getEmail(),
-            user.type = "google"
-        sendGoogleData(user)
-        console.log(user, "user ")
-    }
-
-    function sendGoogleData(user) {
-        fetch('http://localhost:6969/signin', {
-                mode: 'cors',
-                method: 'post',
-                body: JSON.stringify(user),
-            })
-            .then((response) => {
-                response.json()
-            })
-            .then((data) => {
-                console.log(data)
-            });
-    }
 
     function defAuthShow() {
         let el = document.getElementById("authWrapperId");
@@ -71,30 +39,40 @@
     }
     const showNotify = (msg) => {
         if (msg != "success") {
+            console.log(msg, "msg")
             let ns = document.getElementById('notify')
             ns.innerText = msg
         } else {
-        welcomeSound()
-        //sound & confetti
+            welcomeSound()
+            //sound & confetti
             window.location.replace("http://localhost:6969/profile")
         }
     }
 
     const welcomeSound = () => {
-var audio = new Audio('rihanna.mp3');
-audio.play();
-}
+        var audio = new Audio('rihanna.mp3');
+        audio.play();
+    }
 
     function defAuthSendData() {
-
-        let email = document.getElementById("email").value;
+        // let email = document.getElementById("email").value;
+        let name = document.getElementById("name").value;
         let password = document.getElementById("password").value;
-
+        let s = name.split("@")
+        let email = ""
+        let username = ""
+        console.log(s, "split user")
+        if (s.length > 1) {
+            email = name
+        } else {
+            username = name
+        }
         user.email = email,
             user.password = password,
+            user.username = username,
             user.type = "default"
 
-        if (user.email != '' && user.password != '') {
+        if (user.email != '' && user.password != '' || user.username && user.password) {
             //async fetch query
             async function getUserAsync() {
                 let response = await fetch('http://localhost:6969/signin', {

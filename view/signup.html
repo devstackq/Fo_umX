@@ -1,42 +1,70 @@
 {{define "signup"}} {{template "header"}}
 <div class="signup-wrapper">
-<div class="signup-container">
-    <h3>Signup Forum-X</h3>
-    <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
-        <input type="text" name="fullname" placeholder="Full Name"> <br />
-        <input id="email" type="email" name="email" placeholder="Email"><br />
-        <input type="number" name="age" placeholder="Age" min="16" max="80"> <br />
+    <div class="signup-container">
+        <h3>Signup Forum-X</h3>
+        <!-- //onsubmit="event.preventDefault();" -->
+        <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="text" name="fullname" placeholder="Full Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input id="email" type="email" name="email" placeholder="Email">
+            <input type="number" name="age" placeholder="Age" min="16" max="80">
+            <input type="hidden" name="authType" value="default">
 
-        <select name="sex" id="">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
+            <select name="sex" id="">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
 
-        <select name="city" id="">
-            <option value="Almaty">Almaty</option>
-            <option value="Astana">Astana</option>
-            <option value="Karaganda">Karaganda</option>
-            <option value="Shymkent">Shymkent</option>
-            <option value="Aktau">Aktau</option>
-            <option value="Atyrau">Atyrau</option>
-            <option value="Taraz">Taraz</option>
-            <option value="Kokshetau">Kokshetau</option>
-            <option value="Semey">Semey</option>
-            <option value="Uralsk">Uralsk</option>
-            <option value="Pavlodar">Pavlodar</option>
-            <option value="Petropavlsk">Petropavlsk</option>
-            <option value="Kyzyldorda">Kyzyldorda</option>
-            <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
-        </select>
+            <select name="city" id="">
+                <option value="Almaty">Almaty</option>
+                <option value="Astana">Astana</option>
+                <option value="Karaganda">Karaganda</option>
+                <option value="Shymkent">Shymkent</option>
+                <option value="Aktau">Aktau</option>
+                <option value="Atyrau">Atyrau</option>
+                <option value="Taraz">Taraz</option>
+                <option value="Kokshetau">Kokshetau</option>
+                <option value="Semey">Semey</option>
+                <option value="Uralsk">Uralsk</option>
+                <option value="Pavlodar">Pavlodar</option>
+                <option value="Petropavlsk">Petropavlsk</option>
+                <option value="Kyzyldorda">Kyzyldorda</option>
+                <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
+            </select>
 
-        <input type="password" name="password" placeholder="Password">
+            <input id="pwd1" type="password" name="password" placeholder="Password">
+            <input id="pwd2" type="password" name="password" placeholder="Repeat password">
 
-        <input type="file" name="uploadfile" accept="image/*" />
-        <input type="submit" value="Register">
+            <input type="file" name="uploadfile" accept="image/*" />
+            <input type="submit" value="Register">
 
-    </form>
-     {{.}}
-    <span>If you are logged in, then log in to me <a style="color: gold;" href="/signin" >Signin</a> </span>
+        </form>
+        <span>If you are logged in, then log in to me <a style="color: gold;" href="/signin">Signin</a> </span>
+        <br />
+        <span id="notify"> {{ if . }} {{.}} {{end}} </span>
+    </div>
+
 </div>
-</div>
+<script>
+    const element = document.querySelector('form');
+    // element.addEventListener('submit', event => {
+    //     event.preventDefault();
+
+    //     let user = {
+    //         name: '',
+    //         image: null,
+    //         email: '',
+    //         username: '',
+    //         password: '',
+    //         type: ''
+    //     };
+    //     let name = document.getElementById("name").value;
+    //     let password = document.getElementById("password").value;
+    //     let password = document.getElementById("password").value;
+
+    //     // actual logic, e.g. validate the form
+    //     console.log('Form submission cancelled.');
+
+    // });
+</script>
 {{end}}

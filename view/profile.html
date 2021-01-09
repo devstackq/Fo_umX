@@ -1,57 +1,63 @@
 {{define "profile"}}
 <div class="profile-wrapper">
-    <div class="profile-info">
-        <h3>Welcome {{.FullName}}</h3>
-
-        {{if .SVG}}
-        <img alt=" " width="220px" src="data:image/svg+xml;base64, {{.ImageHTML}} "> {{else}}
-        <img  width="220px" src="data:image/jpeg;base64, {{.ImageHTML}}" alt=" "> {{end}}
-        <br>
-<div class="user-info">  
-        <label  for="">Name:</label>
-        <td > {{.FullName}}</td> <br>
-        <label for="">Email:</label>
-        <td> {{.Email}}</td> <br>
-        <label for="">Age:</label>
-        <td>{{.Age}} </td> <br>
-        <label for="">Sex:</label>
-        <td> {{.Sex}}</td> <br>
-        <label for=""> On site with:</label>
-        <td> {{.Temp}} </td> <br>
-        <label for="">From:</label>
+  <div class="profile-info">
+    <h3>Welcome {{.FullName}}</h3>
+    {{if .SVG}}
+    <img alt=" " width="220px" src="data:image/svg+xml;base64, {{.ImageHTML}} "> {{else}}
+    <img width="220px" src="data:image/jpeg;base64, {{.ImageHTML}}" alt=" "> {{end}}
+    <br>
+    <div class="user-info">
+      <label for="">Name:
+        <td> {{.FullName}}</td>
+      </label>
+      <label for="">Nickname:
+        <td> {{.Username}}</td>
+      </label>
+      <label for="">Email:
+        <td> {{.Email}}</td>
+      </label>
+      <label for="">Age:
+        <td>{{.Age}} </td>
+      </label>
+      <label for="">Sex:
+        <td> {{.Sex}}</td>
+      </label>
+      <label for=""> On site with:
+        <td> {{.Temp}} </td>
+      </label>
+      <label for="">From:
         <td> {{.City}}</td>
- </div>
+      </label>
+      <label for=""> Last seen:
+        <td> {{.LastSeen}}</td>
+      </label>
     </div>
-<div class="profile-link-container">
+  </div>
+  <div class="profile-link-container">
     <a class="link-profile edit-btn" href="/edit/user?uid={{.ID}}">Edit profile</a>
-    <a class="link-profile delete-btn" onclick="areYouSure({{.ID}} )" >Delete account</a>
-    <a class="link-profile create-btn" href="/create/post" >Create post</a>
-    </div>
+    <a class="link-profile delete-btn" onclick="areYouSure({{.ID}} )">Delete account</a>
+  </div>
+  <br />
+  <!-- <a id="create_post" class="link-profile create-btn" href="/create/post">Create
+    post</a> -->
+  <a class="link-profile activity-btn" href="/activity">Activities </a>
 </div>
-
-
 <script>
-
-const areYouSure =(id)=> {
-
-  if (confirm("Are u sure epta?")) {
-
-           fetch('http://localhost:6969/delete/account', {
-                mode: 'cors',
-                method: 'post',
-                body: id,
-            })
-            .then((response) => {
-            if(response.ok) {
+  const areYouSure = (id) => {
+    if (confirm("Are u sure epta?")) {
+      fetch('http://localhost:6969/delete/account', {
+        mode: 'cors',
+        method: 'post',
+        body: id,
+      })
+        .then((response) => {
+          if (response.ok) {
             window.location.replace("http://localhost:6969/")
-            }
-            })
-
-  } else {
-    console.log( "You pressed Cancel!");
+          }
+        })
+    } else {
+      console.log("You pressed Cancel!");
+    }
   }
-}
-
 </script>
-
- {{end}} 
+{{end}}

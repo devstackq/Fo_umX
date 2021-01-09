@@ -7,28 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum-X</title>
     <link rel="stylesheet" type="text/css" href="../statics/css/app.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <meta name="google-signin-client_id" content="272819090705-qu6arlmkvs66hc5fuvalv6liuf2n9fj8.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="google-signin-client_id"
+        content="272819090705-qu6arlmkvs66hc5fuvalv6liuf2n9fj8.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="/statics//js//app.js"> </script>
 </head>
 
 <body>
     <div class="navbar-wrapper">
-            <div class="nav" id="navId">
-                <a class="nav-link" href="/">All</a>
-                <a class="nav-link" href="/science">Science</a>
-                <a class="nav-link" href="/love">Love</a>
-                <a class="nav-link" href="/sapid">Sapid </a> 
-                {{if .Authenticated}}
-                <a class="nav-link" href="/profile">Profile</a>
-                <a class="nav-link logout-link" href="/logout">Logout</a> 
-                {{else}}
-                <div class="auth-container">
+        <div class="nav" id="navId">
+            <a class="nav-link" href="/">All</a>
+            <a class="nav-link" href="/science">Science</a>
+            <a class="nav-link" href="/love">Love</a>
+            <a class="nav-link" href="/sapid">Sapid </a>
+            {{if .Authenticated}}
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link logout-link" href="/logout">Logout</a>
+            {{else}}
+            <div class="auth-container">
                 <a class="nav-link signup-link" href="/signup">Signup</a>
                 <a class="nav-link signin-link" href="/signin">Signin</a>
             </div>
-            </div>
+        </div>
     </div>
-    </body>
-    {{end}}
-     {{end}}
+</body>
+{{end}}
+{{end}}

@@ -1,99 +1,100 @@
 package controllers
 
 import (
+	"ForumX/general"
+	"ForumX/models"
+	"ForumX/utils"
 	"database/sql"
 	"encoding/base64"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
-
-	structure "github.com/devstackq/ForumX/general"
-	"github.com/devstackq/ForumX/models"
-	util "github.com/devstackq/ForumX/utils"
+	"time"
 )
 
 var (
 	err  error
 	DB   *sql.DB
-	msg  = structure.API.Message
-	auth = structure.API.Authenticated
+	msg  = general.API.Message
+	auth = general.API.Authenticated
 )
 
 //GetAllPosts  by category || all posts
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" && r.URL.Path != "/science" && r.URL.Path != "/love" && r.URL.Path != "/sapid" {
-		util.DisplayTemplate(w, "404page", http.StatusNotFound)
+		utils.RenderTemplate(w, "404page", http.StatusNotFound)
 		return
 	}
-
+	//methods Filter struct -> if no case filter : default get All post
 	filterValue := models.Filter{
 		Like:     r.FormValue("likes"),
 		Date:     r.FormValue("date"),
 		Category: r.FormValue("cats"),
 	}
 
-	posts, endpoint, category, err := filterValue.GetAllPost(r, r.FormValue("next"), r.FormValue("prev"))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	util.DisplayTemplate(w, "header", util.IsAuth(r))
-
-	if endpoint == "/" {
-		util.DisplayTemplate(w, "index", posts)
-	} else {
-		//send category value
-		msg := []byte(fmt.Sprintf("<h3 id='category'> %s </h3>", category))
+	posts, endpoint, category := filterValue.GetAllPost(r, r.FormValue("next"), r.FormValue("prev"))
+	utils.RenderTemplate(w, "header", utils.IsAuth(r))
+	if posts == nil {
+		msg := []byte(fmt.Sprintf("<span id='notify-post'> Post nil </span>", ))
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(msg)
-		util.DisplayTemplate(w, "category_post_template", posts)
+		//utils.RenderTemplate(w, "category_post_template", posts)
+		return
+	}
+	if endpoint == "/" {
+		utils.RenderTemplate(w, "index", posts)
+	} else {
+		//send category value
+		msg := []byte(fmt.Sprintf("<span id='category'> %s </span>", category))
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(msg)
+		utils.RenderTemplate(w, "category_post_template", posts)
 	}
 }
 
 //GetPostByID  1 post by id
 func GetPostByID(w http.ResponseWriter, r *http.Request) {
 
-	if util.URLChecker(w, r, "/post") {
+	if utils.URLChecker(w, r, "/post") {
 
 		id, _ := strconv.Atoi(r.FormValue("id"))
-		pid := models.Post{ID: id}
-		comments, post, err := pid.GetPostByID(r)
-
+		var temp string
+		err = DB.QueryRow("select content from posts where id=?", id).Scan(&temp)
 		if err != nil {
 			log.Println(err)
+			utils.RenderTemplate(w, "404page", 404)
+			return
 		}
-		util.DisplayTemplate(w, "header", util.IsAuth(r))
-		util.DisplayTemplate(w, "posts", post)
-		util.DisplayTemplate(w, "comment_post", comments)
+		//fmt.Println(temp)
+		pid := models.Post{ID: id}
+		comments, post := pid.GetPostByID(r)
+
+		utils.RenderTemplate(w, "header", utils.IsAuth(r))
+		utils.RenderTemplate(w, "posts", post)
+		utils.RenderTemplate(w, "comment_post", comments)
+		//utils.RenderTemplate(w, "reply_comment", repliesComment)
 	}
 }
 
 //CreatePost  function
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 
-	if util.URLChecker(w, r, "/create/post") {
+	if utils.URLChecker(w, r, "/create/post") {
 
-		//switch r.Method {
 		if r.Method == "GET" {
-			util.DisplayTemplate(w, "header", util.IsAuth(r))
-			util.DisplayTemplate(w, "create_post", &msg)
+			utils.RenderTemplate(w, "header", utils.IsAuth(r))
+			utils.RenderTemplate(w, "create_post", &msg)
 		}
 
 		if r.Method == "POST" {
-			access, session := util.IsCookie(w, r)
-			log.Println(access, "access status")
-			if !access {
-				http.Redirect(w, r, "/signin", 200)
-				return
-			}
 			//r.ParseMultipartForm(10 << 20)
 			f, _, _ := r.FormFile("uploadfile")
 			f2, _, _ := r.FormFile("uploadfile")
 
 			categories, _ := r.Form["input"]
+
 			photoFlag := false
 			if f != nil && f2 != nil {
 				photoFlag = true
@@ -115,96 +116,59 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 //UpdatePost function
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 
-	if util.URLChecker(w, r, "/edit/post") {
+	if utils.URLChecker(w, r, "/edit/post") {
 
 		pid, _ := strconv.Atoi(r.FormValue("id"))
 
 		if r.Method == "GET" {
-
+			//send data - client
 			var p models.Post
-			DB.QueryRow("SELECT * FROM posts WHERE id = ?", pid).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreatedTime, &p.Image, &p.Like, &p.Dislike)
+			DB.QueryRow("SELECT * FROM posts WHERE id = ?", pid).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
 			p.ImageHTML = base64.StdEncoding.EncodeToString(p.Image)
 
-			util.DisplayTemplate(w, "header", util.IsAuth(r))
-			util.DisplayTemplate(w, "update_post", p)
-
+			utils.RenderTemplate(w, "header", utils.IsAuth(r))
+			utils.RenderTemplate(w, "update_post", p)
 		}
 
 		if r.Method == "POST" {
 
-			access, _ := util.IsCookie(w, r)
-			if !access {
-				http.Redirect(w, r, "/signin", 200)
-				return
+			p := models.Post {
+				Title:      r.FormValue("title"),
+				Content:    r.FormValue("content"),
+				Image:      utils.IsImage(r),
+				ID:         pid,
+				UpdateTime: time.Now(),
 			}
-
-			p := models.Post{
-				Title:   r.FormValue("title"),
-				Content: r.FormValue("content"),
-				Image:   util.IsImage(r),
-				ID:      pid,
-			}
-
-			err = p.UpdatePost()
-
-			if err != nil {
-				//try hadnler all error
-				defer log.Println(err, "upd post err")
-			}
+			p.UpdatePost()
+			http.Redirect(w, r, "/post?id="+strconv.Itoa(int(pid)), 302)
 		}
-		http.Redirect(w, r, "/post?id="+strconv.Itoa(int(pid)), 302)
-
 	}
 }
 
 //DeletePost function
 func DeletePost(w http.ResponseWriter, r *http.Request) {
 
-	if util.URLChecker(w, r, "/delete/post") {
-
-		access, _ := util.IsCookie(w, r)
-		if !access {
-			http.Redirect(w, r, "/signin", 200)
-			return
-		}
+	if utils.URLChecker(w, r, "/delete/post") {
 		pid, _ := strconv.Atoi(r.URL.Query().Get("id"))
 		p := models.Post{ID: pid}
-
-		err = p.DeletePost()
-
-		if err != nil {
-			log.Println(err.Error())
-		}
-		http.Redirect(w, r, "/", 302)
+		p.DeletePost()
+		http.Redirect(w, r, "/profile", 302)
 	}
 }
 
 //Search
 func Search(w http.ResponseWriter, r *http.Request) {
 
-	if util.URLChecker(w, r, "/search") {
-
-		if r.Method == "GET" {
-			util.DisplayTemplate(w, "search", http.StatusFound)
-		}
-
-		if r.Method == "POST" {
-
-			foundPosts, err := models.Search(w, r)
-
-			if err != nil {
-				log.Println(err)
-			}
-			if foundPosts == nil {
-				util.DisplayTemplate(w, "header", util.IsAuth(r))
-				msg := []byte(fmt.Sprintf("<h2 id='notFound'> Nihuya ne naideno </h2>"))
-				w.Header().Set("Content-Type", "application/json")
-				w.Write(msg)
-				util.DisplayTemplate(w, "index", nil)
-			} else {
-				util.DisplayTemplate(w, "header", util.IsAuth(r))
-				util.DisplayTemplate(w, "index", foundPosts)
-			}
+	if utils.URLChecker(w, r, "/search") {
+		foundPosts := models.Search(w, r)
+		utils.RenderTemplate(w, "header", utils.IsAuth(r))
+		if foundPosts == nil {
+			msg := []byte(fmt.Sprintf("<h2 id='notFound'> Not found</h2>"))
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(msg)
+			utils.RenderTemplate(w, "index", nil)
+		} else {
+			utils.RenderTemplate(w, "index", foundPosts)
 		}
 	}
 }

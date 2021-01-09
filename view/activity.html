@@ -1,0 +1,44 @@
+{{define "activity"}}
+
+<div class="activity-container">
+    <h3>Activities</h3>
+    {{range .}}
+    <div class="activity-card">
+        {{if gt .PID 0 }}
+        <p class="notify-time"> {{.Time}} </p>
+        <form action="/user/id?{{.UID}}" method="post" class="author-post">
+            <input type="hidden" name="uid" value="{{.UID}}">
+            <input type="submit" value="{{.UserLost}}">
+        </form>
+        {{if eq .VoteState 2 }} <span>Disiked Post </span> {{end}}
+        {{if eq .VoteState 1 }} <span> Liked Post </span>{{end}}
+        "{{.Content}}"
+        <a href="/post?id={{.PID}}">see </a>
+        {{end}}
+        {{if .CID}} {{if gt .CID 0 }}
+
+        <form action="/user/id?{{.UID}}" method="post" class="author-post">
+            <input type="hidden" name="uid" value="{{.UID}}">
+            <input type="submit" value="{{.UserLost}}">
+        </form>
+        <span class="notify-time"> {{.Time}} </span>
+        {{if eq .VoteState 2 }} <span> Disiked Comment </span> {{end}}
+        {{if eq .VoteState 1 }} <span> Liked Comment </span>{{end}}
+        "{{.Content}}"
+        <a href="/post?id={{.CIDPID}}">see</a>
+        {{end}} {{end}}
+
+        {{if .CLID}}
+        {{if gt .CLID 0 }}
+        <p class="notify-time"> {{.Time}} </p>
+        {{if eq .Editted true}}
+        <span class="edited-notify">Edited</span>
+        {{end}}
+        <form action="/user/id?{{.UID}}" method="post" class="author-post">
+            <input type="hidden" name="uid" value="{{.UID}}">
+            <input type="submit" value="{{.UserLost}}">
+        </form>
+        <span> Lost comment </span>
+        "{{.Content}}" <a href="/post?id={{.CLID}}"> see </a> {{end}} {{end}}
+    </div>
+    {{end}} {{end}}

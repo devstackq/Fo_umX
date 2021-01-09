@@ -1,7 +1,7 @@
 {{define "category_post_template"}}
 
 <div class="main">
-    {{template "search"}} {{ range $key, $value := . }}
+   {{ range $key, $value := . }}
  <a class="links" href="/post?id={{$value.ID}}">
     <div class="wrapper-main">
         <form method="POST" action="{{ $value.Endpoint}}/{{$value.ID}}">
@@ -12,13 +12,12 @@
         <p class="content-main"> {{ $value.Content}}...</p>
         Created: {{ $value.Time}} 
         <div class="likes-card"> 
-        <span class = "fa fa-thumbs-up" > {{$value.Like}} </span>
-        <span class = "fa fa-thumbs-down">{{$value.Dislike}} </span>
+        <span>Like {{$value.Like}} </span>
+        <span>Dislike {{$value.Dislike}} </span>
     </div>
     </div>
-</a>
+    </a>
     {{end}}
-
 </div>
 {{template "footer" }} {{end}}
 

@@ -1,133 +1,148 @@
 package models
 
 import (
+	"ForumX/general"
+	"ForumX/utils"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	structure "github.com/devstackq/ForumX/general"
-	util "github.com/devstackq/ForumX/utils"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (u *User) Signup(w http.ResponseWriter, r *http.Request) {
+//Signup func
+func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 
-	users := []User{}
-
-	hashPwd, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
-	if err != nil {
-		log.Println(err)
-	}
-	//check email by unique, if have same email
-	checkEmail, err := DB.Query("SELECT email FROM users")
-	if err != nil {
-		log.Println(err)
-	}
-
-	for checkEmail.Next() {
-		user := User{}
-		var email string
-		err = checkEmail.Scan(&email)
+	var hashPwd []byte
+	if utils.AuthType == "default" {
+		hashPwd, err = bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 		if err != nil {
-			log.Println(err.Error)
-		}
-
-		user.Email = email
-		users = append(users, user)
-	}
-
-	for _, v := range users {
-		if v.Email == u.Email {
-			msg = "Not unique email lel"
-			util.DisplayTemplate(w, "signup", &msg)
 			log.Println(err)
 		}
 	}
+	emailCheck := utils.IsRegistered(w, r, u.Email)
+	userCheck := utils.IsRegistered(w, r, u.Username)
+	
+	if !emailCheck && !userCheck {
+		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES(?,?,?,?,?,?,?,?,?)`)
+		if err != nil {
+			log.Println(err)
+		}
+		_, err = userPrepare.Exec(u.FullName, u.Email, u.Username, hashPwd, u.Age, u.Sex, time.Now(), u.City, u.Image)
+		if err != nil {
+			log.Println(err)
+		}
+		defer userPrepare.Close()
+	} else {
+		if emailCheck {
+			msg = "Not unique email"
+		}
+		if userCheck {
+			msg = "Not unique username"
+		}
+		if userCheck && emailCheck {
+			msg = "Not unique email && username"
+		}
+		//if utils.AuthType == "default" {
+		utils.RenderTemplate(w, "signup", &msg)
+		//}
+	}
+}
 
-	_, err = DB.Exec("INSERT INTO users( full_name, email, password, age, sex, created_time, city, image) VALUES (?,?, ?, ?, ?, ?, ?, ?)",
-		u.FullName, u.Email, hashPwd, u.Age, u.Sex, time.Now(), u.City, u.Image)
+//Signin function dsds
+//if user no system -> create uuid, save save in Db & browser, -> redirect middleware(profile)
+// if second time -> check by Email || username, if  
+func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 
+	var user User
+
+	err = DB.QueryRow("SELECT id FROM users WHERE email=?", uStr.Email).Scan(&user.ID)
 	if err != nil {
 		log.Println(err)
 	}
 
-}
+	if utils.AuthType == "default" {
 
-//Signin function
-func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
-
-	u := DB.QueryRow("SELECT id, password FROM users WHERE email=?", uStr.Email)
-
-	var user User
-	var err error
-	//check pwd, if not correct, error
-	err = u.Scan(&user.ID, &user.Password)
-	if err != nil {
-		util.AuthError(w, err, "user not found")
-		return
+		if uStr.Email != "" {
+			err = DB.QueryRow("SELECT id, password FROM users WHERE email=?", uStr.Email).Scan(&user.ID, &user.Password)
+			if err != nil {
+				log.Println("err email")
+				utils.AuthError(w, r, err, "user by Email not found", utils.AuthType)
+				return
+			}
+			utils.ReSession(user.ID, uStr.Session, "", "")
+		} else if uStr.Username != "" {
+			err = DB.QueryRow("SELECT id, password FROM users WHERE username=?", uStr.Username).Scan(&user.ID, &user.Password)
+			if err != nil {
+				log.Println("errr username")
+				utils.AuthError(w, r, err, "user by Username not found", utils.AuthType)
+				return
+			}
+			utils.ReSession(user.ID, uStr.Session, "", "")
+		}
+		//check pwd, if not correct, error
+		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
+		if err != nil {
+			utils.AuthError(w, r, err, "password incorrect", utils.AuthType)
+			return
+		}
+	} else if utils.AuthType == "google" || utils.AuthType == "github" {
+		utils.ReSession(user.ID, uStr.Session, "", "")
 	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
-	if err != nil {
-		util.AuthError(w, err, "password incorrect")
-		return
-	}
-	//get user by Id, and write session struct
-	s := structure.Session{
+	
+	//1 time set uuid user, set cookie in Browser
+	newSession := general.Session{
 		UserID: user.ID,
 	}
+	
 	uuid := uuid.Must(uuid.NewV4(), err).String()
 	if err != nil {
-		util.AuthError(w, err, "uuid trouble")
+		utils.AuthError(w, r, err, "uuid problem", utils.AuthType)
 		return
 	}
 	//create uuid and set uid DB table session by userid,
-	_, err = DB.Exec("INSERT INTO session(uuid, user_id) VALUES (?, ?)", uuid, s.UserID)
-
-	if err != nil {
-		util.AuthError(w, err, "the user is already in the system")
-		//get ssesion id, by local struct uuid
-		return
-	}
-	// get user in info by session Id
-	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = ?", s.UserID).Scan(&s.ID, &s.UUID)
-	if err != nil {
-		util.AuthError(w, err, "not find user from session")
-		return
-	}
-
-	//set cookie 9128ueq9widjaisdh238yrhdeiuwandijsan
-	cookie := http.Cookie{
-		Name:     "_cookie",
-		Value:    s.UUID,
-		Path:     "/",
-		Expires:  time.Now().Add(300 * time.Minute),
-		HttpOnly: false,
-	}
-	http.SetCookie(w, &cookie)
-	util.AuthError(w, nil, "success")
-}
-
-//Logout function
-func Logout(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("_cookie")
-	if err != nil {
-		fmt.Println(err, "cookie err")
-	}
-	//add cookie -> fields uuid
-	s := structure.Session{UUID: cookie.Value}
-	//get ssesion id, by local struct uuid
-	DB.QueryRow("SELECT id FROM session WHERE uuid = ?", s.UUID).
-		Scan(&s.ID)
-	fmt.Println(s.ID, "user id deleted session")
-	//delete session by id session
-	_, err = DB.Exec("DELETE FROM session WHERE id = ?", s.ID)
-
+	userPrepare, err := DB.Prepare(`INSERT INTO session(uuid, user_id, cookie_time) VALUES (?, ?, ?)`)
 	if err != nil {
 		log.Println(err)
 	}
-	// then delete cookie from client
-	util.DeleteCookie(w)
+
+	_, err = userPrepare.Exec(uuid,  newSession.UserID, time.Now())
+	if err != nil {
+		log.Println(err)
+	}
+	defer userPrepare.Close()
+
+	if err != nil {
+		utils.AuthError(w, r, err, "the user is already in the system", utils.AuthType)
+		//get ssesion id, by local struct uuid
+		log.Println(err)
+		return
+	}
+	
+	// get user in info by session Id
+	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = ?", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
+	if err != nil {
+		utils.AuthError(w, r, err, "not find user from session", utils.AuthType)
+		log.Println(err, "her")
+		return
+	}
+	utils.SetCookie(w, newSession.UUID)
+	//user.Session.StartTimeCookie = time.Now().Add(time.Minute * 60)
+	utils.AuthError(w, r, nil, "success", utils.AuthType)
+	fmt.Println(utils.AuthType, "auth type")
+	http.Redirect(w, r, "/profile", 302)
+}
+
+//Logout function
+func Logout(w http.ResponseWriter, r *http.Request, s general.Session) {
+	
+	utils.Logout(w, r, s)
+	if utils.AuthType == "google" {
+		_, err = http.Get("https://accounts.google.com/o/oauth2/revoke?token=" + utils.Token)
+		if err != nil {
+			log.Println(err)
+		}
+	}
 }

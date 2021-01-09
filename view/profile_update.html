@@ -1,33 +1,42 @@
 {{define "profile_update"}}
 <div class="wrapper-main-edit">
+    <h3>Profile edit page</h3>
     <form action="/edit/user" method="POST" enctype="multipart/form-data" autocomplete="off">
-        <input type="text" name="fullname" placeholder="fuul name"> <br />
-
-        <input type="number" name="age" placeholder="age"><br />
-
-        <select name="sex" id="">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-
-        <select name="city" id="">
-            <option value="Almaty">Almaty</option>
-            <option value="Astana">Astana</option>
-            <option value="Karaganda">Karaganda</option>
-            <option value="Shymkent">Shymkent</option>
-            <option value="Aktau">Aktau</option>
-            <option value="Atyrau">Atyrau</option>
-            <option value="Taraz">Taraz</option>
-            <option value="Kokshetau">Kokshetau</option>
-            <option value="Semey">Semey</option>
-            <option value="Uralsk">Uralsk</option>
-            <option value="Pavlodar">Pavlodar</option>
-            <option value="Petropavlsk">Petropavlsk</option>
-            <option value="Kyzyldorda">Kyzyldorda</option>
-            <option value="Ustakemenogorsk">Ust-kamenogorsk</option>
-        </select><br />
-
-        <input type="file" name="uploadfile"  accept="image/*" />
+        <label for="">Name:
+            <input type="text" name="fullname" placeholder="name" value={{.FullName}} required> </label>
+        <label for="">Nickname:
+            <input type="text" name="nickname" placeholder="nickname" value={{.Username}} required> </label>
+        <label for="">Age:
+            <input type="number" name="age" placeholder="age" value={{.Age}} required></label>
+        <label for="">Sex:
+            <select name="sex" id="" value={{.Sex}}>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </label>
+        <label for="">From:
+            <select name="city" id="" value={{.City}}>
+                <option value="Almaty">Almaty</option>
+                <option value="Astana">Astana</option>
+                <option value="Karaganda">Karaganda</option>
+                <option value="Shymkent">Shymkent</option>
+                <option value="Aktau">Aktau</option>
+                <option value="Atyrau">Atyrau</option>
+                <option value="Taraz">Taraz</option>
+                <option value="Kokshetau">Kokshetau</option>
+                <option value="Semey">Semey</option>
+                <option value="Uralsk">Uralsk</option>
+                <option value="Pavlodar">Pavlodar</option>
+                <option value="Petropavlsk">Petropavlsk</option>
+                <option value="Kyzyldorda">Kyzyldorda</option>
+                <option value="Ust-Kamenogorsk">Ust-kamenogorsk</option>
+            </select>
+        </label>
+        <label for="">Image:
+            <img width="120px" height="100px" class="post-img" src="data:image/jpeg;base64, {{.ImageHTML}}" alt="image">
+            <input type="file" name="uploadfile" accept="image/*" value={{.Image}} />
+        </label>
+        <br />
         <input type="submit" value="send">
     </form>
 </div>

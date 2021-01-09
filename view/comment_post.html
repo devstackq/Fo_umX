@@ -1,46 +1,81 @@
-{{define "comment_post"}} 
+{{define "comment_post"}}
+{{$id :=0}}
+{{range .}} {{$id = .PostID}}
+<div class="comment-wrapperz">
+    <div class="comment-underpost">
+        <div class="comment-wrapper-1">
+            <form action="/user/id?{{.UserID}}" method="post" autocomplete="off">
+                <input type="hidden" name="uid" value="{{.UserID}}">
+                <input type="submit" value="{{.Author}}">
+            </form>
+            {{if eq .Edited true }} <span class="edited-comment"> Edited </span>{{end}}
+            <span class="time-comment"> {{.Time}} </span>
+        </div>
+        {{if gt .ParentID 0 }}
+        <div class="replied-container">
+            <span> <a href="/user/id?uid={{.FromWhom}}" alt="">{{.Author}}</a> responded to the comment: <span
+                    class="replied-content">{{.RepliedContent}}</span>
+                user: <a href="/user/id?uid={{.ToWhom}}" alt=""> {{.Replied}}</a>
+            </span>
+        </div>
+        {{end}}
 
-{{$id :=0}} 
-
-{{range .}} 
-{{$id = .PostID}}
-<div class = "comment-wrapperz"> 
-<div class="comment-underpost">
-
-<div class="comment-wrapper-1"> 
-
-    <form action="/user/id/?{{.UserID}}" method="post" autocomplete="off">
-        <input type="hidden" name="uid" value="{{.UserID}}">
-        <input type="submit" value="{{.Author}}">
-    </form>
-       <span class="time-comment"> {{.CreatedTime}} </span>
+        <p class="comment-wrapper-p"> {{.Content}}</p>
+        <div class="like-comment-wrapper comment-btn-like">
+            <form class="like-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
+                <span class="fa fa-thumbs-up vote-up"> </span>
+                <input type="hidden" name="commentLike" value="1">
+                <input type="hidden" name="pidc" value="{{.PostID}}">
+                <input type="submit" value="     " />
+            </form>
+            <span class="" style="color:red; font-size: 15px; padding-left:5px;">
+                {{.Like}}
+            </span>
+            <form class="dislike-comment-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
+                <span class="fa fa-thumbs-down vote-down"> </span>
+                <input type="hidden" name="commentDislike" value="1">
+                <input class="" type="submit" value="     ">
+                <input type="hidden" name="pidc" value="{{.PostID}}">
+            </form>
+            <span class="" style="color:black; font-size: 15px;">
+                {{.Dislike}}
+            </span>
+        </div>
+        <button key={{.ID}} id="btnReplyId" onclick="toggle_visibility({{.ID}})">Reply</button>
     </div>
-    
+
+    <!-- {{range .Children}}
     <p class="comment-wrapper-p"> {{.Content}}</p>
+    <span class=""> {{.Time}} </span>
+    <button key={{.ID}} id="btnReplyId" onclick="toggle_visibility({{.ID}})">Reply</button>
 
-    <div class="like-comment-wrapper comment-btn-like">
+    <form style="display:none" key={{.ID}} class="" id="answerCommentFormId{{.ID}}" action="/reply/comment"
+        method="POST">
+        <textarea name="answerComment" cols="66" rows="6"></textarea>
+        <input type="hidden" name="postId" value="{{.PostID}}">
+        <input type="hidden" name="parentId" value="{{.ID}}">
+        <input type="submit" value="send" />
+    </form>
 
-        <form class="like-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
-          <span class = "fa fa-thumbs-up vote-up" > </span> 
-            <input type="hidden" name="commentLike" value="1">
-            <input  type="hidden" name="pidc" value="{{.PostID}}">
-         <input type="submit" value="     " /> 
-        </form>
-
-     <span class="" style="color:red; font-size: 15px; padding-left:5px;">
-        {{.Like}}
-    </span>
-        <form class="dislike-comment-wrap" action="/votes/comment?commentID={{.ID}}" method="POST">
-        <span class = "fa fa-thumbs-down vote-down" > </span> 
-            <input type="hidden" name="commentDislike" value="1">
-            <input class="" type="submit" value="     ">
-            <input type="hidden" name="pidc" value="{{.PostID}}">
-        </form>
-    <span class="" style="color:black; font-size: 15px;">
-        {{.Dislike}}
-    </span>
-    </div>
+    {{end}} -->
 </div>
-</div>
+
+<form style="display:none" key={{.ID}} class="answer-form visible-form" id="answerCommentFormId{{.ID}}"
+    action="/reply/comment" method="POST">
+    <textarea name="answerComment" cols="66" rows="6"></textarea>
+    <input type="hidden" name="postId" value="{{.PostID}}">
+    <input type="hidden" name="parentId" value="{{.ID}}">
+    <input type="submit" value="send" />
+</form>
 {{end}}
- {{end}}
+
+<script>
+    function toggle_visibility(id) {
+        var e = document.getElementById("answerCommentFormId" + id);
+        if (e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+    }
+</script>
+{{end}}
