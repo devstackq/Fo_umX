@@ -21,17 +21,17 @@ func Init() {
 	// retrieve the url
 	dbURL := os.Getenv("postgres://iczkybfluwphwj:12d122053793fe4ba376b339f5911d6a6cdfa16836b8e5068bfb904adfb0b2ad@ec2-52-30-161-203.eu-west-1.compu")
 	// connect to the db
-	dbPsql, err := sql.Open("postgres", dbURL)
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Println("can't connect inDb")
 	}
-	fmt.Println(dbPsql, "db data")
+	fmt.Println(db, "db psq data")
 
 	// create DB and table
-	db, err = sql.Open("sqlite3", "forumx.db")
-	if err != nil {
-		log.Println(err)
-	}
+	//db, err = sql.Open("sqlite3", "forumx.db")
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 	db.Exec("PRAGMA foreign_keys=ON")
 
 	postCategoryBridge, err := db.Prepare(`CREATE TABLE IF NOT EXISTS post_cat_bridge(id INTEGER PRIMARY KEY AUTOINCREMENT, post_id INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE )`)
