@@ -36,9 +36,9 @@
         </form>
     </div>
     <!-- lst comment under post -->
-    <div class="comment-wrapper">
+    <div class="comment-wrapper" style="width:100%">
         <form action="/comment" method="POST">
-            <textarea style="width:100%" placeholder="lost your comment.." name="comment-text" id="textareaId"  rows="5"
+            <textarea  placeholder="lost your comment.." name="comment-text" id="textareaId"  rows="5"
                 required></textarea>
             <input type="hidden" name="curr" value="{{.ID}}">
         </form>
