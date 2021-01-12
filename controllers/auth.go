@@ -26,7 +26,7 @@ var (
 func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if utils.URLChecker(w, r, "/signup") {
-	//callback anonim function
+		//callback anonim function
 		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
 			intAge, err := strconv.Atoi(r.FormValue("age"))
 			//switch add
@@ -110,7 +110,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 					Email:    person.Email,
 					Username: person.Username,
 					Password: person.Password,
-					Session: session,
+					Session:  session,
 				}
 				u.Signin(w, r)
 				//set session then compare, if s.startTime < 10 - set NewCookie
@@ -182,7 +182,7 @@ func getUserInfo(state, code string) ([]byte, error) {
 }
 
 func GithubSignin(w http.ResponseWriter, r *http.Request) {
-	redirectURL := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&scope=user:email&redirect_uri=%s", "b8f04afed4e89468b1cf", "http://localhost:6969/githubUserInfo")
+	redirectURL := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&scope=user:email&redirect_uri=%s", "b8f04afed4e89468b1cf", "https://forumx.herokuapp.com/githubUserInfo")
 	http.Redirect(w, r, redirectURL, http.StatusTemporaryRedirect)
 }
 
@@ -242,7 +242,7 @@ func SigninSideService(w http.ResponseWriter, r *http.Request, u models.User) {
 		u := models.User{
 			Email:    u.Email,
 			FullName: u.Name,
-			Session: session,
+			Session:  session,
 		}
 		u.Signin(w, r) //login
 	} else {
