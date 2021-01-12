@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -26,13 +28,29 @@ func Init() {
 		log.Println("can't connect inDb")
 	}
 	fmt.Println(db, "db psq data")
+	err = db.Ping()
+	if err != nil {
+		log.Println("can't Ping")
+	}
 
 	// create DB and table
 	//db, err = sql.Open("sqlite3", "forumx.db")
 	// if err != nil {
 	// 	log.Println(err)
 	// }
-	db.Exec("PRAGMA foreign_keys=ON")
+	//db.Exec("PRAGMA foreign_keys=ON")
+
+	// CREATE TABLE IF NOT EXISTS app_user (
+	// 	username varchar(45) NOT NULL,
+	// 	password varchar(450) NOT NULL,
+	// 	enabled integer NOT NULL DEFAULT '1',
+	// 	PRIMARY KEY (username)
+	// )
+
+	// if _, err := db.Exec("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)"); err != nil {
+	// 	fmt.Println("Error creating database table: %q", err)
+	// 	return
+	// }
 
 	postCategoryBridge, err := db.Prepare(`CREATE TABLE IF NOT EXISTS post_cat_bridge(id INTEGER PRIMARY KEY AUTOINCREMENT, post_id INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE )`)
 	if err != nil {
@@ -67,7 +85,11 @@ func Init() {
 	if err != nil {
 		log.Println(err)
 	}
-	postCategoryBridge.Exec()
+	pcb, err := postCategoryBridge.Exec()
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(pcb, "pcb")
 	session.Exec()
 	post.Exec()
 	comment.Exec()

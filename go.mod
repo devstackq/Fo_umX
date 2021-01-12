@@ -5,6 +5,7 @@ go 1.15
 require (
 	cloud.google.com/go v0.74.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/lib/pq v1.9.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.0.0-20201208171446-5f87f3452ae9
