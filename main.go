@@ -10,9 +10,7 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
-
 	//wsl installed
-
 	//signup page - todo js, like signin
 	//try - comment under - replies comment show
 	//create post -  out main page
