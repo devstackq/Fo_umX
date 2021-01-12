@@ -51,11 +51,11 @@ func Init() {
 	// 	return
 	// }
 
-	post, err := db.Prepare(`CREATE TABLE IF NOT EXISTS posts(id SERIAL PRIMARY KEY, thread VARCHAR, content VARCHAR, creator_id INTEGER, create_time datetime,   update_time datetime DEFAULT CURRENT_TIMESTAMP, image	BLOB NOT NULL, count_like INTEGER DEFAULT 0, count_dislike INTEGER DEFAULT 0, FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE ) `)
+	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id SERIAL PRIMARY KEY, thread VARCHAR, content VARCHAR, creator_id INTEGER, create_time datetime,   update_time datetime DEFAULT CURRENT_TIMESTAMP, image	BLOB NOT NULL, count_like INTEGER DEFAULT 0, count_dislike INTEGER DEFAULT 0, FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE ) ")
 	if err != nil {
 		log.Println(err, "1")
 	}
-	postCategoryBridge, err := db.Prepare(`CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY , post_id INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE )`)
+	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE )")
 	if err != nil {
 		log.Println(err, "2")
 	}
@@ -90,9 +90,9 @@ func Init() {
 		log.Println(err, "exec err 2")
 	}
 	fmt.Println(pcb, "pcb")
-	session.Exec()
 	post.Exec()
 	comment.Exec()
+	session.Exec()
 	user.Exec()
 	voteState.Exec()
 	notify.Exec()
