@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -45,7 +46,10 @@ func IsValidCookie(f http.HandlerFunc) http.HandlerFunc {
 
 //Init func handlers
 func Init() {
-	const PORT = "6969"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "6969" // Default port if not specified
+	}
 	//create multiplexer
 	mux := http.NewServeMux()
 	//file server
@@ -86,6 +90,6 @@ func Init() {
 	mux.HandleFunc("/activity", IsValidCookie(GetUserActivities))
 	mux.HandleFunc("/search", Search)
 	// http.HandleFunc("/chat", routing.StartChat)
-	log.Println("Listening port:", PORT)
-	log.Fatal(http.ListenAndServe(":"+PORT, mux))
+	log.Println("Listening port:", port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
