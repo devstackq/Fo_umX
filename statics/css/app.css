@@ -432,7 +432,7 @@ a.links {
 }
 
 .comment-wrapper textarea {
-    max-width: 1200px;
+    width: 100%;
 }
 
 .comment-wrapper {
