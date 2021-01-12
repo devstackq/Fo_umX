@@ -10,6 +10,8 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
+	//todo db postgres connect, design fix, time utc fix
+
 	//wsl installed
 	//signup page - todo js, like signin
 	//try - comment under - replies comment show

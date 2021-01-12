@@ -45,14 +45,14 @@
 <script>
   const areYouSure = (id) => {
     if (confirm("Are u sure epta?")) {
-      fetch('http://localhost:6969/delete/account', {
+      fetch('https://forumx.herokuapp.com/delete/account', {
         mode: 'cors',
         method: 'post',
         body: id,
       })
         .then((response) => {
           if (response.ok) {
-            window.location.replace("http://localhost:6969/")
+            window.location.replace("https://forumx.herokuapp.com/")
           }
         })
     } else {

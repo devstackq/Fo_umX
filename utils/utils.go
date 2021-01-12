@@ -27,7 +27,7 @@ var (
 	temp = template.Must(template.ParseFiles("./view/header.html", "view/update_comment.html", "view/activity.html", "view/disliked.html", "view/category_post.html", "view/favorites.html", "view/404page.html", "view/update_post.html", "view/created_post.html", "view/comment_user.html", "view/profile_update.html", "view/search.html", "view/another_user.html", "view/profile.html", "view/signin.html", "view/signup.html", "view/filter.html", "view/post.html", "view/comment_post.html", "view/create_post.html", "view/footer.html", "view/index.html"))
 
 	GoogleConfig = &oauth2.Config{
-		RedirectURL:  "http://localhost:6969/googleUserInfo",
+		RedirectURL:  "https://forumx.herokuapp.com/googleUserInfo",
 		ClientID:     "154015070566-3s9nqt7qoe3dlhopeje85buq89603hae",
 		ClientSecret: "HtjxrjYxw8g4WmvzQvsv9Efu",
 		Scopes: []string{"https://www.googleapis.com/auth/userinfo.email",
@@ -132,13 +132,13 @@ func Logout(w http.ResponseWriter, r *http.Request, s general.Session) {
 	DeleteCookie(w)
 	err = DB.QueryRow("SELECT id FROM session WHERE uuid = ?", s.UUID).Scan(&s.ID)
 	if err != nil {
-		log.Println(err)	
+		log.Println(err)
 	}
 	_, err = DB.Exec("DELETE FROM session WHERE id = ?", s.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("UPDATE users SET last_seen=? WHERE id = ?",  time.Now(), s.UserID)
+	_, err = DB.Exec("UPDATE users SET last_seen=? WHERE id = ?", time.Now(), s.UserID)
 	if err != nil {
 		log.Println(err, "time set")
 	}
@@ -203,8 +203,9 @@ func URLChecker(w http.ResponseWriter, r *http.Request, url string) bool {
 //IsEmailValid function
 func IsEmailValid(email string) bool {
 	Re := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,6}$`)
- 	 return Re.MatchString(email) 
+	return Re.MatchString(email)
 }
+
 //IsPasswordValid function
 func IsPasswordValid(s string) bool {
 	var (
@@ -249,10 +250,10 @@ func DeleteCookie(w http.ResponseWriter) {
 func SetCookie(w http.ResponseWriter, uuid string) {
 
 	cookie := http.Cookie{
-		Name:    "_cookie",
-		Value:   uuid,
-		Path:    "/",
-		Expires: time.Now().Add(300 * time.Minute),
+		Name:     "_cookie",
+		Value:    uuid,
+		Path:     "/",
+		Expires:  time.Now().Add(300 * time.Minute),
 		HttpOnly: false,
 	}
 	//set current time, then compare query - current time, setted time in session
@@ -370,8 +371,8 @@ func SetCommentNotify(pid string, fromWhom, toWhom int, lid int64) {
 	defer voteNotifyPrepare.Close()
 }
 
-func CreateUuid() string{
-		
+func CreateUuid() string {
+
 	uuid := uuid.Must(uuid.NewV4(), err).String()
 	if err != nil {
 		log.Println(err)
@@ -394,16 +395,16 @@ func ReSession(uid int, s *general.Session, typeReSession, uuid string) {
 		if err != nil {
 			log.Println(err)
 		}
-	}else {
-	//same  email signin -> session, if have session -> drop session -> ReLogin
-	_, err := DB.Exec("DELETE FROM session WHERE id = ?", sid)
-	if err != nil {
-		log.Println(err)
+	} else {
+		//same  email signin -> session, if have session -> drop session -> ReLogin
+		_, err := DB.Exec("DELETE FROM session WHERE id = ?", sid)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("deleted prev session, and create new session -> ReSession")
+		//set nil local session
+		*s = general.Session{}
 	}
-	log.Println("deleted prev session, and create new session -> ReSession")
-	//set nil local session
-	*s = general.Session{}
-}
 }
 
 //QueryDb comment
