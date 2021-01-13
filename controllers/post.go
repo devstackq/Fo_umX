@@ -37,7 +37,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	posts, endpoint, category := filterValue.GetAllPost(r, r.FormValue("next"), r.FormValue("prev"))
 	utils.RenderTemplate(w, "header", utils.IsAuth(r))
 	if posts == nil {
-		msg := []byte(fmt.Sprintf("<span id='notify-post'> Post nil </span>", ))
+		msg := []byte(fmt.Sprintf("<span id='notify-post'> Post nil </span>"))
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(msg)
 		//utils.RenderTemplate(w, "category_post_template", posts)
@@ -132,7 +132,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method == "POST" {
 
-			p := models.Post {
+			p := models.Post{
 				Title:      r.FormValue("title"),
 				Content:    r.FormValue("content"),
 				Image:      utils.IsImage(r),

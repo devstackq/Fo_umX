@@ -1,7 +1,6 @@
 package config
 
 import (
-	"ForumX/controllers"
 	"ForumX/models"
 	"ForumX/utils"
 	"database/sql"
@@ -13,6 +12,7 @@ import (
 
 var (
 	db  *sql.DB
+	DBQ *sql.DB
 	err error
 )
 
@@ -124,7 +124,7 @@ func Init() {
 	putCategoriesInDb(db)
 
 	//send packege - DB conn
-	controllers.DB = db
+	//controllers.DB = db
 	models.DB = db
 	utils.DB = db
 
