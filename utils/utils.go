@@ -276,10 +276,11 @@ func IsImage(r *http.Request) []byte {
 
 func GetCountTable(table string, db *sql.DB) (count int) {
 
-	err = db.QueryRow("SELECT count(*) FROM " + table).Scan(&count)
+	err = db.QueryRow("SELECT COUNT(*) FROM " + table).Scan(&count)
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(count, table, db)
 	return count
 }
 
