@@ -115,7 +115,7 @@ func putCategoriesInDb() {
 	if count != 3 {
 		categories := []string{"science", "love", "sapid"}
 		for i := 0; i < 3; i++ {
-			categoryPrepare, err := db.Prepare(`INSERT INTO category(name) VALUES(?)`)
+			categoryPrepare, err := db.Prepare(`INSERT INTO category(name) VALUES($1)`)
 			if err != nil {
 				log.Println(err)
 			}
