@@ -3,8 +3,7 @@ package main
 import (
 	"ForumX/config"
 	"ForumX/controllers"
-
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

@@ -278,10 +278,10 @@ func GetCountTable(table string, db *sql.DB) (count int) {
 	fmt.Println(count, table, db, "Get count")
 
 	//	err = db.QueryRow("SELECT COUNT(*) FROM $1", table).Scan(&count)
-
-	err = db.QueryRow("SELECT COUNT(*) FROM " + table).Scan(&count)
+	row := db.QueryRow("SELECT COUNT(*) FROM " + table)
+	err = row.Scan(&count)
 	if err != nil {
-		log.Println(err)
+		log.Println(err, "errka count")
 		return 0
 	}
 
