@@ -115,7 +115,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 			}
 		} else if filter.Category != "" {
 			leftJoin = true
-			rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id=? ORDER  BY create_time  DESC LIMIT 8", filter.Category)
+			rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id $1 ORDER  BY create_time  DESC LIMIT 8", filter.Category)
 			if err != nil {
 				log.Println(err)
 			}
@@ -129,7 +129,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Science"
 		post.Endpoint = "/science"
-		rows, err = DB.Query("SELECT * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id=?  ORDER  BY create_time  DESC LIMIT 5", 1)
+		rows, err = DB.Query("SELECT * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id $1  ORDER  BY create_time  DESC LIMIT 5", 1)
 		if err != nil {
 			log.Println(err)
 		}
@@ -137,7 +137,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Love"
 		post.Endpoint = "/love"
-		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id=?   ORDER  BY create_time  DESC LIMIT 5", 2)
+		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id $1   ORDER  BY create_time  DESC LIMIT 5", 2)
 		if err != nil {
 			log.Println(err)
 		}
@@ -145,7 +145,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Sapid"
 		post.Endpoint = "/sapid"
-		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id=?  ORDER  BY create_time  DESC LIMIT 5", 3)
+		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id $1  ORDER  BY create_time  DESC LIMIT 5", 3)
 		if err != nil {
 			log.Println(err)
 		}
@@ -180,7 +180,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 
 //UpdatePost fucntion
 func (p *Post) UpdatePost() {
-	_, err := DB.Exec("UPDATE  posts SET thread=?, content=?, image=?, update_time=? WHERE id=?",
+	_, err := DB.Exec("UPDATE  posts SET thread $1, content $2, image $3, update_time $4 WHERE id $5",
 		p.Title, p.Content, p.Image, p.UpdateTime, p.ID)
 	if err != nil {
 		log.Println(err)
@@ -190,27 +190,27 @@ func (p *Post) UpdatePost() {
 //DeletePost function, delete rows, notify, voteState, comment, by postId
 func (p *Post) DeletePost() {
 
-	_, err = DB.Exec("DELETE FROM voteState  WHERE post_id =?", p.ID)
+	_, err = DB.Exec("DELETE FROM voteState  WHERE post_id $1", p.ID)
 	if err != nil {
-		log.Println(err, "3")
+		log.Println(err)
 	}
-	_, err := DB.Exec("DELETE FROM comments  WHERE post_id =?", p.ID)
+	_, err := DB.Exec("DELETE FROM comments  WHERE post_id $1", p.ID)
 	if err != nil {
-		log.Println(err, "1")
-	}
-
-	_, err = DB.Exec("DELETE FROM notify  WHERE post_id =?", p.ID)
-	if err != nil {
-		log.Println(err, "2")
+		log.Println(err)
 	}
 
-	_, err = DB.Exec("DELETE FROM post_cat_bridge  WHERE post_id =?", p.ID)
+	_, err = DB.Exec("DELETE FROM notify  WHERE post_id $1", p.ID)
 	if err != nil {
-		log.Println(err, "4")
+		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM posts WHERE id =?", p.ID)
+
+	_, err = DB.Exec("DELETE FROM post_cat_bridge  WHERE post_id $1", p.ID)
 	if err != nil {
-		log.Println(err, "5")
+		log.Println(err)
+	}
+	_, err = DB.Exec("DELETE FROM posts WHERE id $1", p.ID)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
@@ -241,7 +241,7 @@ func (p *Post) CreatePost(w http.ResponseWriter, r *http.Request) {
 	//check empty values
 	if utils.IsValidLetter(p.Title, "post") && utils.IsValidLetter(p.Content, "post") {
 
-		createPostPrepare, err := DB.Prepare(`INSERT INTO posts(thread, content, creator_id, create_time, image) VALUES(?,?,?,?,?)`)
+		createPostPrepare, err := DB.Prepare(`INSERT INTO posts(thread, content, creator_id, create_time, image) VALUES($1, $2, $3, $4, $5)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -295,7 +295,7 @@ func (p *Post) CreatePost(w http.ResponseWriter, r *http.Request) {
 func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 	//write new structure data
 	p := Post{}
-	err = DB.QueryRow("SELECT * FROM posts WHERE id = ?", post.ID).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
+	err = DB.QueryRow("SELECT * FROM posts WHERE id $1", post.ID).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
 	if err != nil {
 		log.Println(err)
 	}
@@ -316,9 +316,9 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 	}
 
 	p.ImageHTML = base64.StdEncoding.EncodeToString(p.Image)
-	DB.QueryRow("SELECT full_name FROM users WHERE id = ?", p.CreatorID).Scan(&p.FullName)
+	DB.QueryRow("SELECT full_name FROM users WHERE id $1", p.CreatorID).Scan(&p.FullName)
 
-	cmtq, err := DB.Query("SELECT * FROM comments WHERE  post_id=?", p.ID)
+	cmtq, err := DB.Query("SELECT * FROM comments WHERE  post_id $1", p.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -342,12 +342,12 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 			comment.Time = comment.CreatedTime.Format("2006 Jan _2 15:04:05")
 		}
 
-		err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.UserID).Scan(&comment.Author)
+		err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.UserID).Scan(&comment.Author)
 		if err != nil {
 			log.Println(err)
 		}
 
-		cmtReplq, err := DB.Query("SELECT * FROM comments WHERE  post_id=?", p.ID)
+		cmtReplq, err := DB.Query("SELECT * FROM comments WHERE  post_id $1", p.ID)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -355,56 +355,42 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 		//write each fields inside Comment struct -> then  append Array Comments
 		//var comments []Comment
 
-		for cmtReplq.Next() {
+		// for cmtReplq.Next() {
 
-			comRep := Comment{}
-			err = cmtReplq.Scan(&comRep.ID, &comRep.ParentID, &comRep.Content, &comRep.PostID, &comRep.UserID, &comRep.ToWhom, &comRep.FromWhom, &comRep.CreatedTime, &comRep.UpdatedTime, &comRep.Like, &comRep.Dislike)
-			if err != nil {
-				log.Fatal(err)
-			}
-			//9, 10 -> 8, iskluchit 9,10
-			if comRep.ParentID == comment.ID {
-				comment.Children = append(comment.Children, comRep)
-				was = append(was, comRep.ID)
-			}
-		}
+		// 	comRep := Comment{}
+		// 	err = cmtReplq.Scan(&comRep.ID, &comRep.ParentID, &comRep.Content, &comRep.PostID, &comRep.UserID, &comRep.ToWhom, &comRep.FromWhom, &comRep.CreatedTime, &comRep.UpdatedTime, &comRep.Like, &comRep.Dislike)
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		// 	//9, 10 -> 8, iskluchit 9,10
+		// 	if comRep.ParentID == comment.ID {
+		// 		comment.Children = append(comment.Children, comRep)
+		// 		was = append(was, comRep.ID)
+		// 	}
+		// }
 		//write - in comments [], uniqum comments, add toggle
 		if comment.ParentID > 0 {
 
-			err = DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id = ?", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
+			err = DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id $1", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.FromWhom).Scan(&comment.Author)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.FromWhom).Scan(&comment.Author)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.ToWhom).Scan(&comment.Replied)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.ToWhom).Scan(&comment.Replied)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT content FROM comments WHERE id = ?", comment.ParentID).Scan(&comment.RepliedContent)
+			err = DB.QueryRow("SELECT content FROM comments WHERE id $1", comment.ParentID).Scan(&comment.RepliedContent)
 			if err != nil {
 				log.Println(err)
 			}
 		}
 
-		//write - uniq by comment.ID
-		fmt.Println(was)
-
 		comments = append(comments, comment)
 	}
-	//8, 11 if current Comment.ID - have, inner -  comment.ParentID, Exclude this comment
-
-	//if comment.ID == parentID, recursive append
-	// for _, com := range comments {
-	// 	for _, child := range com.Children {
-	// 		// if RecursiveAppend(&com, child.ID) {
-	// 		// 	res = append(res, com)
-	// 		// }
-	// 	}
-	// }
-
 	//check, comapre comment.ID == Children.ID, || add 1 table
 
 	return comments, p
@@ -413,7 +399,7 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 //CreateBridge create post  -> post_id relation category
 func (pcb *PostCategory) CreateBridge() {
 
-	createBridgePrepare, err := DB.Prepare(`INSERT INTO post_cat_bridge(post_id, category_id) VALUES (?,?)`)
+	createBridgePrepare, err := DB.Prepare(`INSERT INTO post_cat_bridge(post_id, category_id) VALUES ($1, $2)`)
 	if err != nil {
 		log.Println(err)
 	}
@@ -428,12 +414,12 @@ func (pcb *PostCategory) CreateBridge() {
 func Search(w http.ResponseWriter, r *http.Request) []Post {
 
 	var posts []Post
-	psbt, err := DB.Query("SELECT * FROM posts WHERE thread LIKE ?", "%"+r.FormValue("search")+"%")
+	psbt, err := DB.Query("SELECT * FROM posts WHERE thread LIKE $1", "%"+r.FormValue("search")+"%")
 	if err != nil {
 		log.Println(err, "not find by thread")
 		return nil
 	}
-	psbc, err := DB.Query("SELECT * FROM posts WHERE content LIKE ?", "%"+r.FormValue("search")+"%")
+	psbc, err := DB.Query("SELECT * FROM posts WHERE content LIKE $1", "%"+r.FormValue("search")+"%")
 	if err != nil {
 		log.Println(err)
 		return nil
