@@ -26,7 +26,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 	userCheck := utils.IsRegistered(w, r, u.Username)
 	
 	if !emailCheck && !userCheck {
-		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES($1,$2,$3,$4,$5,$6,$7,$8$,9)`)
+		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES($1,$2,$3,$4,$5,$6,$7,$8$,$9)`)
 		if err != nil {
 			log.Println(err)
 		}
