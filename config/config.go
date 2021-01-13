@@ -82,7 +82,7 @@ func Init() {
 		log.Println(err, "7")
 	}
 
-	category, err := db.Prepare("CREATE TABLE IF NOT EXISTS  category(id SERIAL PRIMARY KEY, name VARCHAR UNIQUE)")
+	category, err := db.Prepare("CREATE TABLE category(id SERIAL PRIMARY KEY, name VARCHAR UNIQUE, test VARCHAR)")
 	if err != nil {
 		log.Println(err)
 	}
