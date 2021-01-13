@@ -61,7 +61,7 @@ func GetPostByID(w http.ResponseWriter, r *http.Request) {
 
 		id, _ := strconv.Atoi(r.FormValue("id"))
 		var temp string
-		err = DB.QueryRow("select content from posts where id=?", id).Scan(&temp)
+		err = DB.QueryRow("select content from posts where id=$1", id).Scan(&temp)
 		if err != nil {
 			log.Println(err)
 			utils.RenderTemplate(w, "404page", 404)
@@ -123,7 +123,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			//send data - client
 			var p models.Post
-			DB.QueryRow("SELECT * FROM posts WHERE id = ?", pid).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
+			DB.QueryRow("SELECT * FROM posts WHERE id = $1", pid).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
 			p.ImageHTML = base64.StdEncoding.EncodeToString(p.Image)
 
 			utils.RenderTemplate(w, "header", utils.IsAuth(r))

@@ -82,7 +82,7 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			var u models.User
 
-		err = DB.QueryRow("SELECT id, full_name, email, username, age, sex, city, image FROM users where id=?", session.UserID).Scan(&u.ID, &u.FullName, &u.Email, &u.Username, &u.Age, &u.Sex, &u.City, &u.Image)	
+		err = DB.QueryRow("SELECT id, full_name, email, username, age, sex, city, image FROM users where id=$1", session.UserID).Scan(&u.ID, &u.FullName, &u.Email, &u.Username, &u.Age, &u.Sex, &u.City, &u.Image)	
 			if err != nil {
 				log.Println(err)
 			}

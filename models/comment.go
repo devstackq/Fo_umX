@@ -35,7 +35,7 @@ type Comment struct {
 //LeaveComment for post by id
 func (c *Comment) LeaveComment() (int64) {
 
-	commentPrepare, err := DB.Prepare(`INSERT INTO comments(content, post_id, creator_id, create_time) VALUES(?,?,?,?)`)
+	commentPrepare, err := DB.Prepare(`INSERT INTO comments(content, post_id, creator_id, create_time) VALUES($1,$2,$3,$4)`)
 	if err != nil {
 		log.Println(err)
 	}
@@ -46,7 +46,7 @@ func (c *Comment) LeaveComment() (int64) {
 	defer commentPrepare.Close()
 
 	//commet content
-	err = DB.QueryRow("SELECT creator_id FROM posts WHERE id=?", c.PostID).Scan(&c.ToWhom)
+	err = DB.QueryRow("SELECT creator_id FROM posts WHERE id=$1", c.PostID).Scan(&c.ToWhom)
 	if err != nil {
 		log.Println(err)
 	}
@@ -60,7 +60,7 @@ func (c *Comment) LeaveComment() (int64) {
 
 //UpdateComment func
 func (c *Comment) UpdateComment() {
-	_, err := DB.Exec("UPDATE comments SET content=?, update_time=? WHERE id =?",
+	_, err := DB.Exec("UPDATE comments SET content=$1, update_time=$2 WHERE id=$3",
 		c.Content, c.UpdatedTime, c.ID )
 	if err != nil {
 		log.Println(err)
@@ -70,15 +70,15 @@ func (c *Comment) UpdateComment() {
 // DeleteComment func
 func DeleteComment(id string) {
 
-	_, err = DB.Exec("DELETE FROM notify  WHERE comment_id =?", id)
+	_, err = DB.Exec("DELETE FROM notify  WHERE comment_id=$1", id)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM voteState  WHERE comment_id =?", id)
+	_, err = DB.Exec("DELETE FROM voteState  WHERE comment_id =$1", id)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM  comments  WHERE id =?", id)
+	_, err = DB.Exec("DELETE FROM  comments  WHERE id =$1", id)
 	if err != nil {
 		log.Println(err)
 	}

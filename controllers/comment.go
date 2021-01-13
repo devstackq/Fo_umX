@@ -39,7 +39,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 
 			var comment models.Comment
-			err = DB.QueryRow("SELECT * FROM comments WHERE id = ?", cid).Scan(&comment.ID, &comment.ParentID, &comment.Content, &comment.PostID, &comment.UserID, &comment.ToWhom, &comment.FromWhom, &comment.CreatedTime, &comment.UpdatedTime, &comment.Like, &comment.Dislike)
+			err = DB.QueryRow("SELECT * FROM comments WHERE id $1", cid).Scan(&comment.ID, &comment.ParentID, &comment.Content, &comment.PostID, &comment.UserID, &comment.ToWhom, &comment.FromWhom, &comment.CreatedTime, &comment.UpdatedTime, &comment.Like, &comment.Dislike)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -84,7 +84,7 @@ func ReplyComment(w http.ResponseWriter, r *http.Request) {
 
 		if utils.IsValidLetter(content, "post") {
 			//get creator_id -> when answer by post, else get fromWho, reply another comment
-		err = DB.QueryRow("SELECT creator_id FROM comments WHERE id = ?", parent).Scan(&comment.ToWhom)
+		err = DB.QueryRow("SELECT creator_id FROM comments WHERE id = $1", parent).Scan(&comment.ToWhom)
 		if err != nil {
 			log.Println(err, "not find user")
 		}

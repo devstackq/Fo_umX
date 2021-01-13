@@ -62,14 +62,14 @@ func IsCookie(w http.ResponseWriter, r *http.Request, cookie string) (bool, gene
 	//if have _cookie in  browser, get userId - in  session table ->
 	if IsAuth(r).Authenticated {
 		// get userid by borswerCookie
-		err = DB.QueryRow("SELECT user_id FROM session WHERE uuid = ?", temp.UUID).Scan(&temp.UserID)
+		err = DB.QueryRow("SELECT user_id FROM session WHERE uuid = $1", temp.UUID).Scan(&temp.UserID)
 		if err != nil {
 			log.Println(err, "warn: no session with this cookie")
 			Logout(w, r, temp)
 			return false, temp
 		}
 		//get uuid by userId in session table
-		err = DB.QueryRow("SELECT uuid FROM session WHERE user_id = ?", temp.UserID).Scan(&temp.DbCookie)
+		err = DB.QueryRow("SELECT uuid FROM session WHERE user_id = $1", temp.UserID).Scan(&temp.DbCookie)
 		if err != nil {
 			log.Println(err, "warn: no session this User")
 			Logout(w, r, temp)
@@ -130,15 +130,15 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 func Logout(w http.ResponseWriter, r *http.Request, s general.Session) {
 
 	DeleteCookie(w)
-	err = DB.QueryRow("SELECT id FROM session WHERE uuid = ?", s.UUID).Scan(&s.ID)
+	err = DB.QueryRow("SELECT id FROM session WHERE uuid = $1", s.UUID).Scan(&s.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM session WHERE id = ?", s.ID)
+	_, err = DB.Exec("DELETE FROM session WHERE id = $1", s.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("UPDATE users SET last_seen=? WHERE id = ?", time.Now(), s.UserID)
+	_, err = DB.Exec("UPDATE users SET last_seen=$1 WHERE id = $2", time.Now(), s.UserID)
 	if err != nil {
 		log.Println(err, "time set")
 	}
@@ -333,7 +333,7 @@ func SetVoteNotify(table string, toWhom, fromWhom, objID int, voteLD bool) {
 	}
 	//putch(some fields), put(all fields),
 	if table == "post" && toWhom != 0 {
-		voteNotifyPreparePost, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES(?, ?, ?, ?, ?, ?)`)
+		voteNotifyPreparePost, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1, $2, $3,$4,$5,$6)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -345,7 +345,7 @@ func SetVoteNotify(table string, toWhom, fromWhom, objID int, voteLD bool) {
 		defer voteNotifyPreparePost.Close()
 
 	} else if table == "comment" && toWhom != 0 {
-		voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify( post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES(?, ?, ?, ?, ?, ?)`)
+		voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify( post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1, $2, $3,$4,$5,$6)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -361,7 +361,7 @@ func SetVoteNotify(table string, toWhom, fromWhom, objID int, voteLD bool) {
 //SetCommentNotify func by PostID
 func SetCommentNotify(pid string, fromWhom, toWhom int, lid int64) {
 
-	voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES(?, ?, ?, ?, ?, ?)`)
+	voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1, $2, $3,$4,$5,$6)`)
 	if err != nil {
 		log.Println(err)
 	}
@@ -387,19 +387,19 @@ func ReSession(uid int, s *general.Session, typeReSession, uuid string) {
 
 	var sid int
 	//first time enter signin system
-	err = DB.QueryRow("SELECT id FROM session WHERE user_id=?", uid).Scan(&sid)
+	err = DB.QueryRow("SELECT id FROM session WHERE user_id=$1", uid).Scan(&sid)
 	if err != nil {
 		log.Println(err, "no have session by uid, first Enter system")
 		return
 	}
 	if typeReSession == "timeout" {
-		_, err := DB.Exec("UPDATE session SET uuid=?, cookie_time=? WHERE id = ?", uuid, time.Now(), sid)
+		_, err := DB.Exec("UPDATE session SET uuid=$1, cookie_time=$2 WHERE id=$3", uuid, time.Now(), sid)
 		if err != nil {
 			log.Println(err)
 		}
 	} else {
 		//same  email signin -> session, if have session -> drop session -> ReLogin
-		_, err := DB.Exec("DELETE FROM session WHERE id = ?", sid)
+		_, err := DB.Exec("DELETE FROM session WHERE id = $1", sid)
 		if err != nil {
 			log.Println(err)
 		}

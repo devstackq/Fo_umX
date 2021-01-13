@@ -29,16 +29,16 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 	field := any + "_id"
 	table := any + "s"
 
-	DB.QueryRow("SELECT id FROM voteState WHERE "+field+"=? AND user_id=?", id, s.UserID).Scan(&vote.ID)
+	DB.QueryRow("SELECT id FROM voteState WHERE "+field+"=$1 AND user_id=$2", id, s.UserID).Scan(&vote.ID)
 
-	err = DB.QueryRow("SELECT creator_id FROM "+table+"  WHERE id=?", id).Scan(&vote.CreatorID)
+	err = DB.QueryRow("SELECT creator_id FROM "+table+"  WHERE id=$1", id).Scan(&vote.CreatorID)
 	objID, _ := strconv.Atoi(id)
 	v := Votes{}
 
 	if vote.ID == 0 {
 		fmt.Println(vote.ID, s.UserID, "start", objID, table, "table", "init Dislike field", field)
 
-		votePrepare, err := DB.Prepare(`INSERT INTO voteState(` + field + `, user_id, dislike_state, like_state) VALUES( ?, ?, ?,?)`)
+		votePrepare, err := DB.Prepare(`INSERT INTO voteState(` + field + `, user_id, dislike_state, like_state) VALUES($1,$2,$3,$4)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -48,11 +48,11 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 		}
 		defer votePrepare.Close()
 
-		err = DB.QueryRow("SELECT count_dislike FROM "+table+" WHERE id=?", id).Scan(&vote.OldDislike)
+		err = DB.QueryRow("SELECT count_dislike FROM "+table+" WHERE id=$1", id).Scan(&vote.OldDislike)
 		if err != nil {
 			log.Println(err)
 		}
-		_, err = DB.Exec("UPDATE "+table+" SET count_dislike=? WHERE id=?", vote.OldDislike+1, id)
+		_, err = DB.Exec("UPDATE "+table+" SET count_dislike=$1 WHERE id=$2", vote.OldDislike+1, id)
 
 		if err != nil {
 			log.Println(err)
@@ -61,25 +61,25 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 		utils.SetVoteNotify(any, vote.CreatorID, s.UserID, objID, false)
 
 	} else {
-		err = DB.QueryRow("SELECT count_like FROM "+table+" WHERE id=?", id).Scan(&vote.OldLike)
+		err = DB.QueryRow("SELECT count_like FROM "+table+" WHERE id=$1", id).Scan(&vote.OldLike)
 		if err != nil {
 			log.Println(err)
 		}
-		err = DB.QueryRow("SELECT count_dislike FROM "+table+" WHERE id=?", id).Scan(&vote.OldDislike)
+		err = DB.QueryRow("SELECT count_dislike FROM "+table+" WHERE id=$1", id).Scan(&vote.OldDislike)
 		if err != nil {
 			log.Println(err)
 		}
-		DB.QueryRow("SELECT like_state, dislike_state FROM voteState where "+field+"=? and user_id=?", id, s.UserID).Scan(&vote.LikeState, &vote.DislikeState)
+		DB.QueryRow("SELECT like_state, dislike_state FROM voteState where "+field+"=$1 and user_id=$2", id, s.UserID).Scan(&vote.LikeState, &vote.DislikeState)
 
 		//set dislike default
 		if vote.LikeState == 0 && vote.DislikeState == 1 {
 
 			vote.OldDislike--
-			_, err = DB.Exec("UPDATE "+table+" SET count_dislike = ? WHERE id=?", vote.OldDislike, id)
+			_, err = DB.Exec("UPDATE "+table+" SET count_dislike = $1 WHERE id=$2", vote.OldDislike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET  dislike_state=? WHERE "+field+"=? and user_id=?", 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET  dislike_state=$1 WHERE "+field+"=$2 and user_id=$3", 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -96,15 +96,15 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 
 			vote.OldDislike++
 			vote.OldLike--
-			_, err = DB.Exec("UPDATE "+table+" SET count_dislike = ? WHERE id=?", vote.OldDislike, id)
+			_, err = DB.Exec("UPDATE "+table+" SET count_dislike = $1 WHERE id=$2", vote.OldDislike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE "+table+" SET count_like = ? WHERE id=?", vote.OldLike, id)
+			_, err = DB.Exec("UPDATE "+table+" SET count_like = $1 WHERE id=$2", vote.OldLike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET like_state = ?, dislike_state=? WHERE "+field+"=? and user_id=?", 0, 1, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET like_state = $1, dislike_state=$2 WHERE "+field+"=$3 and user_id=$4", 0, 1, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -115,11 +115,11 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 		if vote.LikeState == 0 && vote.DislikeState == 0 {
 			fmt.Println("case 4 like 0, dis 0 LS 0, DS 1")
 			vote.OldDislike++
-			_, err = DB.Exec("UPDATE "+table+" SET count_dislike=? WHERE id=?", vote.OldDislike, id)
+			_, err = DB.Exec("UPDATE "+table+" SET count_dislike=$1 WHERE id=$2", vote.OldDislike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET dislike_state = ?, like_state=? WHERE "+field+"=? and user_id=?", 1, 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET dislike_state = $1, like_state=$2 WHERE "+field+"=$3 and user_id=$4", 1, 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -136,9 +136,9 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 	table := any + "s"
 	//get current UserId by uuid
 	//get by post_id and user_id -> row -> in voteState, if not -> create new row, set chenge likeState = 1, add post by ID  - like_count + 1
-	DB.QueryRow("SELECT id FROM voteState where "+field+"=? and user_id=?", id, s.UserID).Scan(&vote.ID)
+	DB.QueryRow("SELECT id FROM voteState where "+field+"=$1 and user_id=$2", id, s.UserID).Scan(&vote.ID)
 
-	err = DB.QueryRow("SELECT creator_id FROM "+table+"  WHERE id=?", id).Scan(&vote.CreatorID)
+	err = DB.QueryRow("SELECT creator_id FROM "+table+"  WHERE id=$1", id).Scan(&vote.CreatorID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -148,7 +148,7 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 	if vote.ID == 0 {
 		fmt.Println(vote.ID, s.UserID, "start", id, table, "table", "init Like field", field)
 
-		votePrepare, err := DB.Prepare("INSERT INTO voteState(" + field + ", user_id, like_state, dislike_state) VALUES( ?, ?, ?,?)")
+		votePrepare, err := DB.Prepare("INSERT INTO voteState(" + field + ", user_id, like_state, dislike_state) VALUES($1,$2,$3,$4)")
 		if err != nil {
 			log.Println(err)
 		}
@@ -158,11 +158,11 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 		}
 		defer votePrepare.Close()
 
-		err = DB.QueryRow("SELECT count_like FROM "+table+" WHERE id=?", id).Scan(&vote.OldLike)
+		err = DB.QueryRow("SELECT count_like FROM "+table+" WHERE id=$1", id).Scan(&vote.OldLike)
 		if err != nil {
 			log.Println(err)
 		}
-		_, err = DB.Exec("UPDATE "+table+" SET count_like=? WHERE id=?", vote.OldLike+1, id)
+		_, err = DB.Exec("UPDATE "+table+" SET count_like=$1 WHERE id=$2", vote.OldLike+1, id)
 		if err != nil {
 			log.Println(err)
 		}
@@ -170,16 +170,16 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 
 	} else {
 		//if post -> liked or Disliked -> get CountLike & Dislike current Post, and get LikeState & dislike State
-		err = DB.QueryRow("SELECT count_like FROM "+table+"  WHERE id=?", id).Scan(&vote.OldLike)
+		err = DB.QueryRow("SELECT count_like FROM "+table+"  WHERE id=$1", id).Scan(&vote.OldLike)
 		if err != nil {
 			log.Println(err)
 		}
-		err = DB.QueryRow("SELECT count_dislike FROM "+table+"  WHERE id=?", id).Scan(&vote.OldDislike)
+		err = DB.QueryRow("SELECT count_dislike FROM "+table+"  WHERE id=$1", id).Scan(&vote.OldDislike)
 		if err != nil {
 			log.Println(err)
 		}
 
-		DB.QueryRow("SELECT like_state, dislike_state FROM voteState where "+field+"=?  and user_id=?", id, s.UserID).Scan(&vote.LikeState, &vote.DislikeState)
+		DB.QueryRow("SELECT like_state, dislike_state FROM voteState where "+field+"=$1 and user_id=$2", id, s.UserID).Scan(&vote.LikeState, &vote.DislikeState)
 
 		fmt.Println(" old Dislike & like", vote.OldDislike, vote.OldLike)
 
@@ -188,11 +188,11 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 
 			fmt.Println("l-1, d-0 -> l-0,d-0")
 			vote.OldLike--
-			_, err = DB.Exec("UPDATE "+table+"  SET count_like = ? WHERE id= ?", vote.OldLike, id)
+			_, err = DB.Exec("UPDATE "+table+"  SET count_like =$1 WHERE id=$2", vote.OldLike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET like_state = ? WHERE "+field+"=?  and user_id=?", 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET like_state =$1 WHERE "+field+"=$2  and user_id=$3", 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -206,11 +206,11 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 			fmt.Println("l-0,d-1, -> l-1, d-0")
 			vote.OldDislike--
 			vote.OldLike++
-			_, err = DB.Exec("UPDATE "+table+"  SET count_dislike = ?, count_like=? WHERE id=?", vote.OldDislike, vote.OldLike, id)
+			_, err = DB.Exec("UPDATE "+table+"  SET count_dislike =$1, count_like=$2 WHERE id=$3", vote.OldDislike, vote.OldLike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET like_state = ?, dislike_state=? WHERE "+field+"=?  and user_id=?", 1, 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET like_state = $1, dislike_state=$2 WHERE "+field+"=$3  and user_id=$4", 1, 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -223,11 +223,11 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 
 			fmt.Println("l-0, d-0 -> l-1, d-0")
 			vote.OldLike++
-			_, err = DB.Exec("UPDATE "+table+" SET count_like=? WHERE id=?", vote.OldLike, id)
+			_, err = DB.Exec("UPDATE "+table+" SET count_like=$1 WHERE id=$2", vote.OldLike, id)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET like_state = ?, dislike_state=? WHERE "+field+"= ?  and user_id=?", 1, 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET like_state =#1, dislike_state=$2 WHERE "+field+"= $3  and user_id=$4", 1, 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
@@ -240,7 +240,7 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 func (v *Votes) UpdateNotify(table string, toWhom, fromWhom, objID, voteType int) {
 
 	if table == "post" && toWhom != 0 {
-		_, err = DB.Exec("UPDATE notify SET voteState=? WHERE comment_id=? AND post_id =? AND current_user_id=?  AND to_whom=?", voteType, 0, objID, fromWhom, toWhom)
+		_, err = DB.Exec("UPDATE notify SET voteState=$1 WHERE comment_id=$2 AND post_id =$3 AND current_user_id=$4  AND to_whom=$4", voteType, 0, objID, fromWhom, toWhom)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -249,7 +249,7 @@ func (v *Votes) UpdateNotify(table string, toWhom, fromWhom, objID, voteType int
 	} else if table == "comment" && toWhom != 0 {
 
 		fmt.Println(objID, fromWhom, toWhom, "notify Update Vote Comment")
-		_, err = DB.Exec("UPDATE notify SET voteState=? WHERE post_id=? AND  comment_id=? AND current_user_id=?  AND to_whom=?", voteType, 0, objID, fromWhom, toWhom)
+		_, err = DB.Exec("UPDATE notify SET voteState=$1 WHERE post_id=$2 AND  comment_id=$3 AND current_user_id=$4  AND to_whom=$5", voteType, 0, objID, fromWhom, toWhom)
 		if err != nil {
 			fmt.Println(err)
 		}

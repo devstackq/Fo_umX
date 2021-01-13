@@ -64,7 +64,7 @@ func (user *User) GetUserProfile(r *http.Request, w http.ResponseWriter) ([]Post
 	u := User{}
 	liked := VotedPosts("like_state", user.Session.UserID)
 	disliked := VotedPosts("dislike_state", user.Session.UserID)
-	err = DB.QueryRow("SELECT id, full_name, email, username, isAdmin, age, sex, created_time, city, image, last_seen  FROM users WHERE id = ?", user.Session.UserID).Scan(&u.ID, &u.FullName, &u.Email, &u.Username, &u.IsAdmin, &u.Age, &u.Sex, &u.CreatedTime, &u.City, &u.Image, &u.LastTime)
+	err = DB.QueryRow("SELECT id, full_name, email, username, isAdmin, age, sex, created_time, city, image, last_seen  FROM users WHERE id = $1", user.Session.UserID).Scan(&u.ID, &u.FullName, &u.Email, &u.Username, &u.IsAdmin, &u.Age, &u.Sex, &u.CreatedTime, &u.City, &u.Image, &u.LastTime)
 	if err != nil {
 		log.Println(err)
 	}
@@ -76,7 +76,7 @@ func (user *User) GetUserProfile(r *http.Request, w http.ResponseWriter) ([]Post
 	u.ImageHTML = base64.StdEncoding.EncodeToString(u.Image)
 
 	//get posts current user
-	pStmp, err := DB.Query("SELECT * FROM posts WHERE creator_id=?", user.Session.UserID)
+	pStmp, err := DB.Query("SELECT * FROM posts WHERE creator_id=$1", user.Session.UserID)
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -93,7 +93,7 @@ func (user *User) GetUserProfile(r *http.Request, w http.ResponseWriter) ([]Post
 		postsCreated = append(postsCreated, post)
 	}
 
-	commentQuery, err := DB.Query("SELECT * FROM comments WHERE creator_id=?", user.Session.UserID)
+	commentQuery, err := DB.Query("SELECT * FROM comments WHERE creator_id=$1", user.Session.UserID)
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -106,11 +106,11 @@ func (user *User) GetUserProfile(r *http.Request, w http.ResponseWriter) ([]Post
 		if err != nil {
 			log.Println(err.Error())
 		}
-		err = DB.QueryRow("SELECT post_id FROM comments WHERE id = ?", cmt.ID).Scan(&post.ID)
+		err = DB.QueryRow("SELECT post_id FROM comments WHERE id =$1", cmt.ID).Scan(&post.ID)
 		if err != nil {
 			log.Println(err.Error())
 		}
-		err = DB.QueryRow("SELECT thread FROM posts WHERE id = ?", post.ID).Scan(&cmt.TitlePost)
+		err = DB.QueryRow("SELECT thread FROM posts WHERE id = $1", post.ID).Scan(&cmt.TitlePost)
 		if err != nil {
 			log.Println(err.Error())
 		}
@@ -126,7 +126,7 @@ func (user *User) GetUserProfile(r *http.Request, w http.ResponseWriter) ([]Post
 func GetUserActivities(w http.ResponseWriter, r *http.Request, s *general.Session) (result []Notify) {
 
 	var notifies []Notify
-	nQuery, err := DB.Query("SELECT * FROM notify WHERE to_whom=?", s.UserID)
+	nQuery, err := DB.Query("SELECT * FROM notify WHERE to_whom=$1", s.UserID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -142,11 +142,11 @@ func GetUserActivities(w http.ResponseWriter, r *http.Request, s *general.Sessio
 		//get data/comment data by id
 		n := Notify{}
 		// commnentId - delete, but notify - Have row
-		err = DB.QueryRow("SELECT thread, create_time, update_time FROM posts WHERE id = ?", v.PostID).Scan(&n.Content, &n.CreatedTime, &n.UpdatedTime)
+		err = DB.QueryRow("SELECT thread, create_time, update_time FROM posts WHERE id = $1", v.PostID).Scan(&n.Content, &n.CreatedTime, &n.UpdatedTime)
 		if err != nil {
 			log.Println(err)
 		}		
-		err = DB.QueryRow("SELECT post_id, content, create_time, update_time FROM comments WHERE id = ?", v.CommentID).Scan(&n.CIDPID, &n.Content, &n.CreatedTime, &n.UpdatedTime)
+		err = DB.QueryRow("SELECT post_id, content, create_time, update_time FROM comments WHERE id = $1", v.CommentID).Scan(&n.CIDPID, &n.Content, &n.CreatedTime, &n.UpdatedTime)
 		if err != nil {
 			log.Println(err)
 		}
@@ -163,7 +163,7 @@ func GetUserActivities(w http.ResponseWriter, r *http.Request, s *general.Sessio
 			n.Time = n.CreatedTime.Format("2006 Jan _2 15:04:05")
 		}
 
-		err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", v.UserLostID).Scan(&n.UserLost)
+		err = DB.QueryRow("SELECT full_name FROM users WHERE id = $1", v.UserLostID).Scan(&n.UserLost)
 		if err != nil {
 			log.Println(err)
 		}
@@ -210,12 +210,12 @@ func (user *User) GetAnotherProfile(r *http.Request) ([]Post, User, error) {
 	postsU := []Post{}
 
 	//err = userQR.Scan(&u.ID, &u.FullName, &u.Email, &u.Password, &u.IsAdmin, &u.Age, &u.Sex, &u.CreatedTime, &u.City, &u.Image)
-	err = DB.QueryRow("SELECT id, full_name, email, isAdmin, age, sex, created_time, city, image  FROM users WHERE id = ?", user.Temp).Scan(&u.ID, &u.FullName, &u.Email, &u.IsAdmin, &u.Age, &u.Sex, &u.CreatedTime, &u.City, &u.Image)
+	err = DB.QueryRow("SELECT id, full_name, email, isAdmin, age, sex, created_time, city, image  FROM users WHERE id = $1", user.Temp).Scan(&u.ID, &u.FullName, &u.Email, &u.IsAdmin, &u.Age, &u.Sex, &u.CreatedTime, &u.City, &u.Image)
 	if u.Image[0] == 60 {
 		u.SVG = true
 	}
 	u.ImageHTML = base64.StdEncoding.EncodeToString(u.Image)
-	psu, err := DB.Query("SELECT * FROM posts WHERE creator_id=?", u.ID)
+	psu, err := DB.Query("SELECT * FROM posts WHERE creator_id=$1", u.ID)
 
 	defer psu.Close()
 
@@ -238,7 +238,7 @@ func (user *User) GetAnotherProfile(r *http.Request) ([]Post, User, error) {
 //UpdateProfile function
 func (u *User) UpdateProfile() {
 
-	_, err := DB.Exec("UPDATE  users SET full_name=?, username=?, age=?, sex=?, city=?, image=? WHERE id =?",
+	_, err := DB.Exec("UPDATE  users SET full_name=$1, username=$2, age=$3, sex=$4, city=$5, image=$6 WHERE id =$7",
 		u.FullName, u.Username, u.Age, u.Sex, u.City, u.Image, u.ID)
 	if err != nil {
 	log.Println(err)	
@@ -248,19 +248,19 @@ func (u *User) UpdateProfile() {
 //DeleteAccount then dlogut - delete cookie, delete lsot comment, session Db, voteState
 func (u *User) DeleteAccount(w http.ResponseWriter, r *http.Request) {
 
-	_, err = DB.Exec("DELETE FROM  session  WHERE user_id=?", u.ID)
+	_, err = DB.Exec("DELETE FROM  session  WHERE user_id=$1", u.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM  voteState  WHERE user_id=?", u.ID)
+	_, err = DB.Exec("DELETE FROM  voteState  WHERE user_id=$1", u.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM  comments  WHERE creator_id=?", u.ID)
+	_, err = DB.Exec("DELETE FROM  comments  WHERE creator_id=$1", u.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM  users  WHERE id=?", u.ID)
+	_, err = DB.Exec("DELETE FROM  users  WHERE id=$1", u.ID)
 
 	if err != nil {
 		log.Println(err)
@@ -273,7 +273,7 @@ func VotedPosts(voteType string, uid int) (result []Post) {
 	postArr := []Votes{}
 	arrIDVote := []int{}
 
-	votedPost, err := DB.Query("select post_id from voteState where user_id=? and  "+voteType+" and comment_id is null", uid, 1)
+	votedPost, err := DB.Query("select post_id from voteState where user_id=$1 and  "+voteType+" and comment_id is null", uid, 1)
 	if err != nil {
 		log.Println(err)
 	}
@@ -289,7 +289,7 @@ func VotedPosts(voteType string, uid int) (result []Post) {
 	}
 
 	for _, v := range arrIDVote {
-		smtp, err := DB.Query("SELECT * FROM posts WHERE id=?", v)
+		smtp, err := DB.Query("SELECT * FROM posts WHERE id=$1", v)
 		if err != nil {
 			log.Println(err)
 		}

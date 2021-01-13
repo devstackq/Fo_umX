@@ -25,7 +25,7 @@ func IsValidCookie(f http.HandlerFunc) http.HandlerFunc {
 		//cookie Browser -> send IsCookie(check if this user ->)
 		// then call handler -> middleware
 		if isValidCookie, sessionF := utils.IsCookie(w, r, c.Value); isValidCookie {
-			err = DB.QueryRow("SELECT cookie_time FROM session WHERE user_id = ?", sessionF.UserID).Scan(&sessionF.Time)
+			err = DB.QueryRow("SELECT cookie_time FROM session WHERE user_id = $1", sessionF.UserID).Scan(&sessionF.Time)
 			if err != nil {
 				log.Println(err)
 			}

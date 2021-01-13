@@ -26,7 +26,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 	userCheck := utils.IsRegistered(w, r, u.Username)
 	
 	if !emailCheck && !userCheck {
-		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES(?,?,?,?,?,?,?,?,?)`)
+		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES($1,$2,$3,$4,$5,$6,$7,$8$,9)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -58,7 +58,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 
 	var user User
 
-	err = DB.QueryRow("SELECT id FROM users WHERE email=?", uStr.Email).Scan(&user.ID)
+	err = DB.QueryRow("SELECT id FROM users WHERE email=$1", uStr.Email).Scan(&user.ID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -66,7 +66,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	if utils.AuthType == "default" {
 
 		if uStr.Email != "" {
-			err = DB.QueryRow("SELECT id, password FROM users WHERE email=?", uStr.Email).Scan(&user.ID, &user.Password)
+			err = DB.QueryRow("SELECT id, password FROM users WHERE email=$1", uStr.Email).Scan(&user.ID, &user.Password)
 			if err != nil {
 				log.Println("err email")
 				utils.AuthError(w, r, err, "user by Email not found", utils.AuthType)
@@ -74,7 +74,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			}
 			utils.ReSession(user.ID, uStr.Session, "", "")
 		} else if uStr.Username != "" {
-			err = DB.QueryRow("SELECT id, password FROM users WHERE username=?", uStr.Username).Scan(&user.ID, &user.Password)
+			err = DB.QueryRow("SELECT id, password FROM users WHERE username=$1", uStr.Username).Scan(&user.ID, &user.Password)
 			if err != nil {
 				log.Println("errr username")
 				utils.AuthError(w, r, err, "user by Username not found", utils.AuthType)
@@ -103,7 +103,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//create uuid and set uid DB table session by userid,
-	userPrepare, err := DB.Prepare(`INSERT INTO session(uuid, user_id, cookie_time) VALUES (?, ?, ?)`)
+	userPrepare, err := DB.Prepare(`INSERT INTO session(uuid, user_id, cookie_time) VALUES ($1,$2,$3)`)
 	if err != nil {
 		log.Println(err)
 	}
@@ -122,7 +122,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	// get user in info by session Id
-	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = ?", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
+	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
 	if err != nil {
 		utils.AuthError(w, r, err, "not find user from session", utils.AuthType)
 		log.Println(err, "her")
