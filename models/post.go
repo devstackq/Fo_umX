@@ -120,7 +120,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 				log.Println(err)
 			}
 		} else {
-			rows, err = DB.Query("SELECT * FROM posts ORDER BY create_time DESC LIMIT ? OFFSET ?", limit, offset)
+			rows, err = DB.Query("SELECT * FROM posts ORDER BY create_time DESC LIMIT $1 OFFSET $2", limit, offset)
 			if err != nil {
 				log.Println(err)
 			}
@@ -198,7 +198,7 @@ func (p *Post) DeletePost() {
 	if err != nil {
 		log.Println(err, "1")
 	}
-	
+
 	_, err = DB.Exec("DELETE FROM notify  WHERE post_id =?", p.ID)
 	if err != nil {
 		log.Println(err, "2")
@@ -245,7 +245,7 @@ func (p *Post) CreatePost(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		
+
 		createPostExec, err := createPostPrepare.Exec(p.Title, p.Content, p.Session.UserID, time.Now(), fileBytes)
 		if err != nil {
 			log.Println(err)
@@ -341,8 +341,8 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 		} else {
 			comment.Time = comment.CreatedTime.Format("2006 Jan _2 15:04:05")
 		}
-		
-		err = 	DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.UserID).Scan(&comment.Author)
+
+		err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.UserID).Scan(&comment.Author)
 		if err != nil {
 			log.Println(err)
 		}
@@ -354,7 +354,7 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 		defer cmtReplq.Close()
 		//write each fields inside Comment struct -> then  append Array Comments
 		//var comments []Comment
-	
+
 		for cmtReplq.Next() {
 
 			comRep := Comment{}
@@ -362,33 +362,33 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 			if err != nil {
 				log.Fatal(err)
 			}
-		//9, 10 -> 8, iskluchit 9,10
+			//9, 10 -> 8, iskluchit 9,10
 			if comRep.ParentID == comment.ID {
-				comment.Children = append(comment.Children,  comRep)
+				comment.Children = append(comment.Children, comRep)
 				was = append(was, comRep.ID)
 			}
-	}
-	//write - in comments [], uniqum comments, add toggle
-	if comment.ParentID  > 0 {
+		}
+		//write - in comments [], uniqum comments, add toggle
+		if comment.ParentID > 0 {
 
-			err = 	DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id = ?", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
+			err = DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id = ?", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
 			if err != nil {
 				log.Println(err)
 			}
-			err = 	DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.FromWhom).Scan(&comment.Author)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.FromWhom).Scan(&comment.Author)
 			if err != nil {
 				log.Println(err)
 			}
-			err = 	DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.ToWhom).Scan(&comment.Replied)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id = ?", comment.ToWhom).Scan(&comment.Replied)
 			if err != nil {
 				log.Println(err)
 			}
-			err = 	DB.QueryRow("SELECT content FROM comments WHERE id = ?", comment.ParentID).Scan(&comment.RepliedContent)
+			err = DB.QueryRow("SELECT content FROM comments WHERE id = ?", comment.ParentID).Scan(&comment.RepliedContent)
 			if err != nil {
 				log.Println(err)
 			}
 		}
-		
+
 		//write - uniq by comment.ID
 		fmt.Println(was)
 
@@ -409,7 +409,6 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 
 	return comments, p
 }
-
 
 //CreateBridge create post  -> post_id relation category
 func (pcb *PostCategory) CreateBridge() {
@@ -439,11 +438,11 @@ func Search(w http.ResponseWriter, r *http.Request) []Post {
 		log.Println(err)
 		return nil
 	}
-	
+
 	defer psbc.Close()
 	defer psbt.Close()
-	var  pTID int
-	
+	var pTID int
+
 	for psbt.Next() {
 		err = psbt.Scan(&post.ID, &post.Title, &post.Content, &post.CreatorID, &post.CreateTime, &post.UpdateTime, &post.Image, &post.Like, &post.Dislike)
 		if err != nil {

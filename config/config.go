@@ -19,25 +19,16 @@ var (
 //Init Db, if not table -> create
 func Init() {
 
-	// retrieve the url
-	//	dbURL := os.Getenv("postgres://iczkybfluwphwj:12d122053793fe4ba376b339f5911d6a6cdfa16836b8e5068bfb904adfb0b2ad@ec2-52-30-161-203.eu-west-1.compu")7
-	// connect to the db
 	db, err := sql.Open("postgres", "postgres://rhwyoybdcpfqge:91b7f85d5fe2999acedec578e377dc63a941a0e8a320f6092b4071c4eec85b72@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/dcmpipelt02b2h")
 	if err != nil {
 		log.Println("can't connect inDb")
 	}
-	fmt.Println(db, "db psq data")
 
 	err = db.Ping()
 	if err != nil {
 		log.Println("can't Ping")
 	}
 
-	// create DB and table
-	//db, err = sql.Open("sqlite3", "forumx.db")
-	// if err != nil {
-	// 	log.Println(err)
-	// }
 	//db.Exec("PRAGMA foreign_keys=ON")
 
 	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name varchar(255) NOT NULL, email	varchar(255) NOT NULL UNIQUE, username varchar(255) NOT NULL UNIQUE, password varchar(255), isAdmin int DEFAULT 0, age int, sex varchar(255), created_time	timestamp, last_seen timestamp, city varchar(255), image bytea NOT NULL);")
@@ -119,7 +110,6 @@ func Init() {
 	if err != nil {
 		log.Println(err, "exec err 8")
 	}
-	fmt.Println(db, "suck D")
 
 	putCategoriesInDb(db)
 
