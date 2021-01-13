@@ -115,7 +115,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 			}
 		} else if filter.Category != "" {
 			leftJoin = true
-			rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id $1 ORDER  BY create_time  DESC LIMIT 8", filter.Category)
+			rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id=$1 ORDER  BY create_time  DESC LIMIT 8", filter.Category)
 			if err != nil {
 				log.Println(err)
 			}
@@ -129,7 +129,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Science"
 		post.Endpoint = "/science"
-		rows, err = DB.Query("SELECT * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id $1  ORDER  BY create_time  DESC LIMIT 5", 1)
+		rows, err = DB.Query("SELECT * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id   WHERE category_id=$1  ORDER  BY create_time  DESC LIMIT 5", 1)
 		if err != nil {
 			log.Println(err)
 		}
@@ -137,7 +137,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Love"
 		post.Endpoint = "/love"
-		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id $1   ORDER  BY create_time  DESC LIMIT 5", 2)
+		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id=$1   ORDER  BY create_time  DESC LIMIT 5", 2)
 		if err != nil {
 			log.Println(err)
 		}
@@ -145,7 +145,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 		leftJoin = true
 		post.Temp = "Sapid"
 		post.Endpoint = "/sapid"
-		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id $1  ORDER  BY create_time  DESC LIMIT 5", 3)
+		rows, err = DB.Query("SELECT  * FROM posts  LEFT JOIN post_cat_bridge  ON post_cat_bridge.post_id = posts.id  WHERE category_id=$1  ORDER  BY create_time  DESC LIMIT 5", 3)
 		if err != nil {
 			log.Println(err)
 		}
@@ -180,7 +180,7 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 
 //UpdatePost fucntion
 func (p *Post) UpdatePost() {
-	_, err := DB.Exec("UPDATE  posts SET thread $1, content $2, image $3, update_time $4 WHERE id $5",
+	_, err := DB.Exec("UPDATE  posts SET thread=$1, content=$2, image=$3, update_time=$4 WHERE id=$5",
 		p.Title, p.Content, p.Image, p.UpdateTime, p.ID)
 	if err != nil {
 		log.Println(err)
@@ -190,25 +190,25 @@ func (p *Post) UpdatePost() {
 //DeletePost function, delete rows, notify, voteState, comment, by postId
 func (p *Post) DeletePost() {
 
-	_, err = DB.Exec("DELETE FROM voteState  WHERE post_id $1", p.ID)
+	_, err = DB.Exec("DELETE FROM voteState  WHERE post_id=$1", p.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err := DB.Exec("DELETE FROM comments  WHERE post_id $1", p.ID)
-	if err != nil {
-		log.Println(err)
-	}
-
-	_, err = DB.Exec("DELETE FROM notify  WHERE post_id $1", p.ID)
+	_, err := DB.Exec("DELETE FROM comments  WHERE post_id=$1", p.ID)
 	if err != nil {
 		log.Println(err)
 	}
 
-	_, err = DB.Exec("DELETE FROM post_cat_bridge  WHERE post_id $1", p.ID)
+	_, err = DB.Exec("DELETE FROM notify  WHERE post_id=$1", p.ID)
 	if err != nil {
 		log.Println(err)
 	}
-	_, err = DB.Exec("DELETE FROM posts WHERE id $1", p.ID)
+
+	_, err = DB.Exec("DELETE FROM post_cat_bridge  WHERE post_id=$1", p.ID)
+	if err != nil {
+		log.Println(err)
+	}
+	_, err = DB.Exec("DELETE FROM posts WHERE id=$1", p.ID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -295,7 +295,7 @@ func (p *Post) CreatePost(w http.ResponseWriter, r *http.Request) {
 func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 	//write new structure data
 	p := Post{}
-	err = DB.QueryRow("SELECT * FROM posts WHERE id $1", post.ID).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
+	err = DB.QueryRow("SELECT * FROM posts WHERE id=$1", post.ID).Scan(&p.ID, &p.Title, &p.Content, &p.CreatorID, &p.CreateTime, &p.UpdateTime, &p.Image, &p.Like, &p.Dislike)
 	if err != nil {
 		log.Println(err)
 	}
@@ -316,16 +316,15 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 	}
 
 	p.ImageHTML = base64.StdEncoding.EncodeToString(p.Image)
-	DB.QueryRow("SELECT full_name FROM users WHERE id $1", p.CreatorID).Scan(&p.FullName)
+	DB.QueryRow("SELECT full_name FROM users WHERE id=$1", p.CreatorID).Scan(&p.FullName)
 
-	cmtq, err := DB.Query("SELECT * FROM comments WHERE  post_id $1", p.ID)
+	cmtq, err := DB.Query("SELECT * FROM comments WHERE post_id=$1", p.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer cmtq.Close()
 	//write each fields inside Comment struct -> then  append Array Comments
 	var comments []Comment
-	var was []int
 
 	for cmtq.Next() {
 		//get each comment Post -> by Id, -> get each replyComment by comment_id -> get replyAnswer by reply_com_id
@@ -342,12 +341,12 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 			comment.Time = comment.CreatedTime.Format("2006 Jan _2 15:04:05")
 		}
 
-		err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.UserID).Scan(&comment.Author)
+		err = DB.QueryRow("SELECT full_name FROM users WHERE id=$1", comment.UserID).Scan(&comment.Author)
 		if err != nil {
 			log.Println(err)
 		}
 
-		cmtReplq, err := DB.Query("SELECT * FROM comments WHERE  post_id $1", p.ID)
+		cmtReplq, err := DB.Query("SELECT * FROM comments WHERE  post_id=$1", p.ID)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -371,19 +370,19 @@ func (post *Post) GetPostByID(r *http.Request) ([]Comment, Post) {
 		//write - in comments [], uniqum comments, add toggle
 		if comment.ParentID > 0 {
 
-			err = DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id $1", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
+			err = DB.QueryRow("SELECT creator_id, toWho FROM comments WHERE id=$1", comment.ID).Scan(&comment.FromWhom, &comment.ToWhom)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.FromWhom).Scan(&comment.Author)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id=$1", comment.FromWhom).Scan(&comment.Author)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT full_name FROM users WHERE id $1", comment.ToWhom).Scan(&comment.Replied)
+			err = DB.QueryRow("SELECT full_name FROM users WHERE id=$1", comment.ToWhom).Scan(&comment.Replied)
 			if err != nil {
 				log.Println(err)
 			}
-			err = DB.QueryRow("SELECT content FROM comments WHERE id $1", comment.ParentID).Scan(&comment.RepliedContent)
+			err = DB.QueryRow("SELECT content FROM comments WHERE id=$1", comment.ParentID).Scan(&comment.RepliedContent)
 			if err != nil {
 				log.Println(err)
 			}
