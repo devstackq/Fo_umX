@@ -55,10 +55,11 @@ func Init() {
 	if err != nil {
 		log.Println(err, "1")
 	}
-	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER, CONSTRAINT fk_key_pcb_cat FOREIGN KEY(category_id) REFERENCES category(id), CONSTRAINT fk_key_pcb_post FOREIGN KEY(post_id) REFERENCES posts(id) )")
+	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER)")
 	if err != nil {
 		log.Println(err, "2")
 	}
+	//postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER, CONSTRAINT fk_key_pcb_cat FOREIGN KEY(category_id) REFERENCES category(id), CONSTRAINT fk_key_pcb_post FOREIGN KEY(post_id) REFERENCES posts(id) )")
 	comment, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments(id SERIAL PRIMARY KEY, parent_id INTEGER DEFAULT 0, content VARCHAR, post_id INTEGER, creator_id INTEGER DEFAULT 0, toWho INTEGER DEFAULT 0, fromWho INTEGER DEFAULT 0, create_time datetime,  update_time	datetime DEFAULT CURRENT_TIMESTAMP,  count_like INTEGER DEFAULT 0, count_dislike  INTEGER DEFAULT 0, CONSTRAINT fk_key_post_comment FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE )")
 	if err != nil {
 		log.Println(err, "3")
