@@ -97,7 +97,7 @@ func Init() {
 	}
 	notify.Exec()
 
-	category, err := db.Prepare("CREATE TABLE IF NOT EXISTS  category(id SERIAL PRIMARY KEY, name varchar(255) UNIQUE) );")
+	category, err := db.Prepare("CREATE TABLE IF NOT EXISTS  category(id SERIAL PRIMARY KEY, name varchar(255) UNIQUE );")
 	if err != nil {
 		log.Println(err)
 	}
