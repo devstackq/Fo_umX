@@ -111,7 +111,6 @@ func Init() {
 func putCategoriesInDb() {
 
 	count := utils.GetCountTable("category", db)
-
 	if count != 3 {
 		categories := []string{"science", "love", "sapid"}
 		for i := 0; i < 3; i++ {
@@ -126,4 +125,5 @@ func putCategoriesInDb() {
 			defer categoryPrepare.Close()
 		}
 	}
+	log.Println("test")
 }
