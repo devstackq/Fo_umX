@@ -51,7 +51,7 @@ func Init() {
 	// 	return
 	// }
 
-	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id SERIAL PRIMARY KEY, thread VARCHAR, content VARCHAR, creator_id INTEGER, create_time datetime,   update_time datetime DEFAULT CURRENT_TIMESTAMP, image	BLOB NOT NULL, count_like INTEGER DEFAULT 0, count_dislike INTEGER DEFAULT 0, FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE ) ")
+	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread varchar, content varchar, creator_id integer, create_time datetime,   update_time datetime DEFAULT current_timestamp, image	bytea NOT NULL, count_like INTEGER DEFAULT 0, count_dislike INTEGER DEFAULT 0, FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE ) ")
 	if err != nil {
 		log.Println(err, "1")
 	}
@@ -68,7 +68,7 @@ func Init() {
 	if err != nil {
 		log.Println(err, "4")
 	}
-	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name VARCHAR NOT NULL, email	VARCHAR NOT NULL UNIQUE, username VARCHAR NOT NULL UNIQUE, password VARCHAR, isAdmin INTEGER DEFAULT 0, age INTEGER, sex VARCHAR, created_time	datetime, last_seen datetime, city VARCHAR, image	BLOB NOT NULL)")
+	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name VARCHAR NOT NULL, email	VARCHAR NOT NULL UNIQUE, username VARCHAR NOT NULL UNIQUE, password VARCHAR, isAdmin INTEGER DEFAULT 0, age INTEGER, sex VARCHAR, created_time	datetime, last_seen datetime, city VARCHAR, image	bytea NOT NULL)")
 	if err != nil {
 		log.Println(err, "5")
 	}
