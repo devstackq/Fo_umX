@@ -55,7 +55,7 @@ func Init() {
 	if err != nil {
 		log.Println(err, "1")
 	}
-	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(post_id) REFERENCES posts(id) )")
+	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id INTEGER, category_id INTEGER, CONSTRAINT fk_key_pcb_cat FOREIGN KEY(category_id) REFERENCES category(id), CONSTRAINT fk_key_pcb_post FOREIGN KEY(post_id) REFERENCES posts(id) )")
 	if err != nil {
 		log.Println(err, "2")
 	}
