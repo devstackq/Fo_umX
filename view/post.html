@@ -9,13 +9,16 @@
         <img width="240px" height="220px" alt=" " src="data:image/svg+xml;base64, {{.ImageHTML}} "> {{else}}
         <img width="240px" height="220px" class="post-img" src="data:image/jpeg;base64, {{.ImageHTML}}" alt=" "> {{end}}
     </div>
-    <p class="post-content"> {{.Content}} </p>
     <span id="time" class="time-post"> {{.Time}} </span>
-    <div class="author-wrapper">
-        <form action="/user/id?{{.CreatorID}}" method="post" class="author-post">
-            <input type="hidden" name="uid" value="{{.CreatorID}}">
-            <input type="submit" value="{{.FullName}}">
-        </form>
+
+    <div class="post-content"> {{.Content}}
+
+        <div class="author-wrapper">
+            <form action="/user/id?{{.CreatorID}}" method="post" class="author-post">
+                <input type="hidden" name="uid" value="{{.CreatorID}}">
+                <input type="submit" value="{{.FullName}}">
+            </form>
+        </div>
     </div>
     <div class="like-wrapper">
         <form action="/votes/post?id={{.ID}}" method="POST">

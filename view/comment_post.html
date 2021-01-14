@@ -8,8 +8,9 @@
                 <input type="hidden" name="uid" value="{{.UserID}}">
                 <input type="submit" value="{{.Author}}">
             </form>
-            {{if eq .Edited true }} <span class="edited-comment"> Edited </span>{{end}}
             <span class="time-comment"> {{.Time}} </span>
+
+            {{if eq .Edited true }} <span class="edited-comment"> Edited </span>{{end}}
         </div>
         {{if gt .ParentID 0 }}
         <div class="replied-container">

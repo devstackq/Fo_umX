@@ -10,6 +10,7 @@ body {
 }
 
 .main {
+  width: 100%;
   margin: 0px auto 0;
   background-color: #fff;
   max-width: 1200px;
@@ -347,6 +348,7 @@ a.links {
 }
 
 .post-wrapper {
+  width: 100%;
   max-width: 1200px;
   color: #fff;
   display: flex;
@@ -365,7 +367,7 @@ a.links {
 .author-wrapper {
   position: absolute;
   right: 10px;
-  bottom: 26%;
+  bottom: -15px;
   z-index: 2;
 }
 
@@ -412,10 +414,12 @@ a.links {
 }
 
 .comment-wrapperz {
-  background: #fff;
+  background-color: #fff;
+  width: 100%;
   max-width: 1200px;
   margin: 0px auto;
-  padding: 10px 20px 5px 20px;
+  padding: 4px 18px;
+  line-height: 1.5;
 }
 
 .comment-wrapper {
@@ -428,18 +432,13 @@ a.links {
   width: 100%;
 }
 
-.comment-wrapper {
-  margin-top: 20px;
-  margin-left: -15px;
-}
-
 .comment-underpost {
   position: relative;
   background-color: gray;
   border: 1px solid #000;
-  margin: 0px auto;
+  margin: 2px auto;
   color: #fff;
-  padding: 8px 10px;
+  padding: 8px 18px;
   z-index: 3;
 }
 
@@ -478,6 +477,7 @@ a.links {
 }
 
 .footer {
+  width: 100%;
   color: #000;
   background: #fff;
   max-width: 1200px;
@@ -816,14 +816,14 @@ a.dislike {
 }
 
 .comment-wrapper-p {
-  margin: 2px;
+  margin: 0;
   padding: 5px;
 }
 
 .like-comment-wrapper {
-position: absolute;
-right: 10px;
-bottom: 10px;
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
   display: flex;
   justify-content: center;
   padding-left: 10px;
@@ -847,6 +847,7 @@ bottom: 10px;
   padding: 16px;
   box-shadow: 6px 4px 12px grey;
   line-height: 24px;
+  position: relative;
 }
 
 .comment-btn {
@@ -979,25 +980,37 @@ bottom: 10px;
 }
 
 .time-comment {
-    position:absolute;
-  right: 10px;
+  position: absolute;
+  right: 18px;
   top: 10px;
 }
 @media only screen and (max-width: 600px) {
-    .time-comment, .replied-container, .author-wrapper, .like-comment-wrapper {    
-        position: relative;
+  .like-comment-wrapper {
+    position: relative;
   }
-.replied-container {
-    position:absolute;
-  right: 10px;
-  bottom: 0;
-  padding: 5px;
+  .time-comment {
+    top: 20px;
+    position: relative;
+    right: 0;
+  }
+  .comment-wrapper-p {
+    margin: 12px 0px 6px;
+  }
+  .replied-container span {
+    position: absolute;
+    top: 18%;
+    color: orangered;
+  }
 }
+.replied-container {
+  color: orangered;
+}
+/* .replied-container span{
+    position: relative;
+  } */
 
-.replied-container span{
-position: absolute;
-top: 5px;
-left: 20%;
+.replied-container span {
+  top: 18%;
 }
 .replied-container a {
   color: gold;
