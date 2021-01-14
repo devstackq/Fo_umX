@@ -11,7 +11,12 @@
     </div>
     <p class="post-content"> {{.Content}} </p>
     <span id="time" class="time-post"> {{.Time}} </span>
-
+    <div class="author-wrapper">
+        <form action="/user/id?{{.CreatorID}}" method="post" class="author-post">
+            <input type="hidden" name="uid" value="{{.CreatorID}}">
+            <input type="submit" value="{{.FullName}}">
+        </form>
+    </div>
     <div class="like-wrapper">
         <form action="/votes/post?id={{.ID}}" method="POST">
             <input type="hidden" name="like" value="1">
@@ -28,16 +33,11 @@
         <span class="dislike"> {{.Dislike}}</span>
     </div>
 
-    <div class="author-wrapper">
-        <form action="/user/id?{{.CreatorID}}" method="post" class="author-post">
-            <input type="hidden" name="uid" value="{{.CreatorID}}">
-            <input type="submit" value="{{.FullName}}">
-        </form>
-    </div>
+
     <!-- lst comment under post -->
     <div class="comment-wrapper" style="width:100%">
         <form action="/comment" method="POST">
-            <textarea  placeholder="lost your comment.." name="comment-text" id="textareaId"  rows="5"
+            <textarea placeholder="lost your comment.." name="comment-text" id="textareaId" rows="5"
                 required></textarea>
             <input type="hidden" name="curr" value="{{.ID}}">
         </form>

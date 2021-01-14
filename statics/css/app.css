@@ -12,7 +12,6 @@ body {
 .main {
   margin: 0px auto 0;
   background-color: #fff;
-  width: 100%;
   max-width: 1200px;
   position: relative;
   padding: 1px 18px;
@@ -269,8 +268,7 @@ a.links {
 .user-post-card {
   padding: 9px;
   background: lightgray;
-  margin-bottom: 3px;
-  line-height: 26px;
+  line-height: 32px;
   position: relative;
 }
 
@@ -329,8 +327,9 @@ a.links {
   max-width: 960px;
   color: #000;
   border: 0.5px solid #666;
-  padding: 18px 10px;
+  padding: 1px 10px 10px;
   margin-top: 20px;
+  line-height: 2;
 }
 
 .profile-wrapper img {
@@ -348,7 +347,6 @@ a.links {
 }
 
 .post-wrapper {
-  width: 100%;
   max-width: 1200px;
   color: #fff;
   display: flex;
@@ -483,7 +481,6 @@ a.links {
 .footer {
   color: #000;
   background: #fff;
-  width: 100%;
   max-width: 1200px;
   display: flex;
   justify-content: center;
@@ -660,6 +657,9 @@ input[type="file"]:hover {
   background-color: gold;
   margin-top: 10px;
 }
+.nav {
+  line-height: 2;
+}
 
 a.dislike {
   background-color: blue;
@@ -731,7 +731,6 @@ a.dislike {
   left: 24%;
   top: 165px; */
   line-height: 22px;
-  font-size: 14px;
   display: flex;
   flex-direction: column;
 }
