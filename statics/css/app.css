@@ -132,6 +132,9 @@ body {
     position: absolute;
     left: 50%;
     font-size: 20px;
+    position: absolute;
+    top: 32%;
+    left: 4%;
 }
 
 .nav {

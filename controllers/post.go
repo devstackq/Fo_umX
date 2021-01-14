@@ -43,11 +43,13 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		//utils.RenderTemplate(w, "category_post_template", posts)
 		return
 	}
+	send 
 	if endpoint == "/" {
 		utils.RenderTemplate(w, "index", posts)
 	} else {
 		//send category value
-		msg := []byte(fmt.Sprintf("<span id='category'> %s </span>", category))
+		msg := []byte(fmt.Sprintf("<span id='category'> %s </span>  <a id="create_post" class="link-profile create-btn" href="/create/post">Create
+		post</a> ", category))
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(msg)
 		utils.RenderTemplate(w, "category_post_template", posts)
