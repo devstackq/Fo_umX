@@ -334,7 +334,7 @@ a.links {
 }
 
 .profile-wrapper img {
-  max-width: 160px;
+  max-width: 120px;
 }
 
 .user-img {
@@ -727,9 +727,9 @@ a.dislike {
 }
 
 .user-info {
-  position: absolute;
+  /* position: absolute;
   left: 24%;
-  top: 165px;
+  top: 165px; */
   line-height: 22px;
   font-size: 14px;
   display: flex;
@@ -779,7 +779,7 @@ a.dislike {
 }
 
 .profile-link-container {
-  margin-top: 50px;
+  margin-top: 10%;
 }
 
 .profile-link-container a {
