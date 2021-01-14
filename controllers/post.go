@@ -40,19 +40,24 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		//msg := []byte(fmt.Sprintf("<span id='notify-post'> Post nil </span> <a id='create_post' class='link-profile create-btn' href='/create/post'>Create		post</a>"))
 		//w.Header().Set("Content-Type", "application/json")
 		//w.Write(msg)
-		utils.RenderTemplate(w, "category_post_template", posts)
-		return
+		if endpoint != "/" {
+			utils.RenderTemplate(w, "category_post_template", posts)
+		} else {
+			utils.RenderTemplate(w, "index", posts)
+		}
+	} else {
+
+		if endpoint == "/" {
+			utils.RenderTemplate(w, "index", posts)
+		} else {
+			//send category value
+			msg := []byte(fmt.Sprintf("<span id='category'> %s </span>", category))
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(msg)
+			utils.RenderTemplate(w, "category_post_template", posts)
+		}
 	}
 
-	if endpoint == "/" {
-		utils.RenderTemplate(w, "index", posts)
-	} else {
-		//send category value
-		msg := []byte(fmt.Sprintf("<span id='category'> %s </span>", category))
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(msg)
-		utils.RenderTemplate(w, "category_post_template", posts)
-	}
 }
 
 //GetPostByID  1 post by id
