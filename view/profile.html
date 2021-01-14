@@ -35,13 +35,14 @@
         <td> {{.LastSeen}}</td>
       </label>
     </div>
+
+    <div class="profile-link-container">
+      <a class="link-profile edit-btn" href="/edit/user?uid={{.ID}}">Edit profile</a>
+      <a class="link-profile delete-btn" onclick="areYouSure({{.ID}} )">Delete account</a>
+      <a class="link-profile activity-btn" href="/activity">Activities </a>
+    </div>
   </div>
 
-  <div class="profile-link-container">
-    <a class="link-profile edit-btn" href="/edit/user?uid={{.ID}}">Edit profile</a>
-    <a class="link-profile delete-btn" onclick="areYouSure({{.ID}} )">Delete account</a>
-    <a class="link-profile activity-btn" href="/activity">Activities </a>
-  </div>
   <!-- <a id="create_post" class="link-profile create-btn" href="/create/post">Create
     post</a> -->
 </div>
