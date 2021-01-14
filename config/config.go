@@ -1,6 +1,7 @@
 package config
 
 import (
+	"ForumX/controllers"
 	"ForumX/models"
 	"ForumX/utils"
 	"database/sql"
@@ -114,7 +115,7 @@ func Init() {
 	putCategoriesInDb(db)
 
 	//send packege - DB conn
-	//controllers.DB = db
+	controllers.DB = db
 	models.DB = db
 	utils.DB = db
 
@@ -140,5 +141,4 @@ func putCategoriesInDb(db *sql.DB) {
 			defer categoryPrepare.Close()
 		}
 	}
-	log.Println("test")
 }

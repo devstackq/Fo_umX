@@ -29,7 +29,7 @@ func IsValidCookie(f http.HandlerFunc) http.HandlerFunc {
 			err = DB.QueryRow("SELECT cookie_time FROM session WHERE user_id = $1", sessionF.UserID).Scan(&sessionF.Time)
 			fmt.Println(sessionF, "session")
 			if err != nil {
-				log.Println(err)
+				log.Println(err, "err session time")
 			}
 			strToTime, _ := time.Parse(time.RFC3339, sessionF.Time)
 			diff := time.Now().Sub(strToTime)
