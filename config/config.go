@@ -43,7 +43,7 @@ func Init() {
 		log.Println(err, "exec err 5")
 	}
 
-	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread varchar(255), content varchar(255), creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
+	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content varchar(255), creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
 
 	if err != nil {
 		log.Println(err, "1")
@@ -64,7 +64,7 @@ func Init() {
 	}
 
 	//postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id int, category_id int, CONSTRAINT fk_key_pcb_cat FOREIGN KEY(category_id) REFERENCES category(id), CONSTRAINT fk_key_pcb_post FOREIGN KEY(post_id) REFERENCES posts(id) )")
-	comment, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments(id SERIAL PRIMARY KEY, parent_id int DEFAULT 0, content varchar(255), post_id int, creator_id int DEFAULT 0, toWho int DEFAULT 0, fromWho int DEFAULT 0, create_time timestamp,  update_time	timestamp DEFAULT CURRENT_TIMESTAMP,  count_like int DEFAULT 0, count_dislike  int DEFAULT 0, CONSTRAINT fk_key_comment_post  FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE );")
+	comment, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments(id SERIAL PRIMARY KEY, parent_id int DEFAULT 0, content text, post_id int, creator_id int DEFAULT 0, toWho int DEFAULT 0, fromWho int DEFAULT 0, create_time timestamp,  update_time	timestamp DEFAULT CURRENT_TIMESTAMP,  count_like int DEFAULT 0, count_dislike  int DEFAULT 0, CONSTRAINT fk_key_comment_post  FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE );")
 	if err != nil {
 		log.Println(err, "3")
 	}
