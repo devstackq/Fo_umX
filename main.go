@@ -9,6 +9,8 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
+	//design better, mobile add, adfix offset
+
 	//todo db postgres connect, design fix, time utc fix
 
 	//wsl installed
