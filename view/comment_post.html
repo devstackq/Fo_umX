@@ -13,8 +13,7 @@
         </div>
         {{if gt .ParentID 0 }}
         <div class="replied-container">
-            <span> <a href="/user/id?uid={{.FromWhom}}" alt="">{{.Author}}</a> responded to the comment: <span
-                    class="replied-content">{{.RepliedContent}}</span>
+            <span> responded to the comment: <span class="replied-content">{{.RepliedContent}}</span>
                 user: <a href="/user/id?uid={{.ToWhom}}" alt=""> {{.Replied}}</a>
             </span>
         </div>

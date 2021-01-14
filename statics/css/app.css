@@ -994,6 +994,11 @@ bottom: 10px;
   padding: 5px;
 }
 
+.replied-container span{
+position: absolute;
+top: 5px;
+left: 20%;
+}
 .replied-container a {
   color: gold;
 }
