@@ -31,30 +31,30 @@ type User struct {
 	Name        string    `json:"name"`
 	Location    string    `json:"location"`
 	Username    string    `json:"username"`
-	Session *general.Session
-	LastTime  time.Time `json:"lastTime"`
-	LastSeen  string `json:"lastSeen"`
+	Session     *general.Session
+	LastTime    time.Time `json:"lastTime"`
+	LastSeen    string    `json:"lastSeen"`
 }
 
 //Notify struct
 type Notify struct {
-	UID          int    `json:"uid"`
-	PID          int    `json:"pid"`
-	CID          int    `json:"cid"`
-	CLID         int    `json:"clid"`
-	ID           int    `json:"id"`
-	CIDPID       int    `json:"cidpid"`
-	PostID       int    `json:"postId"`
-	CommentID    int    `json:"commentId"`
-	UserLostID   int    `json:"userLostId"`
-	VoteState    int    `json:"voteState"`
-	Time  string `json:"time"`
-	CreatedTime  time.Time `json:"createdTime"`
+	UID         int       `json:"uid"`
+	PID         int       `json:"pid"`
+	CID         int       `json:"cid"`
+	CLID        int       `json:"clid"`
+	ID          int       `json:"id"`
+	CIDPID      int       `json:"cidpid"`
+	PostID      int       `json:"postId"`
+	CommentID   int       `json:"commentId"`
+	UserLostID  int       `json:"userLostId"`
+	VoteState   int       `json:"voteState"`
+	Time        string    `json:"time"`
+	CreatedTime time.Time `json:"createdTime"`
 	UpdatedTime time.Time `json:"updatedTime"`
-	ToWhom       int    `json:"toWhom"`
-	Content    string `json:"postTitle"`
-	UserLost     string `json:"userLost"`
-	Editted bool `json:"editted"`
+	ToWhom      int       `json:"toWhom"`
+	Content     string    `json:"postTitle"`
+	UserLost    string    `json:"userLost"`
+	Editted     bool      `json:"editted"`
 }
 
 //GetUserProfile function
@@ -145,21 +145,21 @@ func GetUserActivities(w http.ResponseWriter, r *http.Request, s *general.Sessio
 		err = DB.QueryRow("SELECT thread, create_time, update_time FROM posts WHERE id = $1", v.PostID).Scan(&n.Content, &n.CreatedTime, &n.UpdatedTime)
 		if err != nil {
 			log.Println(err)
-		}		
+		}
 		err = DB.QueryRow("SELECT post_id, content, create_time, update_time FROM comments WHERE id = $1", v.CommentID).Scan(&n.CIDPID, &n.Content, &n.CreatedTime, &n.UpdatedTime)
 		if err != nil {
 			log.Println(err)
 		}
-		
+
 		//compare create == update, time post/comment
 		//like - to dislike, Edited vote ??
 		diff := n.UpdatedTime.Sub(n.CreatedTime)
-		
+
 		if diff > 0 {
 			n.Time = n.UpdatedTime.Format("2006 Jan _2 15:04:05")
 			n.Editted = true
-			//fmt.Println( "edited post/comment", diff)		
-		}else {
+			//fmt.Println( "edited post/comment", diff)
+		} else {
 			n.Time = n.CreatedTime.Format("2006 Jan _2 15:04:05")
 		}
 
@@ -241,8 +241,8 @@ func (u *User) UpdateProfile() {
 	_, err := DB.Exec("UPDATE  users SET full_name=$1, username=$2, age=$3, sex=$4, city=$5, image=$6 WHERE id =$7",
 		u.FullName, u.Username, u.Age, u.Sex, u.City, u.Image, u.ID)
 	if err != nil {
-	log.Println(err)	
-}
+		log.Println(err)
+	}
 }
 
 //DeleteAccount then dlogut - delete cookie, delete lsot comment, session Db, voteState
@@ -273,13 +273,16 @@ func VotedPosts(voteType string, uid int) (result []Post) {
 	postArr := []Votes{}
 	arrIDVote := []int{}
 
-	votedPost, err := DB.Query("select post_id from voteState where user_id=$1 and  "+voteType+" and comment_id is null", uid, 1)
+	votedPost, err := DB.Query("select post_id from voteState where user_id=$1 and "+voteType+" = $2 and comment_id is null", uid, 1)
 	if err != nil {
 		log.Println(err)
 	}
 	for votedPost.Next() {
 		voteLiked := Votes{}
 		err = votedPost.Scan(&voteLiked.PostID)
+		if err != nil {
+			log.Println(err)
+		}
 		postArr = append(postArr, voteLiked)
 	}
 	defer votedPost.Close()
