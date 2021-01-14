@@ -22,12 +22,10 @@ func IsValidCookie(f http.HandlerFunc) http.HandlerFunc {
 			utils.Logout(w, r, *session)
 			return
 		}
-		fmt.Println(c, "сщщлшу")
 		//cookie Browser -> send IsCookie(check if this user ->)
 		// then call handler -> middleware
 		if isValidCookie, sessionF := utils.IsCookie(w, r, c.Value); isValidCookie {
 			err = DB.QueryRow("SELECT cookie_time FROM session WHERE user_id = $1", sessionF.UserID).Scan(&sessionF.Time)
-			fmt.Println(sessionF, "session")
 			if err != nil {
 				log.Println(err, "err session time")
 			}

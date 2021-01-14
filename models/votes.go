@@ -29,9 +29,14 @@ func VoteDislike(w http.ResponseWriter, r *http.Request, id, any string, s *gene
 	field := any + "_id"
 	table := any + "s"
 
-	DB.QueryRow("SELECT id FROM voteState WHERE "+field+"=$1 AND user_id=$2", id, s.UserID).Scan(&vote.ID)
-
+	err = DB.QueryRow("SELECT id FROM voteState WHERE "+field+"=$1 AND user_id=$2", id, s.UserID).Scan(&vote.ID)
+	if err != nil {
+		log.Println(err)
+	}
 	err = DB.QueryRow("SELECT creator_id FROM "+table+"  WHERE id=$1", id).Scan(&vote.CreatorID)
+	if err != nil {
+		log.Println(err)
+	}
 	objID, _ := strconv.Atoi(id)
 	v := Votes{}
 
@@ -240,7 +245,7 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 func (v *Votes) UpdateNotify(table string, toWhom, fromWhom, objID, voteType int) {
 
 	if table == "post" && toWhom != 0 {
-		_, err = DB.Exec("UPDATE notify SET voteState=$1 WHERE comment_id=$2 AND post_id =$3 AND current_user_id=$4  AND to_whom=$4", voteType, 0, objID, fromWhom, toWhom)
+		_, err = DB.Exec("UPDATE notify SET voteState=$1 WHERE comment_id=$2 AND post_id=$3 AND current_user_id=$4  AND to_whom=$5", voteType, 0, objID, fromWhom, toWhom)
 		if err != nil {
 			fmt.Println(err)
 		}

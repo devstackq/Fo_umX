@@ -29,78 +29,77 @@ func Init() {
 	if err != nil {
 		log.Println("can't Ping")
 	}
-
 	//db.Exec("PRAGMA foreign_keys=ON")
 
 	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name varchar(255) NOT NULL, email	varchar(255) NOT NULL UNIQUE, username varchar(255) NOT NULL UNIQUE, password varchar(255), isAdmin int DEFAULT 0, age int, sex varchar(255), created_time	timestamp, last_seen timestamp, city varchar(255), image bytea NOT NULL);")
 	if err != nil {
-		log.Println(err, "5")
+		log.Println(err)
 	}
 
 	_, err = user.Exec()
 
 	if err != nil {
-		log.Println(err, "exec err 5")
+		log.Println(err)
 	}
 
 	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content text, creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
 
 	if err != nil {
-		log.Println(err, "1")
+		log.Println(err)
 	}
 	_, err = post.Exec()
 
 	if err != nil {
-		log.Println(err, "exec err 1")
+		log.Println(err)
 	}
 
 	postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id int, category_id int);")
 	if err != nil {
-		log.Println(err, "2")
+		log.Println(err)
 	}
 	_, err = postCategoryBridge.Exec()
 	if err != nil {
-		log.Println(err, "exec err 2")
+		log.Println(err)
 	}
 
 	//postCategoryBridge, err := db.Prepare("CREATE TABLE IF NOT EXISTS post_cat_bridge(id SERIAL PRIMARY KEY, post_id int, category_id int, CONSTRAINT fk_key_pcb_cat FOREIGN KEY(category_id) REFERENCES category(id), CONSTRAINT fk_key_pcb_post FOREIGN KEY(post_id) REFERENCES posts(id) )")
 	comment, err := db.Prepare("CREATE TABLE IF NOT EXISTS comments(id SERIAL PRIMARY KEY, parent_id int DEFAULT 0, content text, post_id int, creator_id int DEFAULT 0, toWho int DEFAULT 0, fromWho int DEFAULT 0, create_time timestamp,  update_time	timestamp DEFAULT CURRENT_TIMESTAMP,  count_like int DEFAULT 0, count_dislike  int DEFAULT 0, CONSTRAINT fk_key_comment_post  FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE );")
 	if err != nil {
-		log.Println(err, "3")
+		log.Println(err)
 	}
 
 	_, err = comment.Exec()
 	if err != nil {
-		log.Println(err, "exec err 3")
+		log.Println(err)
 	}
 
 	session, err := db.Prepare("CREATE TABLE IF NOT EXISTS session(id SERIAL PRIMARY KEY, uuid	varchar(255), user_id int UNIQUE, cookie_time timestamp);")
 	if err != nil {
-		log.Println(err, "4")
+		log.Println(err)
 	}
 	_, err = session.Exec()
 	if err != nil {
-		log.Println(err, "exec err 4")
+		log.Println(err)
 	}
 
 	voteState, err := db.Prepare("CREATE TABLE IF NOT EXISTS voteState(id SERIAL PRIMARY KEY,  user_id int, post_id int, comment_id int,   like_state int  DEFAULT 0, dislike_state int  DEFAULT 0, unique(post_id, user_id),CONSTRAINT fk_key_vote_comment  FOREIGN KEY(comment_id) REFERENCES comments(id), CONSTRAINT fk_key_vote_post FOREIGN KEY(post_id) REFERENCES posts(id));")
 	if err != nil {
-		log.Println(err, "6")
+		log.Println(err)
 	}
 	_, err = voteState.Exec()
 	if err != nil {
-		log.Println(err, "exec err 6")
+		log.Println(err)
 	}
 
 	notify, err := db.Prepare("CREATE TABLE IF NOT EXISTS notify(id SERIAL PRIMARY KEY, post_id int,  current_user_id int, voteState int DEFAULT 0, created_time timestamp, to_whom int, comment_id int );")
 
 	if err != nil {
-		log.Println(err, "7")
+		log.Println(err)
 	}
 	_, err = notify.Exec()
 
 	if err != nil {
-		log.Println(err, "exec err 7")
+		log.Println(err)
 	}
 
 	category, err := db.Prepare("CREATE TABLE IF NOT EXISTS  category(id SERIAL PRIMARY KEY, name varchar(255) UNIQUE );")
@@ -109,7 +108,7 @@ func Init() {
 	}
 	_, err = category.Exec()
 	if err != nil {
-		log.Println(err, "exec err 8")
+		log.Println(err)
 	}
 
 	putCategoriesInDb(db)
@@ -119,7 +118,7 @@ func Init() {
 	models.DB = db
 	utils.DB = db
 
-	fmt.Println("Сукцесс коннект")
+	fmt.Println("Сукцесс коннект", db)
 }
 
 //first call -> put categories values

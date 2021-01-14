@@ -333,7 +333,7 @@ func SetVoteNotify(table string, toWhom, fromWhom, objID int, voteLD bool) {
 	}
 	//putch(some fields), put(all fields),
 	if table == "post" && toWhom != 0 {
-		voteNotifyPreparePost, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1, $2, $3,$4,$5,$6)`)
+		voteNotifyPreparePost, err := DB.Prepare(`INSERT INTO notify(post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1,$2,$3,$4,$5,$6)`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -345,7 +345,7 @@ func SetVoteNotify(table string, toWhom, fromWhom, objID int, voteLD bool) {
 		defer voteNotifyPreparePost.Close()
 
 	} else if table == "comment" && toWhom != 0 {
-		voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify( post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1, $2, $3,$4,$5,$6)`)
+		voteNotifyPrepare, err := DB.Prepare(`INSERT INTO notify( post_id, current_user_id, voteState, created_time, to_whom, comment_id ) VALUES($1,$2,$3,$4,$5,$6)`)
 		if err != nil {
 			log.Println(err)
 		}
