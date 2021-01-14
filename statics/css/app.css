@@ -118,7 +118,7 @@ body {
     background: #fff;
     padding: 10px 18px 20px;
     border-bottom: 2px solid slategray;
-    line-height: 2.3;
+    /* line-height: 2.3; */
     width: 100%;
     max-width: 1200px;
 }

@@ -46,7 +46,6 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		w.Write(msg)
 		utils.RenderTemplate(w, "category_post_template", posts)
 	}
-
 }
 
 //GetPostByID  1 post by id
@@ -66,7 +65,7 @@ func GetPostByID(w http.ResponseWriter, r *http.Request) {
 		pid := models.Post{ID: id}
 		comments, post := pid.GetPostByID(r)
 
-		//utils.RenderTemplate(w, "header", utils.IsAuth(r))
+		utils.RenderTemplate(w, "header", utils.IsAuth(r))
 		utils.RenderTemplate(w, "posts", post)
 		utils.RenderTemplate(w, "comment_post", comments)
 		//utils.RenderTemplate(w, "reply_comment", repliesComment)
