@@ -56,7 +56,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 			}
 
 			comment.UpdateComment()
-		http.Redirect(w, r, "/profile", 302)
+			http.Redirect(w, r, "/profile", 302)
 
 		}
 	}
@@ -84,25 +84,25 @@ func ReplyComment(w http.ResponseWriter, r *http.Request) {
 
 		if utils.IsValidLetter(content, "post") {
 			//get creator_id -> when answer by post, else get fromWho, reply another comment
-		err = DB.QueryRow("SELECT creator_id FROM comments WHERE id = $1", parent).Scan(&comment.ToWhom)
-		if err != nil {
-			log.Println(err, "not find user")
-		}
+			err = DB.QueryRow("SELECT creator_id FROM comments WHERE id = $1", parent).Scan(&comment.ToWhom)
+			if err != nil {
+				log.Println(err, "not find user")
+			}
 
-		fmt.Println(parent, "parentId", parent, "replyID", parent, "cid", postId, "pid")
+			fmt.Println(parent, "parentId", parent, "replyID", parent, "cid", postId, "pid")
 
-			comment.CommentID= parent
-			comment.Content=   content
-			comment.PostID=   postId
-			comment.FromWhom= session.UserID
+			comment.CommentID = parent
+			comment.Content = content
+			comment.PostID = postId
+			comment.FromWhom = session.UserID
 			comment.ParentID = parent
 			comment.UserID = session.UserID
-			
-			commentPrepare, err := DB.Prepare(`INSERT INTO comments(parent_id, content, post_id, creator_id, toWho, fromWho, create_time) VALUES(?,?,?,?,?,?,?)`)
+
+			commentPrepare, err := DB.Prepare(`INSERT INTO comments(parent_id, content, post_id, creator_id, toWho, fromWho, create_time) VALUES($1,$2,$3,$4,$5,$6,$7)`)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = commentPrepare.Exec(comment.ParentID, comment.Content, comment.PostID, comment.UserID, comment.ToWhom,  comment.FromWhom, time.Now())
+			_, err = commentPrepare.Exec(comment.ParentID, comment.Content, comment.PostID, comment.UserID, comment.ToWhom, comment.FromWhom, time.Now())
 			if err != nil {
 				log.Println(err)
 			}
