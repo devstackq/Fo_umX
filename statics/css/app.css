@@ -1,19 +1,21 @@
 body {
     padding: 0;
-    padding: 0;
     width: 100%;
     max-width: 80vw;
     margin: 0 auto;
     background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
 }
 
 .main {
-    margin: -25px auto 0;
+    margin: 0px auto 0;
     background-color: #fff;
     width: 100%;
     max-width: 1200px;
     position: relative;
-    padding: 10px 18px;
+    padding: 1px 18px;
 }
 
 .wrapper-main {
@@ -21,7 +23,7 @@ body {
     border-radius: 6px;
     background-color: slategray;
     color: #fff;
-    max-width: 960px;
+    max-width: 1200px;
     padding: 0px 20px 12px 20px;
     border: 0.3px solid transparent;
     position: relative;
@@ -71,6 +73,8 @@ body {
     background: #000;
     color: #fff;
     padding: 8px 28px;
+    float: right;
+    margin-right: 10px;
 }
 
 .wrapper-filter input[type="submit"] {
@@ -112,10 +116,8 @@ body {
 
 .navbar-wrapper {
     background: #fff;
-    margin: 0 auto 0px;
     padding: 10px 18px 20px;
     border-bottom: 2px solid slategray;
-    display: flex;
     line-height: 2.3;
     width: 100%;
     max-width: 1200px;
@@ -720,7 +722,9 @@ a.dislike {
     z-index: 2;
     font-weight: 700;
     font-size: 20px;
-    margin-left: 60%;
+    width: 100%;
+    margin: 0 auto;
+    background: #fff;
 }
 
 .user-info {
