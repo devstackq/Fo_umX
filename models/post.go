@@ -89,6 +89,10 @@ func (filter *Filter) GetAllPost(r *http.Request, next, prev string) ([]Post, st
 	//count pageNum, fix
 	limit := 4
 	offset := limit * (pageNum - 1)
+	if offset < 0 {
+		offset = 0
+	}
+	fmt.Println(offset)
 	switch r.URL.Path {
 	case "/":
 		leftJoin = false
