@@ -9,7 +9,7 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
-	//design better, mobile add, adfix offset
+	//design better, mobile add, adfix offset, not empty value, in comment
 
 	//todo db postgres connect, design fix, time utc fix
 

@@ -437,11 +437,12 @@ a.links {
   position: relative;
   background-color: gray;
   border: 1px solid #000;
-  width: 97%;
   margin: 0px auto;
   color: #fff;
   padding: 8px 10px;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
 }
 
 .likess {
@@ -983,13 +984,16 @@ a.dislike {
 }
 
 .time-comment {
-  position: absolute;
+    position:absolute;
   right: 10px;
   top: 10px;
 }
-
+@media only screen and (max-width: 600px) {
+    .time-comment, .replied-container  {
+        position: relative;
+  }
 .replied-container {
-  position: absolute;
+    position:absolute;
   right: 10px;
   bottom: 0;
   padding: 5px;
