@@ -232,7 +232,7 @@ func VoteLike(w http.ResponseWriter, r *http.Request, id, any string, s *general
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = DB.Exec("UPDATE voteState SET like_state =#1, dislike_state=$2 WHERE "+field+"= $3  and user_id=$4", 1, 0, id, s.UserID)
+			_, err = DB.Exec("UPDATE voteState SET like_state =$1, dislike_state=$2 WHERE "+field+"= $3  and user_id=$4", 1, 0, id, s.UserID)
 			if err != nil {
 				log.Println(err)
 			}
