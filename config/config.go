@@ -43,7 +43,7 @@ func Init() {
 		log.Println(err, "exec err 5")
 	}
 
-	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content varchar(255), creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
+	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content text, creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
 
 	if err != nil {
 		log.Println(err, "1")
