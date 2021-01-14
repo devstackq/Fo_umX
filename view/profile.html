@@ -1,11 +1,14 @@
 {{define "profile"}}
 <div class="profile-wrapper">
+
   <div class="profile-info">
+
     <h3>Welcome {{.FullName}}</h3>
     {{if .SVG}}
-    <img alt=" " width="220px" src="data:image/svg+xml;base64, {{.ImageHTML}} "> {{else}}
-    <img width="220px" src="data:image/jpeg;base64, {{.ImageHTML}}" alt=" "> {{end}}
-    <br>
+    <div> <img alt=" " src="data:image/svg+xml;base64, {{.ImageHTML}} " /></div> {{else}}
+    <div><img src="data:image/jpeg;base64, {{.ImageHTML}}" alt=" " /></div>
+    {{end}}
+
     <div class="user-info">
       <label for="">Name:
         <td> {{.FullName}}</td>
@@ -33,14 +36,14 @@
       </label>
     </div>
   </div>
+
   <div class="profile-link-container">
     <a class="link-profile edit-btn" href="/edit/user?uid={{.ID}}">Edit profile</a>
     <a class="link-profile delete-btn" onclick="areYouSure({{.ID}} )">Delete account</a>
+    <a class="link-profile activity-btn" href="/activity">Activities </a>
   </div>
-  <br />
   <!-- <a id="create_post" class="link-profile create-btn" href="/create/post">Create
     post</a> -->
-  <a class="link-profile activity-btn" href="/activity">Activities </a>
 </div>
 <script>
   const areYouSure = (id) => {
