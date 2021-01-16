@@ -96,7 +96,15 @@ func IsValidLetter(value string, typeLetter string) bool {
 			}
 		}
 	} else if typeLetter == "post" {
-
+		var countSpace int
+		for _, v := range value {
+			if v == ' ' {
+				countSpace++
+			}
+		}
+		if countSpace == len(value) {
+			return false
+		}
 		for _, v := range value {
 			if v >= 97 && v <= 122 || v >= 65 && v <= 90 || v >= 32 && v <= 64 || v > 128 {
 				return true
