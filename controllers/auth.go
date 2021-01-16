@@ -47,7 +47,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			var person models.User
 
 			err = json.NewDecoder(r.Body).Decode(&person)
-
+			fmt.Println(person, "person")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return

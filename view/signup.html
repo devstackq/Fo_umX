@@ -71,7 +71,7 @@ user.pwd2 = document.getElementById("password2").value;
          user.username = document.getElementById("username").value;
          user.age = document.getElementById("age").value;
          user.type = document.getElementById("authType").value;
-user.sex = document.getElementById("sex").value;
+        user.sex = document.getElementById("sex").value;
          user.image = document.getElementById("image").value;
 
 console.log(user, "ll")
@@ -86,9 +86,9 @@ console.log(user, "ll")
                     body: JSON.stringify(user),
                 });
                 let data = await response.json()
+                console.log(data, "returned data, promise")
                 return data;
             }
-
          console.log('Form submission cancelled.');
 }
      });
