@@ -27,7 +27,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if utils.URLChecker(w, r, "/signup") {
 		//callback anonim function
-		fmt.Println("-1")
+		fmt.Println("-1", r.Method)
 		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
 
 			// iB := utils.FileByte(r, "user")
