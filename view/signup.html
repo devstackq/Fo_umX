@@ -3,43 +3,43 @@
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
         <!-- //onsubmit="event.preventDefault();" -->
-        <form  enctype=" multipart/form-data " autocomplete="on" onsubmit="event.preventDefault();>
-            <input type="text " id="fullname " name="fullname " placeholder="Full Name " required>
-            <input type="text " id="username " name="username " placeholder="Username " required>
-            <input id="email " type="email " name="email " placeholder="Email " required>
-            <input type="number " id="age " name="age " placeholder="Age " min="16 " max="80 ">
-            <input type="hidden " id="authType " name="authType " value="default ">
+        <form  enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault();>
+            <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input id="email" type="email" name="email" placeholder="Email" required>
+            <input type="number" id="age" name="age" placeholder="Age" min="16" max="80">
+            <input type="hidden" id="authType" name="authType" value="default">
 
-            <select name="sex " id="sex ">
-                <option value="male ">Male</option>
-                <option value="female ">Female</option>
+            <select name="sex" id="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
             </select>
 
-            <select name="city " id="city ">
-                <option value="Almaty ">Almaty</option>
-                <option value="Astana ">Astana</option>
-                <option value="Karaganda ">Karaganda</option>
-                <option value="Shymkent ">Shymkent</option>
-                <option value="Aktau ">Aktau</option>
-                <option value="Atyrau ">Atyrau</option>
-                <option value="Taraz ">Taraz</option>
-                <option value="Kokshetau ">Kokshetau</option>
-                <option value="Semey ">Semey</option>
-                <option value="Uralsk ">Uralsk</option>
-                <option value="Pavlodar ">Pavlodar</option>
-                <option value="Petropavlsk ">Petropavlsk</option>
-                <option value="Kyzyldorda ">Kyzyldorda</option>
-                <option value="Ust-kamenogorsk ">Ust-kamenogorsk</option>
+            <select name="city" id="city">
+                <option value="Almaty">Almaty</option>
+                <option value="Astana">Astana</option>
+                <option value="Karaganda">Karaganda</option>
+                <option value="Shymkent">Shymkent</option>
+                <option value="Aktau">Aktau</option>
+                <option value="Atyrau">Atyrau</option>
+                <option value="Taraz">Taraz</option>
+                <option value="Kokshetau">Kokshetau</option>
+                <option value="Semey">Semey</option>
+                <option value="Uralsk">Uralsk</option>
+                <option value="Pavlodar">Pavlodar</option>
+                <option value="Petropavlsk">Petropavlsk</option>
+                <option value="Kyzyldorda">Kyzyldorda</option>
+                <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
             </select>
 
-            <input id="password1 " type="password " name="password " placeholder="Password " required>
-            <input id="password2 " type="password " name="password " placeholder="Repeat password " required>
-            <label for="image ">Image:
-                <input id="image " type="file " name="uploadfile " accept="image/* " />
+            <input id="password1" type="password" name="password" placeholder="Password" required>
+            <input id="password2" type="password" name="password" placeholder="Repeat password" required>
+            <label for="image">Image:
+                <input id="image" type="file" name="uploadfile" accept="image/*" />
             </label>
-            <input onclick="signup() " type="submit " value="Register ">
+            <input onclick="signup()" type="submit" value="Register">
         </form>
-        <span>If you are logged in, then log in to me <a style="color: gold; " href="/signin ">Signin</a> </span>
+        <span>If you are logged in, then log in to me <a style="color: gold; " href="/signin">Signin</a> </span>
         <br />
         <span id="notify ">  </span>
     </div>
@@ -48,13 +48,13 @@
 <script>
 
     const showNotify = (msg) => {
-        if (msg != "success ") {
-            console.log(msg, "msg ")
+        if (msg != "success") {
+            console.log(msg,"msg")
             let ns = document.getElementById('notify')
             ns.innerText = msg
         } else {
             //sound & confetti
-            window.location.replace("https://forumx.herokuapp.com/profile ")
+            window.location.replace("https://forumx.herokuapp.com/profile")
         }
     }
 
@@ -79,16 +79,16 @@
 
      
 
-user.password1 = document.getElementById("password1 ").value;
-user.password2 = document.getElementById("password2 ").value;
-         user.email = document.getElementById("email ").value;
-         user.fullname = document.getElementById("fullname ").value;
-         user.username = document.getElementById("username ").value;
-         user.age = document.getElementById("age ").value;
-         user.type = document.getElementById("authType ").value;
-        user.sex = document.getElementById("sex ").value;
-        user.city = document.getElementById("city ").value;
-         user.image = document.getElementById("image ").value;
+user.password1 = document.getElementById("password1").value;
+user.password2 = document.getElementById("password2").value;
+         user.email = document.getElementById("email").value;
+         user.fullname = document.getElementById("fullname").value;
+         user.username = document.getElementById("username").value;
+         user.age = document.getElementById("age").value;
+         user.type = document.getElementById("authType").value;
+        user.sex = document.getElementById("sex").value;
+        user.city = document.getElementById("city").value;
+         user.image = document.getElementById("image").value;
 
 console.log(user, "user client ")
               if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
@@ -108,6 +108,5 @@ console.log(user, "user client ")
                 .then(data => showNotify(data));
 }
 }
-
 </script>
 {{end}}
