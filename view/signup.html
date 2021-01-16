@@ -78,20 +78,20 @@
              password2 : '',
              city : ''
          };
-
-        user.password1 = document.getElementById("password1").value;
-        user.password2 = document.getElementById("password2").value;
-         user.email = document.getElementById("email").value;
+    user.username = document.getElementById("username").value;
          user.fullname = document.getElementById("fullname").value;
-         user.username = document.getElementById("username").value;
+         user.email = document.getElementById("email").value;
          user.age = document.getElementById("age").value;
          user.type = document.getElementById("authType").value;
-        user.sex = document.getElementById("sex").value;
+        user.password1 = document.getElementById("password1").value;
+        user.password2 = document.getElementById("password2").value;
         user.city = document.getElementById("city").value;
+     
+        user.sex = document.getElementById("sex").value;
          user.image = document.getElementById("image").value;
+           //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
 console.log(user, "user client ")
-              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
             //async fetch query
             async function getUserAsync() {
             console.log("user 1")
@@ -106,7 +106,6 @@ console.log(user, "user client ")
             }
               getUserAsync()
                 .then(data => showNotify(data));
-}
 }
 </script>
 {{end}}
