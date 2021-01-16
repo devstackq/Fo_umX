@@ -1,21 +1,22 @@
 {{define "signup"}} {{template "header"}}
+
 <div class="signup-wrapper">
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
         <!-- //onsubmit="event.preventDefault();" -->
         <form  enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault();>
-            <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
-            <input type="text" id="username" name="username" placeholder="Username" required>
-            <input id="email" type="email" name="email" placeholder="Email" required>
-            <input type="number" id="age" name="age" placeholder="Age" min="16" max="80">
-            <input type="hidden" id="authType" name="authType" value="default">
+            <input type="text" id="fullname"  placeholder="Full Name" required>
+            <input type="text" id="username"  placeholder="Username" required>
+            <input id="email" type="email" placeholder="Email" required>
+            <input type="number" id="age"placeholder="Age" min="16" max="80">
+            <input type="hidden" id="authType"  value="default">
 
-            <select name="sex" id="sex">
+            <select  id="sex">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
             </select>
 
-            <select name="city" id="city">
+            <select  id="city">
                 <option value="Almaty">Almaty</option>
                 <option value="Astana">Astana</option>
                 <option value="Karaganda">Karaganda</option>
@@ -32,16 +33,16 @@
                 <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
             </select>
 
-            <input id="password1" type="password" name="password" placeholder="Password" required>
-            <input id="password2" type="password" name="password" placeholder="Repeat password" required>
+            <input id="password1" type="password" placeholder="Password" required>
+            <input id="password2" type="password"  placeholder="Repeat password" required>
             <label for="image">Image:
-                <input id="image" type="file" name="uploadfile" accept="image/*" />
+                <input id="image" type="file"  accept="image/*" />
             </label>
-            <input onclick="signup()" type="submit" value="Register">
+            <input onclick="signup()" type="submit" value="Register ">
         </form>
         <span>If you are logged in, then log in to me <a style="color: gold; " href="/signin">Signin</a> </span>
         <br />
-        <span id="notify ">  </span>
+        <span id="notify">  </span>
     </div>
 </div>
 
@@ -49,7 +50,7 @@
 
     const showNotify = (msg) => {
         if (msg != "success") {
-            console.log(msg,"msg")
+            console.log(msg, "msg")
             let ns = document.getElementById('notify')
             ns.innerText = msg
         } else {
@@ -76,8 +77,6 @@
          };
 
  const signup = () => {
-
-     
 
 user.password1 = document.getElementById("password1").value;
 user.password2 = document.getElementById("password2").value;
