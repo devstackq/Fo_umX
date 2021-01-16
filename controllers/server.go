@@ -7,7 +7,22 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"golang.org/x/time/rate"
 )
+
+var limiter = rate.NewLimiter(1, 3)
+
+func limit(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if limiter.Allow() == false {
+			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 
 // high order function func(func)(callback)
 //case 1: signin -> set session, & cookie Browser, -> redirect Middleware(Profile)
@@ -91,5 +106,5 @@ func Init() {
 	mux.HandleFunc("/search", Search)
 	// http.HandleFunc("/chat", routing.StartChat)
 	log.Println("Listening port:", port)
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+	log.Fatal(http.ListenAndServe(":"+port, limit(mux)))
 }

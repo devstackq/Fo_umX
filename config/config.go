@@ -118,7 +118,7 @@ func Init() {
 	models.DB = db
 	utils.DB = db
 
-	fmt.Println("Сукцесс коннект", db)
+	fmt.Println("Сукцесс коннект")
 }
 
 //first call -> put categories values
