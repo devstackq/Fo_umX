@@ -36,6 +36,9 @@ type User struct {
 	LastTime       time.Time `json:"lastTime"`
 	LastSeen       string    `json:"lastSeen"`
 }
+type UserSignup struct {
+	Age string `json:"age"`
+}
 
 //Notify struct
 type Notify struct {
