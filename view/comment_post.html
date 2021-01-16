@@ -69,7 +69,7 @@
 
 <form style="display:none" key={{.ID}} class="answer-form visible-form" id="answerCommentFormId{{.ID}}"
     action="/reply/comment" method="POST">
-    <textarea name="answerComment" cols="66" rows="6"></textarea>
+    <textarea name="answerComment" cols="66" rows="6" required></textarea>
     <input type="hidden" name="postId" value="{{.PostID}}">
     <input type="hidden" name="parentId" value="{{.ID}}">
     <input type="submit" value="send" />

@@ -83,7 +83,7 @@ func Init() {
 	mux.HandleFunc("/logout", IsValidCookie(Logout))
 
 	mux.HandleFunc("/profile", IsValidCookie(GetUserProfile))
-	mux.HandleFunc("/user/id", IsValidCookie(GetAnotherProfile))
+	mux.HandleFunc("/user/id", GetAnotherProfile)
 	mux.HandleFunc("/edit/user", IsValidCookie(UpdateProfile))
 	mux.HandleFunc("/delete/account", IsValidCookie(DeleteAccount))
 

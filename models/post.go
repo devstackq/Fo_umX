@@ -244,11 +244,10 @@ func (p *Post) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	//check empty values
 	if utils.IsValidLetter(p.Title, "post") && utils.IsValidLetter(p.Content, "post") {
+
 		var last int64
 
 		err = DB.QueryRow("INSERT INTO posts(thread, content, creator_id, create_time, image) VALUES($1, $2, $3, $4, $5) RETURNING id", p.Title, p.Content, p.Session.UserID, time.Now(), fileBytes).Scan(&last)
-		//createPostPrepare, err := DB.Prepare(`INSERT INTO posts(thread, content, creator_id, create_time, image) VALUES($1, $2, $3, $4, $5) RETURNING id`)
-		fmt.Println(last, "LAST")
 
 		if err != nil {
 			log.Println(err)
