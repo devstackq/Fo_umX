@@ -3,7 +3,7 @@
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
         <!-- //onsubmit="event.preventDefault();" -->
-        <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="on">
             <input type="text" name="fullname" placeholder="Full Name" required>
             <input type="text" name="username" placeholder="Username" required>
             <input id="email" type="email" name="email" placeholder="Email">
@@ -32,8 +32,8 @@
                 <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
             </select>
 
-            <input id="pwd1" type="password" name="password" placeholder="Password">
-            <input id="pwd2" type="password" name="password" placeholder="Repeat password">
+            <input id="pwd1" type="password" name="password1" placeholder="Password">
+            <input id="pwd2" type="password" name="password2" placeholder="Repeat password">
             <label for="image">Image:
                 <input id="image" type="file" name="uploadfile" accept="image/*" />
             </label>
@@ -57,11 +57,36 @@
              email: '',
              username: '',
              password: '',
-             type: ''
+             type: '',
+             sex : '',
+             pwd1 : '',
+             pwd2 : ''
          };
-         let name = document.getElementById("name").value;
-         let password = document.getElementById("password").value;
-         let password = document.getElementById("password").value;
+
+user.pwd1 = document.getElementById("password1").value;
+user.pwd2 = document.getElementById("password2").value;
+         user.name = document.getElementById("name").value;
+         user.email = document.getElementById("email").value;
+         user.fullname = document.getElementById("fullname").value;
+         user.username = document.getElementById("username").value;
+         user.age = document.getElementById("age").value;
+         user.type = document.getElementById("authType").value;
+user.sex = document.getElementById("sex").value;
+         user.image = document.getElementById("image").value;
+
+              if (user.email != '' && user.pwd1 != '' && user.pwd2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
+            //async fetch query
+            if (user.pwd1 != pwd2) {
+            console.log("pawd incorerct)
+            }
+            async function getUserAsync() {
+                let response = await fetch('https://forumx.herokuapp.com/signin', {
+                    method: 'post',
+                    body: JSON.stringify(user),
+                });
+                let data = await response.json()
+                return data;
+            }
 
     //      actual logic, e.g. validate the form
          console.log('Form submission cancelled.');
