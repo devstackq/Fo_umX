@@ -31,9 +31,9 @@ func LeaveComment(w http.ResponseWriter, r *http.Request) {
 			// w.Header().Set("Content-Type", "application/json")
 			// w.Write(msg)
 
-			msg := []byte(fmt.Sprintf("<h3> %s </h3>", "Empty content"))
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(msg)
+			// msg := []byte(fmt.Sprintf("<h3> %s </h3>", "Empty content"))
+			// w.Header().Set("Content-Type", "application/json")
+			// w.Write(msg)
 			return
 			//utils.RenderTemplate(w, "post", nil)
 		}
