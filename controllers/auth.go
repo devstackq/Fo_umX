@@ -27,6 +27,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if utils.URLChecker(w, r, "/signup") {
 		//callback anonim function
+		fmt.Println("-1")
 		utils.CheckMethod(r.Method, "signup", auth, msg, w, func(http.ResponseWriter) {
 
 			// iB := utils.FileByte(r, "user")
@@ -37,8 +38,10 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
+			fmt.Println("0")
 
 			if person.Type == "default" {
+
 				utils.AuthType = "default"
 				var img []byte
 				if person.Image == nil {
@@ -76,25 +79,30 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 									//http.Redirect(w, r, "/signin", 302)
 								} else {
 									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
+									fmt.Println("1")
 									return
 								}
 							} else {
+								fmt.Println("2")
 								utils.AuthError(w, r, err, "Password fields: not match epta", utils.AuthType)
 								return
 							}
 						} else {
+							fmt.Println("3")
 							utils.AuthError(w, r, err, "Incorrect email address: example gopher@yandex.com", utils.AuthType)
 							return
 						}
 					} else {
+						fmt.Println("4")
 						utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 						return
 					}
 				} else {
+					fmt.Println("5")
 					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 					return
 				}
-
+				fmt.Println("6")
 				utils.AuthError(w, r, nil, "success", utils.AuthType)
 				//http.Redirect(w, r, "/profile", 302)
 
