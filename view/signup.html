@@ -3,7 +3,7 @@
 <div class="signup-wrapper">
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
-        <form  enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault();" >
+        <form  enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault()" >
             <input type="text" id="fullname"  placeholder="Full Name" required>
             <input type="text" id="username"  placeholder="Username" required>
             <input id="email" type="email" placeholder="Email" required>
@@ -62,7 +62,8 @@
     {{/* const element = document.querySelector('form');
      element.addEventListener('submit', event => {
          event.preventDefault(); */}}
-
+//              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
+            //async fetch query
  function signup() {
 
      let user = {
@@ -91,8 +92,7 @@
          user.image = document.getElementById("image").value;
 
 console.log(user, "user client ")
-//              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
-            //async fetch query
+
             async function getUserAsync() {
             console.log("user 1")
                 let response = await fetch('https://forumx.herokuapp.com/signup', {
