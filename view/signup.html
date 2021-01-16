@@ -92,7 +92,7 @@ user.password2 = document.getElementById("password2").value;
          user.image = document.getElementById("image").value;
 
 console.log(user, "user client ")
-              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
+//              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
             //async fetch query
             async function getUserAsync() {
             
@@ -106,7 +106,6 @@ console.log(user, "user client ")
             }
               getUserAsync()
                 .then(data => showNotify(data));
-}
 }
 </script>
 {{end}}
