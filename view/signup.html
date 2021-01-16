@@ -47,6 +47,17 @@
 </div>
 <script>
 
+    const showNotify = (msg) => {
+        if (msg != "success") {
+            console.log(msg, "msg")
+            let ns = document.getElementById('notify')
+            ns.innerText = msg
+        } else {
+            //sound & confetti
+            window.location.replace("https://forumx.herokuapp.com/profile")
+        }
+    }
+
     const element = document.querySelector('form');
      element.addEventListener('submit', event => {
          event.preventDefault();
@@ -74,13 +85,14 @@ user.pwd2 = document.getElementById("password2").value;
         user.sex = document.getElementById("sex").value;
          user.image = document.getElementById("image").value;
 
-console.log(user, "ll")
+console.log(user, "user client")
               if (user.email != '' && user.pwd1 != '' && user.pwd2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
             //async fetch query
             if (user.pwd1 != user.pwd2) {
               console.log("pwd incorrect")
             }
             async function getUserAsync() {
+            
                 let response = await fetch('https://forumx.herokuapp.com/signup', {
                     method: 'post',
                     body: JSON.stringify(user),
@@ -89,6 +101,9 @@ console.log(user, "ll")
                 console.log(data, "returned data, promise")
                 return data;
             }
+              getUserAsync()
+                .then(data => showNotify(data));
+
          console.log('Form submission cancelled.');
 }
      });

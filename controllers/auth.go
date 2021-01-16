@@ -29,7 +29,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	if utils.URLChecker(w, r, "/signup") {
 		//callback anonim function
 		fmt.Println("1")
-		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
+		utils.CheckMethod(r.Method, "signup", auth, msg, w, func(http.ResponseWriter) {
 
 			fmt.Println("2")
 			intAge, err := strconv.Atoi(r.FormValue("age"))
