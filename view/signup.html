@@ -62,7 +62,11 @@
     {{/* const element = document.querySelector('form');
      element.addEventListener('submit', event => {
          event.preventDefault(); */}}
-    let user = {
+
+
+ const signup = () => {
+
+     let user = {
              image: null,
              email: '',
              username: '',
@@ -76,8 +80,6 @@
              city : ''
          };
 
- const signup = () => {
-
 user.password1 = document.getElementById("password1").value;
 user.password2 = document.getElementById("password2").value;
          user.email = document.getElementById("email").value;
@@ -90,7 +92,7 @@ user.password2 = document.getElementById("password2").value;
          user.image = document.getElementById("image").value;
 
 console.log(user, "user client ")
-              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
+              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.  != '') {
             //async fetch query
         
             async function getUserAsync() {

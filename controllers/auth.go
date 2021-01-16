@@ -105,56 +105,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("6")
 				utils.AuthError(w, r, nil, "success", utils.AuthType)
 				//http.Redirect(w, r, "/profile", 302)
-
-				// if utils.IsValidLetter(fullName, "user") {
-				// 	if utils.IsValidLetter(username, "user") {
-
-				// 		//checkerEmail & password
-				// 		if utils.IsEmailValid(r.FormValue("email")) {
-
-				// 			if intAge == 0 {
-				// 				intAge = 16
-				// 			}
-				// 			utils.AuthType = r.FormValue("authType")
-				// 			pwd, _ := r.Form["password"]
-				// 			if pwd[0] == pwd[1] {
-				// 				if utils.IsPasswordValid(r.FormValue("password")) {
-				// 					u := models.User{
-				// 						FullName: fullName,
-				// 						Email:    r.FormValue("email"),
-				// 						Username: username,
-				// 						Age:      intAge,
-				// 						Sex:      r.FormValue("sex"),
-				// 						City:     r.FormValue("city"),
-				// 						Image:    iB,
-				// 						Password: r.FormValue("password"),
-				// 					}
-				// 					u.Signup(w, r)
-				// 					http.Redirect(w, r, "/signin", 302)
-				// 				} else {
-				// 					msg = "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!"
-				// 					//utils.RenderTemplate(w, "signup", &msg)
-				// 				}
-				// 			} else {
-				// 				msg = "Password fields: not match epta"
-				// 				//utils.RenderTemplate(w, "signup", &msg)
-				// 			}
-				// 		} else {
-				// 			msg = "Incorrect email address: example god@yandex.com"
-				// 			//			utils.RenderTemplate(w, "signup", &msg)
-				// 		}
-				// 	} else {
-				// 		msg = "Incorrect usernname field: access latin symbols and numbers"
-				// 		//		utils.RenderTemplate(w, "signup", &msg)
-				// 	}
-				// } else {
-				// 	msg = "Incorrect name field access latin symbols"
-				//	utils.RenderTemplate(w, "signup", &msg)
-			}
-			//send like json, errors
-			// json := []byte(fmt.Sprintf("<h3> %s err1 </h3>", &msg))
-			// w.Header().Set("Content-Type", "application/json")
-			// w.Write(json)
 		})
 	}
 }
