@@ -4,18 +4,18 @@
         <h3>Signup Forum-X</h3>
         <!-- //onsubmit="event.preventDefault();" -->
         <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="on">
-            <input type="text" name="fullname" placeholder="Full Name" required>
-            <input type="text" name="username" placeholder="Username" required>
-            <input id="email" type="email" name="email" placeholder="Email">
-            <input type="number" name="age" placeholder="Age" min="16" max="80">
-            <input type="hidden" name="authType" value="default">
+            <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input id="email" type="email" name="email" placeholder="Email" required>
+            <input type="number" id="age" name="age" placeholder="Age" min="16" max="80">
+            <input type="hidden" id="authType" name="authType" value="default">
 
-            <select name="sex" id="">
+            <select name="sex" id="sex">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
             </select>
 
-            <select name="city" id="">
+            <select name="city" id="city">
                 <option value="Almaty">Almaty</option>
                 <option value="Astana">Astana</option>
                 <option value="Karaganda">Karaganda</option>
@@ -32,8 +32,8 @@
                 <option value="Ust-kamenogorsk">Ust-kamenogorsk</option>
             </select>
 
-            <input id="pwd1" type="password" name="password1" placeholder="Password">
-            <input id="pwd2" type="password" name="password2" placeholder="Repeat password">
+            <input id="password1" type="password" name="password" placeholder="Password" required>
+            <input id="password2" type="password" name="password" placeholder="Repeat password" required>
             <label for="image">Image:
                 <input id="image" type="file" name="uploadfile" accept="image/*" />
             </label>
@@ -44,28 +44,28 @@
         <br />
         <span id="notify"> {{ if . }} {{.}} {{end}} </span>
     </div>
-
 </div>
 <script>
+
     const element = document.querySelector('form');
      element.addEventListener('submit', event => {
          event.preventDefault();
 
          let user = {
-             name: '',
              image: null,
              email: '',
              username: '',
+             age: '',
              password: '',
+             fullname: '',
              type: '',
              sex : '',
              pwd1 : '',
-             pwd2 : ''
+             pwd2 : '',
          };
 
 user.pwd1 = document.getElementById("password1").value;
 user.pwd2 = document.getElementById("password2").value;
-         user.name = document.getElementById("name").value;
          user.email = document.getElementById("email").value;
          user.fullname = document.getElementById("fullname").value;
          user.username = document.getElementById("username").value;
@@ -74,10 +74,11 @@ user.pwd2 = document.getElementById("password2").value;
 user.sex = document.getElementById("sex").value;
          user.image = document.getElementById("image").value;
 
+console.log(user, "ll")
               if (user.email != '' && user.pwd1 != '' && user.pwd2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
             //async fetch query
-            if (user.pwd1 != pwd2) {
-            console.log("pwd incorrect")
+            if (user.pwd1 != user.pwd2) {
+              console.log("pwd incorrect")
             }
             async function getUserAsync() {
                 let response = await fetch('https://forumx.herokuapp.com/signin', {
@@ -88,9 +89,8 @@ user.sex = document.getElementById("sex").value;
                 return data;
             }
 
-    //      actual logic, e.g. validate the form
          console.log('Form submission cancelled.');
-
+}
      });
 </script>
 {{end}}

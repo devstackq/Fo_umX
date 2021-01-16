@@ -121,6 +121,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				msg = "Incorrect name field access latin symbols"
 				//	utils.RenderTemplate(w, "signup", &msg)
 			}
+			//send like json, errors
 			json := []byte(fmt.Sprintf("<h3> %s err1 </h3>", &msg))
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(json)
