@@ -71,26 +71,26 @@
              fullname: '',
              type: '',
              sex : '',
-             pwd1 : '',
-             pwd2 : '',
+             password1 : '',
+             password2 : '',
+             city : ''
          };
 
-user.pwd1 = document.getElementById("password1").value;
-user.pwd2 = document.getElementById("password2").value;
+user.password1 = document.getElementById("password1").value;
+user.password2 = document.getElementById("password2").value;
          user.email = document.getElementById("email").value;
          user.fullname = document.getElementById("fullname").value;
          user.username = document.getElementById("username").value;
          user.age = document.getElementById("age").value;
          user.type = document.getElementById("authType").value;
         user.sex = document.getElementById("sex").value;
+        user.city = document.getElementById("city").value;
          user.image = document.getElementById("image").value;
 
 console.log(user, "user client")
-              if (user.email != '' && user.pwd1 != '' && user.pwd2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
+              if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
             //async fetch query
-            if (user.pwd1 != user.pwd2) {
-              console.log("pwd incorrect")
-            }
+        
             async function getUserAsync() {
             
                 let response = await fetch('https://forumx.herokuapp.com/signup', {

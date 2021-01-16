@@ -128,7 +128,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
 	if err != nil {
 		utils.AuthError(w, r, err, "not find user from session", utils.AuthType)
-		log.Println(err, "her")
+		log.Println(err)
 		return
 	}
 	utils.SetCookie(w, newSession.UUID)

@@ -11,7 +11,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"golang.org/x/oauth2"
 )
@@ -31,20 +30,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("1")
 		utils.CheckMethod(r.Method, "signup", auth, msg, w, func(http.ResponseWriter) {
 
-			fmt.Println("2")
-			intAge, err := strconv.Atoi(r.FormValue("age"))
-			//switch add
-			if err != nil {
-				log.Println(err)
-			}
-			iB := utils.FileByte(r, "user")
+			// iB := utils.FileByte(r, "user")
 
-			fullName := r.FormValue("fullname")
-			if fullName == "" {
-				fullName = "No Name"
-			}
-			username := r.FormValue("username")
-			msg := ""
+			// username := r.FormValue("username")
 
 			var person models.User
 
@@ -64,69 +52,101 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				} else {
 					img = person.Image
 				}
-
-				u := models.User{
-					Email:    person.Email,
-					FullName: person.FullName,
-					Username: person.Username,
-					Age:      person.Age,
-					Sex:      person.Sex,
-					City:     person.City,
-					Image:    img,
-					Password: person.Password,
+				if person.FullName == "" {
+					person.FullName = "No name"
 				}
-				fmt.Println(u, "lsd")
-			}
+				if person.Age == 0 {
+					person.Age = 16
+				}
 
-			if utils.IsValidLetter(fullName, "user") {
-				if utils.IsValidLetter(username, "user") {
-
-					//checkerEmail & password
-					if utils.IsEmailValid(r.FormValue("email")) {
-
-						if intAge == 0 {
-							intAge = 16
-						}
-						utils.AuthType = r.FormValue("authType")
-						pwd, _ := r.Form["password"]
-						if pwd[0] == pwd[1] {
-							if utils.IsPasswordValid(r.FormValue("password")) {
-								u := models.User{
-									FullName: fullName,
-									Email:    r.FormValue("email"),
-									Username: username,
-									Age:      intAge,
-									Sex:      r.FormValue("sex"),
-									City:     r.FormValue("city"),
-									Image:    iB,
-									Password: r.FormValue("password"),
+				if utils.IsValidLetter(person.FullName, "user") {
+					if utils.IsValidLetter(person.Username, "user") {
+						if utils.IsEmailValid(person.Email) {
+							if person.Password == person.PasswordRepeat {
+								if utils.IsPasswordValid(person.Password) {
+									u := models.User{
+										Email:    person.Email,
+										FullName: person.FullName,
+										Username: person.Username,
+										Age:      person.Age,
+										Sex:      person.Sex,
+										City:     person.City,
+										Image:    img,
+										Password: person.Password,
+									}
+									u.Signup(w, r)
+									u.Signin(w, r)
+									//http.Redirect(w, r, "/signin", 302)
+								} else {
+									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
 								}
-								u.Signup(w, r)
-								http.Redirect(w, r, "/signin", 302)
 							} else {
-								msg = "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!"
-								//utils.RenderTemplate(w, "signup", &msg)
+								utils.AuthError(w, r, err, "Password fields: not match epta", utils.AuthType)
+
 							}
 						} else {
-							msg = "Password fields: not match epta"
-							//utils.RenderTemplate(w, "signup", &msg)
+							utils.AuthError(w, r, err, "Incorrect email address: example gopher@yandex.com", utils.AuthType)
 						}
 					} else {
-						msg = "Incorrect email address: example god@yandex.com"
-						//			utils.RenderTemplate(w, "signup", &msg)
+						utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
+						return
 					}
 				} else {
-					msg = "Incorrect usernname field: access latin symbols and numbers"
-					//		utils.RenderTemplate(w, "signup", &msg)
+					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 				}
-			} else {
-				msg = "Incorrect name field access latin symbols"
+
+				utils.AuthError(w, r, nil, "success", utils.AuthType)
+				//http.Redirect(w, r, "/profile", 302)
+
+				// if utils.IsValidLetter(fullName, "user") {
+				// 	if utils.IsValidLetter(username, "user") {
+
+				// 		//checkerEmail & password
+				// 		if utils.IsEmailValid(r.FormValue("email")) {
+
+				// 			if intAge == 0 {
+				// 				intAge = 16
+				// 			}
+				// 			utils.AuthType = r.FormValue("authType")
+				// 			pwd, _ := r.Form["password"]
+				// 			if pwd[0] == pwd[1] {
+				// 				if utils.IsPasswordValid(r.FormValue("password")) {
+				// 					u := models.User{
+				// 						FullName: fullName,
+				// 						Email:    r.FormValue("email"),
+				// 						Username: username,
+				// 						Age:      intAge,
+				// 						Sex:      r.FormValue("sex"),
+				// 						City:     r.FormValue("city"),
+				// 						Image:    iB,
+				// 						Password: r.FormValue("password"),
+				// 					}
+				// 					u.Signup(w, r)
+				// 					http.Redirect(w, r, "/signin", 302)
+				// 				} else {
+				// 					msg = "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!"
+				// 					//utils.RenderTemplate(w, "signup", &msg)
+				// 				}
+				// 			} else {
+				// 				msg = "Password fields: not match epta"
+				// 				//utils.RenderTemplate(w, "signup", &msg)
+				// 			}
+				// 		} else {
+				// 			msg = "Incorrect email address: example god@yandex.com"
+				// 			//			utils.RenderTemplate(w, "signup", &msg)
+				// 		}
+				// 	} else {
+				// 		msg = "Incorrect usernname field: access latin symbols and numbers"
+				// 		//		utils.RenderTemplate(w, "signup", &msg)
+				// 	}
+				// } else {
+				// 	msg = "Incorrect name field access latin symbols"
 				//	utils.RenderTemplate(w, "signup", &msg)
 			}
 			//send like json, errors
-			json := []byte(fmt.Sprintf("<h3> %s err1 </h3>", &msg))
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(json)
+			// json := []byte(fmt.Sprintf("<h3> %s err1 </h3>", &msg))
+			// w.Header().Set("Content-Type", "application/json")
+			// w.Write(json)
 		})
 	}
 }
