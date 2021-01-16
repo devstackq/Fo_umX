@@ -19,7 +19,8 @@ type User struct {
 	Password       string    `json:"password1"`
 	PasswordRepeat string    `json:"password2"`
 	IsAdmin        bool      `json:"isAdmin"`
-	Age            int       `json:"age"`
+	Age            int       `json:"ageInt"`
+	AgeStr         string    `json:"age"`
 	Sex            string    `json:"sex"`
 	CreatedTime    time.Time `json:"createdTime"`
 	City           string    `json:"city"`

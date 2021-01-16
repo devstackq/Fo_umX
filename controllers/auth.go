@@ -32,7 +32,10 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 			// iB := utils.FileByte(r, "user")
 			var person models.User
-			err = json.NewDecoder(r.Body).Decode(&person)
+			//err = json.NewDecoder(r.Body).Decode(&person)
+
+			err = json.Unmarshal(r.Body, &person)
+
 			fmt.Println("-12", err)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)

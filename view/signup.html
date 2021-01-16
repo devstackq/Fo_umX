@@ -96,7 +96,7 @@ console.log(user, "user client ")
             console.log("user 1")
                 let response = await fetch('https://forumx.herokuapp.com/signup', {
                     method: 'post',
-                    body: user,
+                    body: JSON.stringify(user),
                 });
                 console.log("user 2", response)
                 let data = await response.json()
