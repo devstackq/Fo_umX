@@ -24,7 +24,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 	emailCheck := utils.IsRegistered(w, r, u.Email)
 	userCheck := utils.IsRegistered(w, r, u.Username)
-	
+
 	if !emailCheck && !userCheck {
 		userPrepare, err := DB.Prepare(`INSERT INTO users(full_name, email, username, password, age, sex, created_time, city, image) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`)
 		if err != nil {
@@ -46,14 +46,17 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 			msg = "Not unique email && username"
 		}
 		//if utils.AuthType == "default" {
-		utils.RenderTemplate(w, "signup", &msg)
+		json := []byte(fmt.Sprintf("<h3> %s </h3>", msg))
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+		//utils.RenderTemplate(w, "signup", &msg)
 		//}
 	}
 }
 
 //Signin function dsds
 //if user no system -> create uuid, save save in Db & browser, -> redirect middleware(profile)
-// if second time -> check by Email || username, if  
+// if second time -> check by Email || username, if
 func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 
 	var user User
@@ -91,12 +94,12 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	} else if utils.AuthType == "google" || utils.AuthType == "github" {
 		utils.ReSession(user.ID, uStr.Session, "", "")
 	}
-	
+
 	//1 time set uuid user, set cookie in Browser
 	newSession := general.Session{
 		UserID: user.ID,
 	}
-	
+
 	uuid := uuid.Must(uuid.NewV4(), err).String()
 	if err != nil {
 		utils.AuthError(w, r, err, "uuid problem", utils.AuthType)
@@ -108,7 +111,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	_, err = userPrepare.Exec(uuid,  newSession.UserID, time.Now())
+	_, err = userPrepare.Exec(uuid, newSession.UserID, time.Now())
 	if err != nil {
 		log.Println(err)
 	}
@@ -120,7 +123,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	
+
 	// get user in info by session Id
 	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
 	if err != nil {
@@ -137,7 +140,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 
 //Logout function
 func Logout(w http.ResponseWriter, r *http.Request, s general.Session) {
-	
+
 	utils.Logout(w, r, s)
 	if utils.AuthType == "google" {
 		_, err = http.Get("https://accounts.google.com/o/oauth2/revoke?token=" + utils.Token)

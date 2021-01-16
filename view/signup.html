@@ -77,7 +77,7 @@ user.sex = document.getElementById("sex").value;
               if (user.email != '' && user.pwd1 != '' && user.pwd2 != '' && user.name != '' && user.username != ''  && user.sex != '' && user.pwd1  != '' && user.pwd2 != '' || user.username && user.password) {
             //async fetch query
             if (user.pwd1 != pwd2) {
-            console.log("pawd incorerct)
+            console.log("pwd incorrect")
             }
             async function getUserAsync() {
                 let response = await fetch('https://forumx.herokuapp.com/signin', {

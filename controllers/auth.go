@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"golang.org/x/oauth2"
@@ -28,6 +29,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	if utils.URLChecker(w, r, "/signup") {
 		//callback anonim function
 		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
+
 			intAge, err := strconv.Atoi(r.FormValue("age"))
 			//switch add
 			if err != nil {
@@ -40,6 +42,39 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				fullName = "No Name"
 			}
 			username := r.FormValue("username")
+			msg := ""
+
+			var person models.User
+
+			err = json.NewDecoder(r.Body).Decode(&person)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			if person.Type == "default" {
+				utils.AuthType = "default"
+				var img []byte
+				if person.Image == nil {
+					defImg, _ := os.Open("./utils/default-user.jpg")
+					img, err = ioutil.ReadAll(defImg)
+				} else {
+					img = person.Image
+				}
+
+				u := models.User{
+					Email:    person.Email,
+					FullName: person.FullName,
+					Username: person.Username,
+					Age:      person.Age,
+					Sex:      person.Sex,
+					City:     person.City,
+					Image:    img,
+					Password: person.Password,
+				}
+				fmt.Println(u, "lsd")
+			}
 
 			if utils.IsValidLetter(fullName, "user") {
 				if utils.IsValidLetter(username, "user") {
@@ -67,25 +102,28 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 								u.Signup(w, r)
 								http.Redirect(w, r, "/signin", 302)
 							} else {
-								msg := "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!"
-								utils.RenderTemplate(w, "signup", &msg)
+								msg = "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!"
+								//utils.RenderTemplate(w, "signup", &msg)
 							}
 						} else {
-							msg := "Password fields: not match epta"
-							utils.RenderTemplate(w, "signup", &msg)
+							msg = "Password fields: not match epta"
+							//utils.RenderTemplate(w, "signup", &msg)
 						}
 					} else {
-						msg := "Incorrect email address: example god@yandex.com"
-						utils.RenderTemplate(w, "signup", &msg)
+						msg = "Incorrect email address: example god@yandex.com"
+						//			utils.RenderTemplate(w, "signup", &msg)
 					}
 				} else {
-					msg := "Incorrect usernname field: access latin symbols and numbers"
-					utils.RenderTemplate(w, "signup", &msg)
+					msg = "Incorrect usernname field: access latin symbols and numbers"
+					//		utils.RenderTemplate(w, "signup", &msg)
 				}
 			} else {
-				msg := "Incorrect name field access latin symbols"
-				utils.RenderTemplate(w, "signup", &msg)
+				msg = "Incorrect name field access latin symbols"
+				//	utils.RenderTemplate(w, "signup", &msg)
 			}
+			json := []byte(fmt.Sprintf("<h3> %s err1 </h3>", &msg))
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(json)
 		})
 	}
 }
