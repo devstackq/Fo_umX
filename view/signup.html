@@ -81,7 +81,7 @@ console.log(user, "ll")
               console.log("pwd incorrect")
             }
             async function getUserAsync() {
-                let response = await fetch('https://forumx.herokuapp.com/signin', {
+                let response = await fetch('https://forumx.herokuapp.com/signup', {
                     method: 'post',
                     body: JSON.stringify(user),
                 });
