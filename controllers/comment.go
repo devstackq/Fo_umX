@@ -26,10 +26,10 @@ func LeaveComment(w http.ResponseWriter, r *http.Request) {
 			comment.LeaveComment()
 			http.Redirect(w, r, "/post?id="+r.FormValue("curr"), 302)
 		} else {
-			msg := []byte(fmt.Sprintf("<h2 id='notify'> Content not empty!</h2>"))
+			msg := []byte(fmt.Sprintf("<h3 id='notify'> Content not empty!</h3>"))
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(msg)
-			return
+			utils.RenderTemplate(w, "post", nil)
 		}
 	}
 }
