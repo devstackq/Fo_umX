@@ -15,11 +15,11 @@ var limiter = rate.NewLimiter(1, 3)
 
 func limit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if limiter.Allow() == false {
-			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+		if !limiter.Allow() {
+			//http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			utils.RenderTemplate(w, "404page", http.StatusTooManyRequests)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
