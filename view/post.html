@@ -31,11 +31,10 @@
         <form action="/votes/post?id={{.ID}}" method="POST">
             <input type="hidden" name="dislike" value="1">
             <span class="fa fa-thumbs-down vote-down"> </span>
-            <input type="submit" value="     ">
+            <input type="submit" value="    ">
         </form>
         <span class="dislike"> {{.Dislike}}</span>
     </div>
-
 
     <!-- lst comment under post -->
     <div class="comment-wrapper" style="width:100%">
@@ -43,13 +42,13 @@
             <textarea placeholder="lost your comment.." name="comment-text" id="textareaId" rows="5"
                 required></textarea>
             <input type="hidden" name="curr" value="{{.ID}}">
+            <input type="submit" name="" value="send">
         </form>
     </div>
-
 </div>
 
 <script>
-    (function () {
+    {{/* (function () {
         document.querySelector('textarea').addEventListener('keydown', function (e) {
         //if all string "", regex
      let count = 0;
@@ -68,6 +67,6 @@
 console.log("no correct comment")
             }
         });
-    })();
+    })(); */}}
 </script>
 {{end}}
