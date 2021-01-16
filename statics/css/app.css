@@ -24,7 +24,7 @@ body {
   background-color: slategray;
   color: #fff;
   max-width: 1200px;
-  padding: 0px 20px 12px 20px;
+  padding: 0px 20px 24px 20px;
   border: 0.3px solid transparent;
   position: relative;
 }
@@ -492,19 +492,19 @@ a.links {
 }
 
 .signin-wrapper {
+  width: 100%;
   margin: 0 auto;
   background-color: #fff;
   color: #000;
   max-width: 1200px;
-  padding: 18px;
-  height: 100vh;
+  padding: 0 18px;
 }
 
 .signin-container {
-  width: 450px;
-  height: 580px;
-  margin: 120px auto 0;
-  padding: 0 38px 18px;
+  width: 86%;
+  max-width: 410px;
+  height: 380px;
+  margin: 120px auto 30px;
   background-color: lightslategray;
   border-radius: 2%;
   color: #fff;
@@ -512,6 +512,7 @@ a.links {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 0 18px;
 }
 
 .signin-container span {
@@ -520,42 +521,39 @@ a.links {
   margin: 0px auto 10px;
 }
 
-.signin-wrapper h3 {
-  margin: 30px auto 0;
-}
-
 .g-signin2 {
   margin: 10px 0;
 }
 
 .signin-label {
   color: #fff;
+  margin-bottom: 30px;
 }
 
 .signin-wrapper input[type="text"] {
-  margin-top: 130px;
-  padding: 10px 0 10px 10px;
+  padding: 10px 0px 10px 10px;
   color: royalblue;
   border: none;
-  width: 100%;
+  width: 97%;
   margin-bottom: 10px;
 }
 
 .signin-wrapper input[type="password"] {
-  padding: 10px 0 10px 10px;
+  padding: 10px 0px 10px 10px;
   color: royalblue;
+  padding-left: 10px;
   border: none;
   margin-top: 3px;
   margin-bottom: 10px;
-  width: 100%;
+  width: 97%;
 }
 
 .signin-wrapper input[type="submit"] {
   margin: 10px 0;
   background: #fff;
   color: #000;
-  padding: 10px;
-  width: 102%;
+  padding: 10px 8px;
+  width: 100%;
   border: none;
   outline: none;
 }
@@ -585,7 +583,7 @@ a.links {
   margin: 0px auto 0;
   background-color: #fff;
   color: #000;
-  min-width: 960px;
+  width: 100%;
   max-width: 1200px;
   padding: 18px;
 }
@@ -593,19 +591,21 @@ a.links {
 .signup-container {
   margin: 120px auto;
   border-radius: 1%;
-  width: 100%;
   max-width: 450px;
-  padding: 18px 38px;
+  padding: 18px;
   background: lightslategray;
   color: #fff;
 }
 
 .signup-container input {
   color: royalblue;
-  width: 92%;
+  width: 94%;
   margin-bottom: 20px;
   padding: 10px 12px;
   font-size: 16px;
+}
+.signup-container input[type="file"] {
+  padding: 10px 0 !important;
 }
 
 .signup-container input[type="submit"] {
@@ -633,7 +633,7 @@ input[type="file"]:hover {
   color: royalblue;
   width: 100%;
   margin-bottom: 20px;
-  padding: 8px 8px;
+  padding: 8px 10px;
   font-size: 16px;
 }
 
@@ -818,6 +818,7 @@ a.dislike {
 .comment-wrapper-p {
   margin: 0;
   padding: 5px;
+  color: yellow;
 }
 
 .like-comment-wrapper {
@@ -879,7 +880,7 @@ a.dislike {
 .likes-card {
   position: absolute;
   right: 6px;
-  bottom: 3px;
+  bottom: 0;
 }
 
 .likes-card span {
@@ -897,14 +898,11 @@ a.dislike {
 }
 
 .google-signin {
-  width: 89%;
+  width: 100%;
   background: #000;
-  padding: 10px;
+  padding: 10px 0;
   display: flex;
   justify-content: center;
-}
-
-.signup-link {
 }
 
 .google-signin a {
@@ -914,9 +912,9 @@ a.dislike {
 
 .github-signin {
   margin: 10px 0;
-  width: 89%;
+  width: 100%;
   background: #fff;
-  padding: 10px;
+  padding: 10px 0;
   display: flex;
   justify-content: center;
 }
@@ -989,25 +987,21 @@ a.dislike {
     position: relative;
   }
   .time-comment {
-    top: 20px;
+    top: 0;
     position: relative;
     right: 0;
   }
   .comment-wrapper-p {
     margin: 12px 0px 6px;
   }
-  .replied-container span {
-    position: absolute;
-    top: 18%;
-    color: orangered;
+  .replied-answer {
+    padding-left: 20px;
+    color: yellow;
   }
-}
-.replied-container {
-  color: orangered;
-}
-/* .replied-container span{
-    position: relative;
-  } */
+  .replied-container span {
+    top: 18%;
+    color: yellow;
+  }
 
 .replied-container span {
   top: 18%;
@@ -1017,7 +1011,7 @@ a.dislike {
 }
 
 .replied-content {
-  color: #fff;
+  color: #fff !important;
   text-decoration: underline;
   font-size: 18px;
 }

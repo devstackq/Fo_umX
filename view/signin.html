@@ -1,24 +1,20 @@
 {{define "signin"}} {{template "header"}}
 
 <div class="signin-wrapper" id="signin-wrapper">
+
     <div class="signin-container">
         <h3 class="signin-label">Login system</h3>
         <form onsubmit="event.preventDefault()">
-            <div id=" authWrapperId">
-                <input id="name" type="text" name="email" placeholder="email || username" required>
-                <input id="password" type="password" name="password" placeholder="password" required>
-                <input onclick="defAuthSendData()" type="submit" value="Login">
+            <input id="name" type="text" name="email" placeholder="email || username" required>
+            <input id="password" type="password" name="password" placeholder="password" required>
+            <input onclick="defAuthSendData()" type="submit" value="Login">
         </form>
+        <div class="google-signin"> <a href="/googleSignin"> Google Sign in </a> </div>
+        <div class="github-signin"> <a href="/githubSignin"> Github Sign in </a></div>
     </div>
-    <hr>
-    <div class="google-signin"> <a href="/googleSignin"> Google Sign in </a> </div>
-    <hr>
-    <div class="github-signin"> <a href="/githubSignin"> Github Sign in </a></div>
-</div>
 
-<span id="notify"> {{ if . }} {{.}} {{end}} </span>
+    <span id="notify"> {{ if . }} {{.}} {{end}} </span>
 
-</div>
 </div>
 
 {{template "footer"}}

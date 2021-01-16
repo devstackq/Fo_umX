@@ -4,19 +4,26 @@
 <div class="comment-wrapperz">
     <div class="comment-underpost">
         <div class="comment-wrapper-1">
+            {{if eq .ParentID 0 }}
             <form action="/user/id?{{.UserID}}" method="post" autocomplete="off">
                 <input type="hidden" name="uid" value="{{.UserID}}">
                 <input type="submit" value="{{.Author}}">
             </form>
+            {{end}}
             <span class="time-comment"> {{.Time}} </span>
 
-            {{if eq .Edited true }} <span class="edited-comment"> Edited </span>{{end}}
+            {{if eq .Edited true }} <span class="edited-comment"> Edited {{.UpdatedTime}} </span>{{end}}
         </div>
         {{if gt .ParentID 0 }}
         <div class="replied-container">
-            <span> responded to the comment: <span class="replied-content">{{.RepliedContent}}</span>
-                user: <a href="/user/id?uid={{.ToWhom}}" alt=""> {{.Replied}}</a>
-            </span>
+            <div>
+                Responded to the comment:
+                <form action="/user/id?{{.UserID}}" method="post" autocomplete="off">
+                    <input type="hidden" name="uid" value="{{.UserID}}">
+                    <input type="submit" value="{{.Author}}">
+                </form> <span class="replied-content">{{.RepliedContent}}</span>
+                to: <a href="/user/id?uid={{.ToWhom}}" alt=""> <span class="replied-answer"> {{.Replied}} </span></a>
+            </div>
         </div>
         {{end}}
 
