@@ -24,11 +24,12 @@ func LeaveComment(w http.ResponseWriter, r *http.Request) {
 				UserID:  session.UserID,
 			}
 			comment.LeaveComment()
+			http.Redirect(w, r, "/post?id="+r.FormValue("curr"), 302)
 		} else {
+			http.Redirect(w, r, "/post?id="+r.FormValue("curr"), 302)
 			log.Println("empty comment field")
 			return
 		}
-		http.Redirect(w, r, "/post?id="+r.FormValue("curr"), 302)
 	}
 }
 
