@@ -3,7 +3,7 @@
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
         <!-- //onsubmit="event.preventDefault();" -->
-        <form action="/signup" method="POST" enctype="multipart/form-data" autocomplete="on">
+        <form  onsubmit="event.preventDefault() action="/signup" method="POST" enctype="multipart/form-data" autocomplete="on">
             <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input id="email" type="email" name="email" placeholder="Email" required>
@@ -37,12 +37,12 @@
             <label for="image">Image:
                 <input id="image" type="file" name="uploadfile" accept="image/*" />
             </label>
-            <input type="submit" value="Register">
+            <input onclick="Signup()" type="submit" value="Register">
 
         </form>
         <span>If you are logged in, then log in to me <a style="color: gold;" href="/signin">Signin</a> </span>
         <br />
-        <span id="notify"> {{ if . }} {{.}} {{end}} </span>
+        <span id="notify">  </span>
     </div>
 </div>
 <script>
@@ -58,9 +58,11 @@
         }
     }
 
-    const element = document.querySelector('form');
+    {{/* const element = document.querySelector('form');
      element.addEventListener('submit', event => {
-         event.preventDefault();
+         event.preventDefault(); */}}
+
+ function Signup() {
 
          let user = {
              image: null,
@@ -104,8 +106,7 @@ console.log(user, "user client")
               getUserAsync()
                 .then(data => showNotify(data));
 
-         console.log('Form submission cancelled.');
 }
-     });
+}
 </script>
 {{end}}
