@@ -25,12 +25,19 @@ func LeaveComment(w http.ResponseWriter, r *http.Request) {
 			}
 			comment.LeaveComment()
 			http.Redirect(w, r, "/post?id="+r.FormValue("curr"), 302)
+
 		} else {
-			msg := []byte(fmt.Sprintf("<h3 id='notify'> Content not empty!</h3>"))
+			// msg := []byte(fmt.Sprintf("<h3 id='notify'> Content not empty!</h3>"))
+			// w.Header().Set("Content-Type", "application/json")
+			// w.Write(msg)
+
+			msg := []byte(fmt.Sprintf("<h3> %s </h3>", "Empty content"))
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(msg)
-			utils.RenderTemplate(w, "post", nil)
+			return
+			//utils.RenderTemplate(w, "post", nil)
 		}
+
 	}
 }
 
