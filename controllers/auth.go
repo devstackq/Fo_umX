@@ -33,9 +33,11 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			// iB := utils.FileByte(r, "user")
 			var person models.User
 			//err = json.NewDecoder(r.Body).Decode(&person)
-
-			err = json.Unmarshal(r.Body, &person)
-
+			reqBody, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				log.Println(err)
+			}
+			err = json.Unmarshal(reqBody, &person)
 			fmt.Println("-12", err)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
