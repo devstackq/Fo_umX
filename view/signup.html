@@ -99,7 +99,7 @@
             uploadForm.addEventListener('submit', function(e) {
    e.preventDefault()
    let filez = e.target.uploadFile.files[0]
-   console.log(filez, "Fiol)
+   console.log(filez, "Fiol")
    let formData = new FormData()
    formData.append('file', filez)
    console.log(formData)
@@ -119,7 +119,6 @@
         console.log(encoded, "enc", user.image[0])
         //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
-        console.log(user, "user client ", file)
         //async fetch query
         async function getUserAsync() {
             let response = await fetch('https://forumx.herokuapp.com/signup', {
