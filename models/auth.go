@@ -37,18 +37,23 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		defer userPrepare.Close()
 	} else {
 		if emailCheck {
-			msg = "Not unique email"
+			
+			utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
+			return
 		}
 		if userCheck {
-			msg = "Not unique username"
+			utils.AuthError(w, r, err, "Not unique username", utils.AuthType)
+			return
 		}
 		if userCheck && emailCheck {
-			msg = "Not unique email && username"
+			utils.AuthError(w, r, err, "Not unique username && email", utils.AuthType)
+			return
 		}
+		utils.AuthError(w, r, nil, "success", utils.AuthType)
 		//if utils.AuthType == "default" {
-		json := []byte(fmt.Sprintf("<h3> %s </h3>", msg))
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
+		// json := []byte(fmt.Sprintf("<h3> %s </h3>", msg))
+		// w.Header().Set("Content-Type", "application/json")
+		// w.Write(json)
 		//utils.RenderTemplate(w, "signup", &msg)
 		//}
 	}

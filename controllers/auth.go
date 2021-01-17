@@ -75,6 +75,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Password: person.Password,
 									}
 									u.Signup(w, r)
+									
 								//	http.Redirect(w, r, "/signin", 302)
 								} else {
 									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
@@ -96,7 +97,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 					return
 				}
-				utils.AuthError(w, r, nil, "success", utils.AuthType)
+				
 				//http.Redirect(w, r, "/signin", 302)
 			}
 		})
