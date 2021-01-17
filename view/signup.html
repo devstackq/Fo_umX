@@ -85,9 +85,9 @@
         user.city = document.getElementById("city").value;
         user.sex = document.getElementById("sex").value;
         
- 
-      if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
-
+console.log("her0") 
+     // if (user.age >  0 &&  user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
+console.log("her")
         //async fetch query
         async function getUserAsync() {
             let response = await fetch('https://forumx.herokuapp.com/signup', {
@@ -103,7 +103,6 @@
         }
         getUserAsync()
             .then(data => showNotify(data));
-    }
     }
 </script>
 {{end}}
