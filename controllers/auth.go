@@ -242,33 +242,35 @@ func GetGithubData(token string) []byte {
 
 	return responseBody
 }
-func SigninSideService(w http.ResponseWriter, r *http.Request, u models.User) {
+func SigninSideService(w http.ResponseWriter, r *http.Request, user models.User) {
 
-	if utils.IsRegistered(w, r, u.Email) {
+	if utils.IsRegistered(w, r, user.Email) {
 		u := models.User{
-			Email:    u.Email,
-			FullName: u.Name,
+			Email:    user.Email,
+			FullName: user.Name,
 			Session:  session,
 		}
 		u.Signin(w, r) //login
 	} else {
 		//if github = location -> else Almaty
-		if u.Username == "" {
-			u.Name = u.Email
+		u := models.User{}
+
+		if user.Username == "" {
+			user.Name = user.Email
 		}
-		if u.Location == "" {
+		if user.Location == "" {
 			u.Location = "Almaty"
 		}
-		u := models.User{
-			Email:    u.Email,
-			FullName: u.Name,
-			Username: u.Name,
-			Age:      16,
-			Sex:      "Male",
-			City:     u.Location,
-			Image:    utils.FileByte(r, "user"),
-			Session:  session,
-		}
+
+		u.Email = user.Email
+		u.FullName = user.Name
+		u.Username = user.Name
+		u.Age = 16
+		u.Sex = "Male"
+		u.City = user.Location
+		u.Image = utils.FileByte(r, "user")
+		u.Session = session
+
 		u.Signup(w, r)
 		u.Signin(w, r)
 	}
