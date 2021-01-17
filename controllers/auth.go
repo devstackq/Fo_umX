@@ -37,8 +37,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			err = json.Unmarshal(reqBody, &person)
-			if err != nil {				
-					log.Println(err,"1")					
+			if err != nil {
+				log.Println(err, "1")
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -50,11 +50,11 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				if person.Image == nil {
 					defImg, err := os.Open("./utils/default-user.jpg")
 					if err != nil {
-						log.Println(err,"2")
-						}
+						log.Println(err, "2")
+					}
 					img, err = ioutil.ReadAll(defImg)
 					if err != nil {
-					log.Println(err,"3")
+						log.Println(err, "3")
 					}
 				} else {
 					img = person.Image
@@ -79,10 +79,11 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Age:      person.Age,
 										Sex:      person.Sex,
 										City:     person.City,
-										Image:    img, ? multipart.File ? 
-										https://medium.com/@aresnik11/how-to-upload-a-file-on-the-frontend-and-send-it-using-js-to-a-rails-backend-29755afaad06
+										Image:    img, //? multipart.File ?
+										//	https://medium.com/@aresnik11/how-to-upload-a-file-on-the-frontend-and-send-it-using-js-to-a-rails-backend-29755afaad06
 										Password: person.Password,
 									}
+									// newReader js  base64 || []byte - send backend
 									u.Signup(w, r)
 								} else {
 									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)

@@ -94,14 +94,15 @@
         var file = document.querySelector('input[type="file"]').files[0];
         //console.log(getBase64(file))
         let encoded;
-
-        getBase64(file)
+        console.log(user.image,  user.image[0])
+        getBase64(user.image[0])
+        
             .then((result) => {
                 encoded = result;
             })
             .catch(e => console.log(e))
 
-        console.log(encoded, "enc")
+        console.log(encoded, "enc", user.image[0])
         //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
         console.log(user, "user client ", file)
