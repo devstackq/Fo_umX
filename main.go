@@ -9,19 +9,12 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
-	//design better, mobile add, adfix offset, not empty value, in comment
-	//add all post, each post - show tags(category)s
-	//todo db postgres connect, design fix, time utc fix
 
-	//wsl installed
-	//signup page - todo js, like signin
+	//add -  all post, each post - show tags(category)s
 	//try - comment under - replies comment show
-	//create post -  out main page
-	//design -> another site, copy colors, etc
 	//try errors -> with gorutine
 	//no row set db - fix handle
 	//superflios writeheader
-	// Heroku deploy
 
 	//not require, optional:
 	//not delete rows in table- add field - visible, if Client delete post/comment-> filed visible false

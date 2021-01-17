@@ -28,7 +28,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		//callback anonim function
 		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
 
-			// iB := utils.FileByte(r, "user")
 			var person models.User
 			reqBody, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -36,7 +35,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			}
 			err = json.Unmarshal(reqBody, &person)
 			if err != nil {
-				log.Println(err, "1")
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -58,7 +56,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 							if person.Password == person.PasswordRepeat {
 								if utils.IsPasswordValid(person.Password) {
 									img := utils.FileByte(r, "user")
-									fmt.Println(img, "Image")
 									u := models.User{
 										Email:    person.Email,
 										FullName: person.FullName,
