@@ -35,9 +35,9 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 		defer userPrepare.Close()
-		utils.AuthError(w, r, nil, "success", utils.AuthType)
-		http.Redirect(w, r, "/signin", 302)
+	
 	} else {
+		if utils.AuthType == "default" {
 		if emailCheck {
 			utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
 			return
@@ -50,13 +50,10 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 			utils.AuthError(w, r, err, "Not unique username && email", utils.AuthType)
 			return
 		}
-		//if utils.AuthType == "default" {
-		// json := []byte(fmt.Sprintf("<h3> %s </h3>", msg))
-		// w.Header().Set("Content-Type", "application/json")
-		// w.Write(json)
-		//utils.RenderTemplate(w, "signup", &msg)
-		//}
 	}
+	}
+	utils.AuthError(w, r, nil, "success", utils.AuthType)
+	http.Redirect(w, r, "/signin", 302)
 }
 
 //Signin function dsds
@@ -91,6 +88,8 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			utils.ReSession(user.ID, uStr.Session, "", "")
 		}
 		//check pwd, if not correct, error
+		fmt.Println(user.Password, uStr.Password, "PWD")
+
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
 		if err != nil {
 			utils.AuthError(w, r, err, "password incorrect", utils.AuthType)
@@ -131,7 +130,6 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.SetCookie(w, newSession.UUID)
-	//user.Session.StartTimeCookie = time.Now().Add(time.Minute * 60)
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	fmt.Println(utils.AuthType, "auth type")
 	http.Redirect(w, r, "/profile", 302)
