@@ -97,7 +97,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				utils.AuthError(w, r, nil, "success", utils.AuthType)
-				//http.Redirect(w, r, "/profile", 302)
+				http.Redirect(w, r, "/signin", 302)
 			}
 		})
 	}
