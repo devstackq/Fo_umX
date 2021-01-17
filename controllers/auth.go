@@ -37,7 +37,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			err = json.Unmarshal(reqBody, &person)
-			if err != nil {
+			if err != nil {				
+					log.Println(err,"1")					
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -47,8 +48,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				utils.AuthType = "default"
 				var img []byte
 				if person.Image == nil {
-					defImg, _ := os.Open("./utils/default-user.jpg")
+					defImg, err := os.Open("./utils/default-user.jpg")
+					if err != nil {
+						log.Println(err,"2")
+						}
 					img, err = ioutil.ReadAll(defImg)
+					if err != nil {
+					log.Println(err,"3")
+					}
 				} else {
 					img = person.Image
 				}
@@ -64,6 +71,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 						if utils.IsEmailValid(person.Email) {
 							if person.Password == person.PasswordRepeat {
 								if utils.IsPasswordValid(person.Password) {
+									fmt.Println(person, "data from client")
 									u := models.User{
 										Email:    person.Email,
 										FullName: person.FullName,
