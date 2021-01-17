@@ -27,7 +27,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if utils.URLChecker(w, r, "/signup") {
 		//callback anonim function
-		fmt.Println("-1", r.Method, "dsds")
 		utils.CheckMethod(r.Method, "signup", auth, "", w, func(http.ResponseWriter) {
 
 			// iB := utils.FileByte(r, "user")
@@ -42,7 +41,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-
+			log.Println(person, "Person data")
 			if person.Type == "default" {
 
 				utils.AuthType = "default"
