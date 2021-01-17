@@ -249,7 +249,7 @@ func SigninSideService(w http.ResponseWriter, r *http.Request, user models.User)
 		u := models.User{}
 
 		if user.Location == "" {
-			u.Location = "Almaty"
+			user.Location = "Almaty"
 		}
 
 		u.Email = user.Email
@@ -261,6 +261,7 @@ func SigninSideService(w http.ResponseWriter, r *http.Request, user models.User)
 		u.Image = utils.FileByte(r, "user")
 		u.Session = session
 
+		fmt.Println(utils.AuthType, "sginin google || github")
 		u.Signup(w, r)
 		u.Signin(w, r)
 	}
