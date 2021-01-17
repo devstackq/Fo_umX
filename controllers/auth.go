@@ -79,7 +79,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Age:      person.Age,
 										Sex:      person.Sex,
 										City:     person.City,
-										Image:    img,
+										Image:    img, ? multipart.File ? 
+										https://medium.com/@aresnik11/how-to-upload-a-file-on-the-frontend-and-send-it-using-js-to-a-rails-backend-29755afaad06
 										Password: person.Password,
 									}
 									u.Signup(w, r)

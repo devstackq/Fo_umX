@@ -58,6 +58,13 @@
             window.location.replace("https://forumx.herokuapp.com/signin")
         }
     }
+    const getBase64 = (file) => new Promise(function (resolve, reject) {
+        let reader = new FileReader();
+        // console.log(reader.readAsBinaryString(file), "reader1")
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = (error) => reject('Error: ', error);
+    })
 
     function signup() {
 
@@ -83,9 +90,21 @@
         user.city = document.getElementById("city").value;
         user.sex = document.getElementById("sex").value;
         user.image = document.getElementById("image").files;
+        
+        var file = document.querySelector('input[type="file"]').files[0];
+        //console.log(getBase64(file))
+        let encoded;
+
+        getBase64(file)
+            .then((result) => {
+                encoded = result;
+            })
+            .catch(e => console.log(e))
+
+        console.log(encoded, "enc")
         //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
-        console.log(user, "user client ")
+        console.log(user, "user client ", file)
         //async fetch query
         async function getUserAsync() {
             let response = await fetch('https://forumx.herokuapp.com/signup', {
