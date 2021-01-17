@@ -90,7 +90,7 @@
         user.password2 = document.getElementById("password2").value;
         user.city = document.getElementById("city").value;
         user.sex = document.getElementById("sex").value;
-        user.image = document.getElementById("image").files;
+      //  user.image = document.getElementById("image").files;
         
         var file = document.querySelector('input[type="file"]').files[0];
         //console.log(getBase64(file))
@@ -98,12 +98,16 @@
             const uploadForm = document.querySelector('.upload')
             uploadForm.addEventListener('submit', function(e) {
    e.preventDefault()
-   let file = e.target.uploadFile.files[0]
-   console.log(file)
+   let filez = e.target.uploadFile.files[0]
+   console.log(filez, "Fiol)
+   let formData = new FormData()
+   formData.append('file', filez)
+   console.log(formData)
+   user.image = formData
 })
         let encoded;
-        console.log(user.image,  user.image[0])
-        getBase64(user.image[0])
+        //console.log(user.image,  user.image[0])
+        getBase64(user.image)
 
             .then((result) => {
                 encoded = result;
@@ -119,6 +123,10 @@
         //async fetch query
         async function getUserAsync() {
             let response = await fetch('https://forumx.herokuapp.com/signup', {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
                 method: 'post',
                 body: JSON.stringify(user),
             });
