@@ -94,6 +94,13 @@
         
         var file = document.querySelector('input[type="file"]').files[0];
         //console.log(getBase64(file))
+  
+            const uploadForm = document.querySelector('.upload')
+            uploadForm.addEventListener('submit', function(e) {
+   e.preventDefault()
+   let file = e.target.uploadFile.files[0]
+   console.log(file)
+})
         let encoded;
         console.log(user.image,  user.image[0])
         getBase64(user.image[0])
@@ -103,11 +110,7 @@
             })
             .catch(e => console.log(e))
 
-            const uploadForm = document.querySelector('.upload')image.addEventListener('submit', function(e) {
-   e.preventDefault()
-   let file = e.target.uploadFile.files[0]
-   console.log(file)
-})
+  
 
         console.log(encoded, "enc", user.image[0])
         //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
