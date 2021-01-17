@@ -32,18 +32,15 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 			// iB := utils.FileByte(r, "user")
 			var person models.User
-			//err = json.NewDecoder(r.Body).Decode(&person)
 			reqBody, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				log.Println(err)
 			}
 			err = json.Unmarshal(reqBody, &person)
-			fmt.Println("-12", err)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			fmt.Println("0")
 
 			if person.Type == "default" {
 
@@ -77,37 +74,28 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Image:    img,
 										Password: person.Password,
 									}
-									fmt.Println("her")
 									u.Signup(w, r)
-									u.Signin(w, r)
-									fmt.Println("her2")
-									//http.Redirect(w, r, "/signin", 302)
+									http.Redirect(w, r, "/signin", 302)
 								} else {
 									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
-									fmt.Println("1")
 									return
 								}
 							} else {
-								fmt.Println("2")
 								utils.AuthError(w, r, err, "Password fields: not match epta", utils.AuthType)
 								return
 							}
 						} else {
-							fmt.Println("3")
 							utils.AuthError(w, r, err, "Incorrect email address: example gopher@yandex.com", utils.AuthType)
 							return
 						}
 					} else {
-						fmt.Println("4")
 						utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 						return
 					}
 				} else {
-					fmt.Println("5")
 					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 					return
 				}
-				fmt.Println("6")
 				utils.AuthError(w, r, nil, "success", utils.AuthType)
 				//http.Redirect(w, r, "/profile", 302)
 			}
