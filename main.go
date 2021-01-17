@@ -8,7 +8,9 @@ import (
 func main() {
 	config.Init()
 	controllers.Init()
+
 	//github signin - not empty data,  google signin - 1 - redirect profile
+	//delete account - correct,
 	//add -  all post, each post - show tags(category)s
 	//try - comment under - replies comment show
 	//try errors -> with gorutine
