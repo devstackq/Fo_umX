@@ -86,7 +86,7 @@
 
         uploadForm.addEventListener('submit', function(e) {
    e.preventDefault()
-   let filez = e.target.uploadFile.files[0]
+   let filez = e.target.uploadForm.files[0]
    console.log(filez, "Fiol")
    let formData = new FormData()
    formData.append('file', filez)
