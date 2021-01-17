@@ -65,7 +65,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Age:      person.Age,
 										Sex:      person.Sex,
 										City:     person.City,
-										Image:    utils.FileByte(r, "user")
+										Image:    utils.FileByte(r, "user"),
 										Password: person.Password,
 									}
 									u.Signup(w, r)
