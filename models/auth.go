@@ -36,7 +36,6 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		}
 		defer userPrepare.Close()
 		utils.AuthError(w, r, nil, "success", utils.AuthType)
-
 	} else {
 		if emailCheck {
 			utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
@@ -122,12 +121,6 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	}
 	defer userPrepare.Close()
 
-	if err != nil {
-		utils.AuthError(w, r, err, "the user is already in the system", utils.AuthType)
-		//get ssesion id, by local struct uuid
-		log.Println(err)
-		return
-	}
 
 	// get user in info by session Id
 	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
@@ -140,7 +133,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	//user.Session.StartTimeCookie = time.Now().Add(time.Minute * 60)
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	fmt.Println(utils.AuthType, "auth type")
-	http.Redirect(w, r, "/profile", 302)
+	//http.Redirect(w, r, "/profile", 302)
 }
 
 //Logout function

@@ -54,11 +54,9 @@
             let ns = document.getElementById('notify')
             ns.innerText = msg
         } else {
-            //sound & confetti
             window.location.replace("https://forumx.herokuapp.com/signin")
         }
     }
-
 
     function signup() {
 
@@ -89,14 +87,11 @@
         console.log(user, "user client ")
         //async fetch query
         async function getUserAsync() {
-            console.log("user 1")
             let response = await fetch('https://forumx.herokuapp.com/signup', {
                 method: 'post',
                 body: JSON.stringify(user),
             });
-            console.log("user 2", response)
             let data = await response.json()
-            console.log(data, "returned data, promise")
             return data;
         }
         getUserAsync()
