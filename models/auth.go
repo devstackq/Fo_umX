@@ -36,6 +36,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		}
 		defer userPrepare.Close()
 		utils.AuthError(w, r, nil, "success", utils.AuthType)
+		http.Redirect(w, r, "/signin", 302)
 	} else {
 		if emailCheck {
 			utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
@@ -133,7 +134,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	//user.Session.StartTimeCookie = time.Now().Add(time.Minute * 60)
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	fmt.Println(utils.AuthType, "auth type")
-	//http.Redirect(w, r, "/profile", 302)
+	http.Redirect(w, r, "/profile", 302)
 }
 
 //Logout function
