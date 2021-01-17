@@ -10,7 +10,7 @@ func main() {
 	config.Init()
 	controllers.Init()
 	//design better, mobile add, adfix offset, not empty value, in comment
-
+	//add all post, each post - show tags(category)s
 	//todo db postgres connect, design fix, time utc fix
 
 	//wsl installed
