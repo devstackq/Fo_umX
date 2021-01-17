@@ -3,19 +3,19 @@
 <div class="signup-wrapper">
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
-        <form  enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault()" >
+        <form enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault()">
             <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
-            <input type="text" id="username" name="username"  placeholder="Username" required>
+            <input type="text" id="username" name="username" placeholder="Username" required>
             <input id="email" type="email" name="email" placeholder="Email" required>
             <input type="number" id="age" name="age" placeholder="Age" min="16" max="80">
-            <input type="hidden" id="authType" name="authType"  value="default">
+            <input type="hidden" id="authType" name="authType" value="default">
 
-            <select  id="sex" name="sex">
+            <select id="sex" name="sex">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
             </select>
 
-            <select name="city"  id="city">
+            <select name="city" id="city">
                 <option value="Almaty">Almaty</option>
                 <option value="Astana">Astana</option>
                 <option value="Karaganda">Karaganda</option>
@@ -33,16 +33,16 @@
             </select>
 
             <input id="password1" name="password" type="password" placeholder="Password" required>
-            <input id="password2" name="password" type="password"  placeholder="Repeat password" required>
- 
+            <input id="password2" name="password" type="password" placeholder="Repeat password" required>
+
             <label for="image">Image:
-                <input name="image" id="image" type="file"  accept="image/*" />
+                <input name="image" id="image" type="file" accept="image/*" />
             </label>
             <input onclick="signup()" type="submit" value="Register ">
         </form>
         <span>If you are logged in, then log in to me <a style="color: gold; " href="/signin">Signin</a> </span>
         <br />
-        <span id="notify">  </span>
+        <span id="notify"> </span>
     </div>
 </div>
 
@@ -55,56 +55,52 @@
             ns.innerText = msg
         } else {
             //sound & confetti
-            window.location.replace("https://forumx.herokuapp.com/profile")
+            window.location.replace("https://forumx.herokuapp.com/signin")
         }
     }
 
-    {{/* const element = document.querySelector('form');
-     element.addEventListener('submit', event => {
-         event.preventDefault(); */}}
 
- function signup() {
+    function signup() {
 
-     let user = {
-             image: null,
-             email: '',
-             username: '',
-             age: 0,
-             fullname: '',
-             type: '',
-             sex : '',
-             password1 : '',
-             password2 : '',
-             city : ''
-         };
-    user.username = document.getElementById("username").value;
-         user.fullname = document.getElementById("fullname").value;
-         user.email = document.getElementById("email").value;
-         user.age = document.getElementById("age").value;
-         user.type = document.getElementById("authType").value;
+        let user = {
+            image: null,
+            email: '',
+            username: '',
+            age: 0,
+            fullname: '',
+            type: '',
+            sex: '',
+            password1: '',
+            password2: '',
+            city: ''
+        };
+        user.username = document.getElementById("username").value;
+        user.fullname = document.getElementById("fullname").value;
+        user.email = document.getElementById("email").value;
+        user.age = document.getElementById("age").value;
+        user.type = document.getElementById("authType").value;
         user.password1 = document.getElementById("password1").value;
         user.password2 = document.getElementById("password2").value;
         user.city = document.getElementById("city").value;
-     
         user.sex = document.getElementById("sex").value;
-         user.image = document.getElementById("image").value;
-           //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
+        user.image = document.getElementById("image").value;
+        //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
-console.log(user, "user client ")
-            //async fetch query
-            async function getUserAsync() {
+        console.log(user, "user client ")
+        //async fetch query
+        async function getUserAsync() {
             console.log("user 1")
-                let response = await fetch('https://forumx.herokuapp.com/signup', {
-                    method: 'post',
-                    body: JSON.stringify(user),
-                });
-                console.log("user 2", response)
-                let data = await response.json()
-                console.log(data, "returned data, promise")
-                return data;
-            }
-              getUserAsync()
-                .then(data => showNotify(data));
-}
+            let response = await fetch('https://forumx.herokuapp.com/signup', {
+                method: 'post',
+                body: JSON.stringify(user),
+            });
+            console.log("user 2", response)
+            let data = await response.json()
+            console.log(data, "returned data, promise")
+            return data;
+        }
+        getUserAsync()
+            .then(data => showNotify(data));
+    }
 </script>
 {{end}}
