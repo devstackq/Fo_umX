@@ -39,7 +39,7 @@
                 <input id="fileElem"  name="image" id="image" type="file" accept="image/*" />
             </label> */}}
             
-            <input  type="submit" value="Register ">
+            <input onclick="signup()" type="submit" value="Register ">
         </form>
         <span>If you are logged in, then log in to me <a style="color: gold; " href="/signin">Signin</a> </span>
         <br />
@@ -85,9 +85,7 @@
         user.city = document.getElementById("city").value;
         user.sex = document.getElementById("sex").value;
         
-console.log("her0") 
-     // if (user.age >  0 &&  user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
-console.log("her")
+      if (user.age >  0 &&  user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
         //async fetch query
         async function getUserAsync() {
             let response = await fetch('https://forumx.herokuapp.com/signup', {
@@ -103,6 +101,7 @@ console.log("her")
         }
         getUserAsync()
             .then(data => showNotify(data));
+    }
     }
 </script>
 {{end}}
