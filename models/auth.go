@@ -56,6 +56,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
+	http.Redirect(w, r, "/profile", 302)
 }
 
 //Signin function dsds
