@@ -5,7 +5,7 @@
     <div class="signin-container">
         <h3 class="signin-label">Login system</h3>
         <form onsubmit="event.preventDefault()">
-            <input id="name" type="text" name="email" placeholder="email || username" required>
+            <input id="name" type="text" name="email" placeholder="email or username" required>
             <input id="password" type="password" name="password" placeholder="password" required>
             <input onclick="defAuthSendData()" type="submit" value="Login">
         </form>
@@ -23,7 +23,7 @@
         name: '',
         email: '',
         username: '',
-        password: '',
+        password1: '',
         type: ''
     };
 
@@ -63,11 +63,11 @@
             username = name
         }
         user.email = email,
-            user.password = password,
+            user.password1 = password,
             user.username = username,
             user.type = "default"
         console.log(user, "u data")
-        if (user.email != '' && user.password != '' || user.username && user.password) {
+        if (user.email != '' && user.password1 != '' || user.username && user.password1) {
             //async fetch query
             async function getUserAsync() {
                 let response = await fetch('https://forumx.herokuapp.com/signin', {
