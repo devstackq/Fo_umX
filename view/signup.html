@@ -3,7 +3,7 @@
 <div class="signup-wrapper">
     <div class="signup-container">
         <h3>Signup Forum-X</h3>
-        <form class="upload" enctype="multipart/form-data" autocomplete="on" onsubmit="event.preventDefault()">
+        <form autocomplete="on" onsubmit="event.preventDefault()">
             <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input id="email" type="email" name="email" placeholder="Email" required>
@@ -35,9 +35,9 @@
             <input id="password1" name="password" type="password" placeholder="Password" required>
             <input id="password2" name="password" type="password" placeholder="Repeat password" required>
             
-            <label for="image">Image:
+            {{/* <label for="image">Image:
                 <input id="fileElem"  name="image" id="image" type="file" accept="image/*" />
-            </label>
+            </label> */}}
             
             <input  type="submit" value="Register ">
         </form>
@@ -59,13 +59,6 @@
             window.location.replace("https://forumx.herokuapp.com/signin")
         }
     }
-    const getBase64 = (file) => new Promise(function (resolve, reject) {
-        let reader = new FileReader();
-        // console.log(reader.readAsBinaryString(file), "reader1")
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = (error) => reject('Error: ', error);
-    })
 
          let user = {
             image: null,
@@ -79,22 +72,7 @@
             password2: '',
             city: ''
         };
- let          fileElem = document.getElementById("fileElem");
 
- console.log(fileElem.files[0], "f")
-        const uploadForm = document.querySelector('.upload')
-
-        uploadForm.addEventListener('submit', function(e) {
-   e.preventDefault()
-   let filez = e.target.uploadForm.files[0]
-   console.log(filez, "Fiol")
-   let formData = new FormData()
-   formData.append('file', filez)
-   console.log(formData)
-   user.image = formData
-
-    signup()
-})
     function signup() {
    
         user.username = document.getElementById("username").value;
@@ -106,22 +84,9 @@
         user.password2 = document.getElementById("password2").value;
         user.city = document.getElementById("city").value;
         user.sex = document.getElementById("sex").value;
-      //  user.image = document.getElementById("image").files;
         
-        var file = document.querySelector('input[type="file"]').files[0];
-        //console.log(getBase64(file))
-
-        let encoded;
-        //console.log(user.image,  user.image[0])
-        getBase64(user.image)
-
-            .then((result) => {
-                encoded = result;
-            })
-            .catch(e => console.log(e))
-
-        console.log(encoded, "enc", user.image[0])
-        //   if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
+ 
+      if (user.email != '' && user.password1 != '' && user.city != ''  && user.password2 != ''  && user.username != '' &&  user.fullname != ''  && user.sex != '') {
 
         //async fetch query
         async function getUserAsync() {
@@ -138,6 +103,7 @@
         }
         getUserAsync()
             .then(data => showNotify(data));
+    }
     }
 </script>
 {{end}}

@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"golang.org/x/oauth2"
 )
@@ -45,19 +44,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			if person.Type == "default" {
 
 				utils.AuthType = "default"
-				var img []byte
-				if person.Image == nil {
-					defImg, err := os.Open("./utils/default-user.jpg")
-					if err != nil {
-						log.Println(err, "2")
-					}
-					img, err = ioutil.ReadAll(defImg)
-					if err != nil {
-						log.Println(err, "3")
-					}
-				} else {
-					img = person.Image
-				}
+
 				if person.FullName == "" {
 					person.FullName = "No name"
 				}
@@ -78,11 +65,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Age:      person.Age,
 										Sex:      person.Sex,
 										City:     person.City,
-										Image:    img, //? multipart.File ?
-										//	https://medium.com/@aresnik11/how-to-upload-a-file-on-the-frontend-and-send-it-using-js-to-a-rails-backend-29755afaad06
+										Image:    utils.FileByte(r, "user")
 										Password: person.Password,
 									}
-									// newReader js  base64 || []byte - send backend
 									u.Signup(w, r)
 								} else {
 									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)

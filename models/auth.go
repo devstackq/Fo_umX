@@ -30,27 +30,28 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+
 		_, err = userPrepare.Exec(u.FullName, u.Email, u.Username, hashPwd, u.Age, u.Sex, time.Now(), u.City, u.Image)
 		if err != nil {
 			log.Println(err)
 		}
 		defer userPrepare.Close()
-	
+
 	} else {
 		if utils.AuthType == "default" {
-		if emailCheck {
-			utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
-			return
+			if emailCheck {
+				utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
+				return
+			}
+			if userCheck {
+				utils.AuthError(w, r, err, "Not unique username", utils.AuthType)
+				return
+			}
+			if userCheck && emailCheck {
+				utils.AuthError(w, r, err, "Not unique username && email", utils.AuthType)
+				return
+			}
 		}
-		if userCheck {
-			utils.AuthError(w, r, err, "Not unique username", utils.AuthType)
-			return
-		}
-		if userCheck && emailCheck {
-			utils.AuthError(w, r, err, "Not unique username && email", utils.AuthType)
-			return
-		}
-	}
 	}
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	http.Redirect(w, r, "/signin", 302)
@@ -88,7 +89,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			utils.ReSession(user.ID, uStr.Session, "", "")
 		}
 		//check pwd, if not correct, error
-		fmt.Println(user.Password,  "PWD", uStr.Password)
+		fmt.Println(user.Password, "PWD", uStr.Password)
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
 		if err != nil {
@@ -120,7 +121,6 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	defer userPrepare.Close()
-
 
 	// get user in info by session Id
 	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
