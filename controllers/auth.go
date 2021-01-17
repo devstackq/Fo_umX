@@ -39,54 +39,52 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			log.Println(person, "Person data")
-			if person.Type == "default" {
 
-				utils.AuthType = "default"
+			utils.AuthType = "default"
 
-				if person.FullName == "" {
-					person.FullName = "No name"
-				}
-				if person.Age == 0 {
-					person.Age = 16
-				}
+			if person.FullName == "" {
+				person.FullName = "No name"
+			}
+			if person.Age == 0 {
+				person.Age = 16
+			}
 
-				if utils.IsValidLetter(person.FullName, "user") {
-					if utils.IsValidLetter(person.Username, "user") {
-						if utils.IsEmailValid(person.Email) {
-							if person.Password == person.PasswordRepeat {
-								if utils.IsPasswordValid(person.Password) {
-									img := utils.FileByte(r, "user")
-									u := models.User{
-										Email:    person.Email,
-										FullName: person.FullName,
-										Username: person.Username,
-										Age:      person.Age,
-										Sex:      person.Sex,
-										City:     person.City,
-										Image:    img,
-										Password: person.Password,
-									}
-									u.Signup(w, r)
-								} else {
-									utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
-									return
+			if utils.IsValidLetter(person.FullName, "user") {
+				if utils.IsValidLetter(person.Username, "user") {
+					if utils.IsEmailValid(person.Email) {
+						if person.Password == person.PasswordRepeat {
+							if utils.IsPasswordValid(person.Password) {
+								img := utils.FileByte(r, "user")
+								u := models.User{
+									Email:    person.Email,
+									FullName: person.FullName,
+									Username: person.Username,
+									Age:      person.Age,
+									Sex:      person.Sex,
+									City:     person.City,
+									Image:    img,
+									Password: person.Password,
 								}
+								u.Signup(w, r)
 							} else {
-								utils.AuthError(w, r, err, "Password fields: not match epta", utils.AuthType)
+								utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
 								return
 							}
 						} else {
-							utils.AuthError(w, r, err, "Incorrect email address: example gopher@yandex.com", utils.AuthType)
+							utils.AuthError(w, r, err, "Password fields: not match epta", utils.AuthType)
 							return
 						}
 					} else {
-						utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
+						utils.AuthError(w, r, err, "Incorrect email address: example gopher@yandex.com", utils.AuthType)
 						return
 					}
 				} else {
 					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 					return
 				}
+			} else {
+				utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
+				return
 			}
 		})
 	}

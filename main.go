@@ -3,13 +3,12 @@ package main
 import (
 	"ForumX/config"
 	"ForumX/controllers"
-	// _ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 	config.Init()
 	controllers.Init()
-
+	//github signin - not empty data,  google signin - 1 - redirect profile
 	//add -  all post, each post - show tags(category)s
 	//try - comment under - replies comment show
 	//try errors -> with gorutine

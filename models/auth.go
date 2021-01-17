@@ -39,6 +39,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		if utils.AuthType == "default" {
+
 			if emailCheck {
 				utils.AuthError(w, r, err, "Not unique email", utils.AuthType)
 				return
@@ -89,8 +90,6 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			utils.ReSession(user.ID, uStr.Session, "", "")
 		}
 		//check pwd, if not correct, error
-		fmt.Println(user.Password, "PWD", uStr.Password)
-
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
 		if err != nil {
 			utils.AuthError(w, r, err, "password incorrect", utils.AuthType)
