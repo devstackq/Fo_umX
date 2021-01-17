@@ -20,7 +20,7 @@ var (
 //Init Db, if not table -> create
 func Init() {
 
-	db, err := sql.Open("postgres", "postgres://rhwyoybdcpfqge:91b7f85d5fe2999acedec578e377dc63a941a0e8a320f6092b4071c4eec85b72@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/dcmpipelt02b2h")
+	db, err := sql.Open("postgres", "postgres://myxaiifqsidmff:09843ef69b080501b4e1b5ab2c977f31372715e3d33113d9e07dff80109b325c@ec2-54-75-199-252.eu-west-1.compute.amazonaws.com:5432/d5hu4u82tl17ms")
 	if err != nil {
 		log.Println("can't connect inDb")
 	}
