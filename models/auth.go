@@ -53,9 +53,9 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 				utils.AuthError(w, r, err, "Not unique username && email", utils.AuthType)
 				return
 			}
+			utils.AuthError(w, r, nil, "success", utils.AuthType)
 		}
 	}
-	utils.AuthError(w, r, nil, "success", utils.AuthType)
 }
 
 //Signin function dsds

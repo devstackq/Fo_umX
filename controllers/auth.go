@@ -66,7 +66,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 									Password: person.Password,
 								}
 								u.Signup(w, r)
+								fmt.Println("red1")
 								http.Redirect(w, r, "/signin", 302)
+								fmt.Println("red2")
 							} else {
 								utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
 								return
