@@ -22,6 +22,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 	}
+
 	emailCheck := utils.IsRegistered(w, r, u.Email)
 	userCheck := utils.IsRegistered(w, r, u.Username)
 
@@ -55,7 +56,7 @@ func (u User) Signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
-	http.Redirect(w, r, "/signin", 302)
+	//	http.Redirect(w, r, "/signin", 302)
 }
 
 //Signin function dsds
@@ -95,7 +96,8 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			utils.AuthError(w, r, err, "password incorrect", utils.AuthType)
 			return
 		}
-	} else if utils.AuthType == "google" || utils.AuthType == "github" {
+	} else {
+		fmt.Println("google github")
 		utils.ReSession(user.ID, uStr.Session, "", "")
 	}
 
@@ -131,7 +133,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	utils.SetCookie(w, newSession.UUID)
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	fmt.Println(utils.AuthType, "auth type")
-	http.Redirect(w, r, "/profile", 302)
+	//	http.Redirect(w, r, "/profile", 302)
 }
 
 //Logout function

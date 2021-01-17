@@ -27,11 +27,6 @@
         type: ''
     };
 
-
-    function defAuthShow() {
-        let el = document.getElementById("authWrapperId");
-        el.style.display = "block"
-    }
     const showNotify = (msg) => {
         if (msg != "success") {
             console.log(msg, "msg")
@@ -45,7 +40,7 @@
     }
 
     const welcomeSound = () => {
-        var audio = new Audio('rihanna.mp3');
+        var audio = new Audio('./rihanna.mp3');
         audio.play();
     }
 

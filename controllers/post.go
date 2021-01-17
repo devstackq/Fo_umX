@@ -61,6 +61,7 @@ func GetPostByID(w http.ResponseWriter, r *http.Request) {
 			utils.RenderTemplate(w, "404page", 404)
 			return
 		}
+
 		//fmt.Println(temp)
 		pid := models.Post{ID: id}
 		comments, post := pid.GetPostByID(r)

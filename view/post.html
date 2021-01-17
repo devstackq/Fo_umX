@@ -12,7 +12,6 @@
     <span id="time" class="time-post"> {{.Time}} </span>
 
     <div class="post-content"> {{.Content}}
-
         <div class="author-wrapper">
             <form action="/user/id?{{.CreatorID}}" method="post" class="author-post">
                 <input type="hidden" name="uid" value="{{.CreatorID}}">

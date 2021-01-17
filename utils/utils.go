@@ -400,6 +400,7 @@ func ReSession(uid int, s *general.Session, typeReSession, uuid string) {
 		log.Println(err, "no have session by uid, first Enter system")
 		return
 	}
+	//update session value, when timeout
 	if typeReSession == "timeout" {
 		_, err := DB.Exec("UPDATE session SET uuid=$1, cookie_time=$2 WHERE id=$3", uuid, time.Now(), sid)
 		if err != nil {
