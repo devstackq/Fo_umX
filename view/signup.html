@@ -36,7 +36,7 @@
             <input id="password2" name="password" type="password" placeholder="Repeat password" required>
             
             <label for="image">Image:
-                <input name="image" id="image" type="file" accept="image/*" />
+                <input id="fileElem"  name="image" id="image" type="file" accept="image/*" />
             </label>
             
             <input  type="submit" value="Register ">
@@ -79,10 +79,14 @@
             password2: '',
             city: ''
         };
+ let          fileElem = document.getElementById("fileElem");
+
+ console.log(fileElem.files[0], "f")
         const uploadForm = document.querySelector('.upload')
 
         uploadForm.addEventListener('submit', function(e) {
    e.preventDefault()
+   e.target.
    let filez = e.target.uploadFile.files[0]
    console.log(filez, "Fiol")
    let formData = new FormData()
