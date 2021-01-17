@@ -125,14 +125,14 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 	// get user in info by session Id
 	err = DB.QueryRow("SELECT id, uuid FROM session WHERE user_id = $1", newSession.UserID).Scan(&newSession.ID, &newSession.UUID)
 	if err != nil {
-		utils.AuthError(w, r, err, "not find user from session", utils.AuthType)
+		utils.AuthError(w, r, err, "not find user by session", utils.AuthType)
 		log.Println(err)
 		return
 	}
 	utils.SetCookie(w, newSession.UUID)
 	utils.AuthError(w, r, nil, "success", utils.AuthType)
 	fmt.Println(utils.AuthType, "auth type")
-	//	http.Redirect(w, r, "/profile", 302)
+	http.Redirect(w, r, "/profile", 302)
 }
 
 //Logout function

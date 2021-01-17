@@ -255,9 +255,9 @@ func SigninSideService(w http.ResponseWriter, r *http.Request, user models.User)
 		//if github = location -> else Almaty
 		u := models.User{}
 
-		if user.Username == "" {
-			user.Name = user.Email
-		}
+		// if user.Username == "" {
+		// 	user.Name = user.Email
+		// }
 		if user.Location == "" {
 			u.Location = "Almaty"
 		}
