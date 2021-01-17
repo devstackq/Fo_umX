@@ -57,7 +57,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 						if utils.IsEmailValid(person.Email) {
 							if person.Password == person.PasswordRepeat {
 								if utils.IsPasswordValid(person.Password) {
-									fmt.Println(person, "data from client")
+									img := utils.FileByte(r, "user")
+									fmt.Println(img, "Image")
 									u := models.User{
 										Email:    person.Email,
 										FullName: person.FullName,
@@ -65,7 +66,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 										Age:      person.Age,
 										Sex:      person.Sex,
 										City:     person.City,
-										Image:    utils.FileByte(r, "user"),
+										Image:    img,
 										Password: person.Password,
 									}
 									u.Signup(w, r)
