@@ -67,9 +67,7 @@
         reader.onerror = (error) => reject('Error: ', error);
     })
 
-    function signup() {
-
-        let user = {
+         let user = {
             image: null,
             email: '',
             username: '',
@@ -81,6 +79,20 @@
             password2: '',
             city: ''
         };
+        const uploadForm = document.querySelector('.upload')
+
+        uploadForm.addEventListener('submit', function(e) {
+   e.preventDefault()
+   let filez = e.target.uploadFile.files[0]
+   console.log(filez, "Fiol")
+   let formData = new FormData()
+   formData.append('file', filez)
+   console.log(formData, "Form)
+   user.image = formData
+})
+    function signup() {
+
+   
         user.username = document.getElementById("username").value;
         user.fullname = document.getElementById("fullname").value;
         user.email = document.getElementById("email").value;
@@ -95,14 +107,15 @@
         var file = document.querySelector('input[type="file"]').files[0];
         //console.log(getBase64(file))
   
-            const uploadForm = document.querySelector('.upload')
-            uploadForm.addEventListener('submit', function(e) {
+        const uploadForm = document.querySelector('.upload')
+        
+        uploadForm.addEventListener('submit', function(e) {
    e.preventDefault()
    let filez = e.target.uploadFile.files[0]
    console.log(filez, "Fiol")
    let formData = new FormData()
    formData.append('file', filez)
-   console.log(formData)
+   console.log(formData, "Form)
    user.image = formData
 })
         let encoded;
