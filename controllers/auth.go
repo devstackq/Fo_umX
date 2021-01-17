@@ -66,6 +66,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 									Password: person.Password,
 								}
 								u.Signup(w, r)
+								http.Redirect(w, r, "/signin", 302)
 							} else {
 								utils.AuthError(w, r, err, "Incorrect password: must be 8 symbols, 1 big, 1 special character, example: 9Password!", utils.AuthType)
 								return
@@ -247,6 +248,12 @@ func SigninSideService(w http.ResponseWriter, r *http.Request, u models.User) {
 		u.Signin(w, r) //login
 	} else {
 		//if github = location -> else Almaty
+		if u.Username == "" {
+			u.Name = u.Email
+		}
+		if u.Location == "" {
+			u.Location = "Almaty"
+		}
 		u := models.User{
 			Email:    u.Email,
 			FullName: u.Name,
