@@ -40,7 +40,10 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			}
 			log.Println(person, "Person data")
 
-			utils.AuthType = "default"
+			// if person.Type == "default" {
+			fmt.Println(person.Type, "ddddds22", utils.AuthType)
+
+			//	utils.AuthType = "default"
 
 			if person.FullName == "" {
 				person.FullName = "No name"
