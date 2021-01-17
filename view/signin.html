@@ -21,7 +21,6 @@
 <script>
     let user = {
         name: '',
-        image: null,
         email: '',
         username: '',
         password: '',
@@ -67,7 +66,7 @@
             user.password = password,
             user.username = username,
             user.type = "default"
-
+        console.log(user, "u data")
         if (user.email != '' && user.password != '' || user.username && user.password) {
             //async fetch query
             async function getUserAsync() {

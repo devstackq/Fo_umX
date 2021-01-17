@@ -88,7 +88,7 @@ func (uStr *User) Signin(w http.ResponseWriter, r *http.Request) {
 			utils.ReSession(user.ID, uStr.Session, "", "")
 		}
 		//check pwd, if not correct, error
-		fmt.Println(user.Password, uStr.Password, "PWD")
+		fmt.Println(user.Password,  "PWD", uStr.Password)
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(uStr.Password))
 		if err != nil {

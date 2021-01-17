@@ -103,8 +103,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 					utils.AuthError(w, r, err, "Incorrect usernname field: access latin symbols and numbers", utils.AuthType)
 					return
 				}
-				
-				//http.Redirect(w, r, "/signin", 302)
 			}
 		})
 	}
