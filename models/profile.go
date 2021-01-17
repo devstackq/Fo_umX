@@ -249,7 +249,7 @@ func (u *User) UpdateProfile() {
 
 //DeleteAccount then dlogut - delete cookie, delete lsot comment, session Db, voteState
 func (u *User) DeleteAccount(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(u, "del")
+	fmt.Println(u.ID, "del")
 	_, err = DB.Exec("DELETE FROM  session  WHERE user_id=$1", u.ID)
 	if err != nil {
 		log.Println(err)

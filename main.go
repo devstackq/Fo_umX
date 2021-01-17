@@ -11,6 +11,8 @@ func main() {
 
 	//github signin - not empty data,  google signin - 1 - redirect profile
 	//delete account - correct,
+	//if user - deleted -> show User deleted page, add field
+
 	//add -  all post, each post - show tags(category)s
 	//try - comment under - replies comment show
 	//try errors -> with gorutine

@@ -31,7 +31,7 @@ func Init() {
 	}
 	//db.Exec("PRAGMA foreign_keys=ON")
 
-	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name varchar(255) NOT NULL, email	varchar(255) NOT NULL UNIQUE, username varchar(255) NOT NULL UNIQUE, password varchar(255), isAdmin int DEFAULT 0, age int, sex varchar(255), created_time	timestamp, last_seen timestamp, city varchar(255), image bytea NOT NULL);")
+	user, err := db.Prepare("CREATE TABLE IF NOT EXISTS users(id SERIAL NOT NULL PRIMARY KEY, full_name varchar(255) NOT NULL, email	varchar(255) NOT NULL UNIQUE, username varchar(255) NOT NULL UNIQUE, password varchar(255), isAdmin int DEFAULT 0, age int, sex varchar(255), created_time	timestamp, last_seen timestamp, city varchar(255), image bytea);")
 	if err != nil {
 		log.Println(err)
 	}
@@ -42,7 +42,7 @@ func Init() {
 		log.Println(err)
 	}
 
-	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content text, creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0,  CONSTRAINT fk_key_post_user FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE );")
+	post, err := db.Prepare("CREATE TABLE IF NOT EXISTS posts(id serial PRIMARY KEY, thread text, content text, creator_id int, create_time timestamp,   update_time timestamp DEFAULT current_timestamp, image	bytea NOT NULL, count_like int DEFAULT 0, count_dislike int DEFAULT 0);")
 
 	if err != nil {
 		log.Println(err)
